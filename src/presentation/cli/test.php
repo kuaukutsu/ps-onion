@@ -11,12 +11,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use kuaukutsu\ps\onion\application\Test;
 use kuaukutsu\ps\onion\domain\entity\TestResponse;
 use kuaukutsu\ps\onion\domain\exception\RequestException;
 use kuaukutsu\ps\onion\domain\exception\ResponseException;
-
-use Psr\Http\Message\StreamFactoryInterface;
 
 use function DI\create;
 
