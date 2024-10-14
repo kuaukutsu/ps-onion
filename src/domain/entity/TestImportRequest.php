@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace kuaukutsu\ps\onion\domain\entity;
+
+use kuaukutsu\ps\onion\domain\interface\Request;
+use kuaukutsu\ps\onion\domain\interface\StreamDecode;
+use kuaukutsu\ps\onion\infrastructure\hydrate\EntityResponse;
+
+/**
+ * @implements Request<TestResponse>
+ * @psalm-internal kuaukutsu\ps\onion\domain\service
+ */
+final readonly class TestImportRequest implements Request
+{
+    public function __construct(private TestImportData $data)
+    {
+    }
+
+    public function getMethod(): string
+    {
+        return 'POST';
+    }
+
+    public function getUri(): string
+    {
+        return 'https://webhook.site/5669bc32-92b7-4b31-9bc7-203b9d11438d';
+    }
+
+    public function getBody(): string
+    {
+        return (string)$this->data;
+    }
+
+    public function makeResponse(StreamDecode $stream): TestResponse
+    {
+        return (new EntityResponse(TestResponse::class))
+            ->makeWithCamelCase(
+                $stream->decode(),
+                [
+                    'name' => 'test default name',
+                ]
+            );
+    }
+}
