@@ -43,9 +43,13 @@ final readonly class HttpClient implements RequestHandler
                     ? $this->makePostRequest($request, $context)
                     : $this->makeRequest($request, $context)
             );
-        } catch (InvalidArgumentException | ClientExceptionInterface $e) {
+        } catch (ClientExceptionInterface $e) {
             // Exception handler: middleware
+            // prepare exception: GuzzleHttp\Exception
+            // rule exception: retry, logger
             throw new RequestException($e->getMessage(), $e->getCode(), $e);
+        } catch (InvalidArgumentException $e) {
+            throw new RequestException($e->getMessage());
         }
 
         try {
