@@ -28,7 +28,7 @@ final readonly class StreamJson implements StreamDecode
              */
             return json_decode((string)$this->stream, true, 512, JSON_THROW_ON_ERROR);
         } catch (Throwable $e) {
-            throw new StreamDecodeException($e->getMessage(), $e->getCode(), $e);
+            throw new StreamDecodeException($e->getMessage());
         }
     }
 }

@@ -29,7 +29,6 @@ final readonly class Test
     }
 
     /**
-     * @param non-empty-string $name
      * @throws RequestException
      * @throws ResponseException
      */
