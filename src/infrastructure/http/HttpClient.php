@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use InvalidArgumentException;
+use Override;
 use TypeError;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -33,6 +34,7 @@ final readonly class HttpClient implements RequestHandler
     /**
      * @psalm-internal kuaukutsu\ps\onion\domain\service
      */
+    #[Override]
     public function send(Request $request, RequestContext $context): Response
     {
         try {

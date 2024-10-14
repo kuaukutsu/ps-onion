@@ -47,7 +47,7 @@ try {
 /** @psalm-check-type-exact $_test = TestResponse */
 
 try {
-    $test = $app->import();
+    $test = $app->import('test');
 } catch (RequestException | ResponseException $e) {
     echo $e->getMessage() . PHP_EOL;
     exit(-1);
@@ -56,12 +56,3 @@ try {
 /** @psalm-check-type-exact $test = TestResponse */
 
 echo $test->name . PHP_EOL;
-
-/**
- * Request and Response в одном пространстве.
- * Для Request необходимо:
- * - RequestFactoryInterface -> RequestInterface
- * - дополнительные модули для обработки Response? НЕТ
- * Для Response необходимо:
- * - входящий набор данных
- */

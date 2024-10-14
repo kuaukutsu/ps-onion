@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\entity;
 
+use Override;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\interface\EntityData;
 use kuaukutsu\ps\onion\infrastructure\hydrate\Json;
@@ -19,6 +20,7 @@ final readonly class TestImportData implements EntityData
     ) {
     }
 
+    #[Override]
     public function toArray(): array
     {
         return [
@@ -30,6 +32,7 @@ final readonly class TestImportData implements EntityData
     /**
      * @throws InvalidArgumentException
      */
+    #[Override]
     public function __toString(): string
     {
         return Json::encode($this->toArray());

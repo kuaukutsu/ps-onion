@@ -54,7 +54,7 @@ final readonly class EntityResponse
     {
         $upper = static fn(
             array $matches
-        ): string => /** @var array{"word": string} $matches */ strtoupper($matches['word']);
+        ): string => /** @var array{"word": string} $matches */ strtoupper((string) $matches['word']);
 
         return preg_replace_callback('~(_)(?<word>[a-z])~', $upper, $variableName);
     }

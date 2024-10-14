@@ -28,7 +28,7 @@ final readonly class Service
      */
     public function get(): TestResponse
     {
-        // Logic
+        // Logic: validate domain rule
         return $this->client->send(
             new TestRequest(),
             new HttpContext(),
@@ -41,7 +41,7 @@ final readonly class Service
      */
     public function import(string $name): TestResponse
     {
-        // Logic
+        // Logic: validate domain rule
         return $this->client->send(
             new TestImportRequest(
                 new TestImportData(

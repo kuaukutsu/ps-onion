@@ -24,15 +24,20 @@ final readonly class Test
      */
     public function get(): TestResponse
     {
+        // Logic: validate args (allowed types)
         return $this->service->get();
     }
 
     /**
+     * @param non-empty-string $name
      * @throws RequestException
      * @throws ResponseException
      */
-    public function import(): TestResponse
+    public function import(string $name): TestResponse
     {
-        return $this->service->import('test');
+        // Logic: validate args (allowed types)
+        assert($name !== '', 'non-empty-string');
+
+        return $this->service->import($name);
     }
 }
