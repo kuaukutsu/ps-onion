@@ -20,7 +20,7 @@
     </projectFiles>
 
     <issueHandlers>
-        <MixedArrayAccess errorLevel="suppress"/>
+        <MixedAssignment errorLevel="suppress"/>
         <MixedArrayAssignment errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

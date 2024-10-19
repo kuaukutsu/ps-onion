@@ -23,8 +23,8 @@ final readonly class EntityResponse
     }
 
     /**
-     * @param array<string, scalar|array|null> $data
-     * @param array<string, scalar|array|null> $default
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $default
      * @return TResponse
      * @throws Error Unknown named parameter
      * @throws TypeError

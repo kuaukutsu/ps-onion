@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\http;
 
-use InvalidArgumentException;
+use Error;
 use Override;
-use TypeError;
+use InvalidArgumentException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
@@ -57,7 +57,7 @@ final readonly class HttpClient implements RequestHandler
             return $request->makeResponse(
                 $this->makeStreamDecode($response),
             );
-        } catch (TypeError | StreamDecodeException $e) {
+        } catch (Error | StreamDecodeException $e) {
             throw new ResponseException($e->getMessage(), $e->getCode(), $e);
         }
     }
