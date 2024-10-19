@@ -6,15 +6,15 @@ namespace kuaukutsu\ps\onion\domain\entity;
 
 use Override;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
-use kuaukutsu\ps\onion\domain\interface\Request;
+use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\hydrate\EntityResponse;
 
 /**
- * @implements Request<TestResponse>
+ * @implements RequestEntity<TestResponse>
  * @psalm-internal kuaukutsu\ps\onion\domain\service
  */
-final readonly class TestRequest implements Request
+final readonly class TestRequest implements RequestEntity
 {
     #[Override]
     public function getMethod(): string

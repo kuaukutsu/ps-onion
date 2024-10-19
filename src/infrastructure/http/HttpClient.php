@@ -16,6 +16,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use kuaukutsu\ps\onion\domain\exception\RequestException;
 use kuaukutsu\ps\onion\domain\exception\ResponseException;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
+use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\Request;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
 use kuaukutsu\ps\onion\domain\interface\RequestHandler;
@@ -35,7 +36,7 @@ final readonly class HttpClient implements RequestHandler
      * @psalm-internal kuaukutsu\ps\onion\domain\service
      */
     #[Override]
-    public function send(Request $request, RequestContext $context): Response
+    public function send(RequestEntity $request, RequestContext $context): Response
     {
         try {
             $response = $this->client->sendRequest(

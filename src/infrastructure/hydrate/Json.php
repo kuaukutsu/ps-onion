@@ -10,6 +10,7 @@ use InvalidArgumentException;
 final readonly class Json
 {
     /**
+     * @param array<string, scalar|array|null> $entityData
      * @throws InvalidArgumentException
      */
     public static function encode(array $entityData): string

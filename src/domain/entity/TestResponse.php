@@ -21,6 +21,8 @@ final readonly class TestResponse implements EntityDto, Response
     #[Override]
     public function toArray(): array
     {
-        return get_object_vars($this);
+        return [
+            'name' => $this->name,
+        ];
     }
 }

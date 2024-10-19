@@ -11,11 +11,11 @@ interface RequestHandler
 {
     /**
      * @template TResponse of Response
-     * @param Request<TResponse> $request
+     * @param RequestEntity<TResponse> $request
      * @return TResponse
      * @throws RequestException
      * @throws ResponseException
      * @noinspection PhpDocSignatureInspection
      */
-    public function send(Request $request, RequestContext $context): Response;
+    public function send(RequestEntity $request, RequestContext $context): Response;
 }

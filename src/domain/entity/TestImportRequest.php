@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\domain\entity;
 
 use Override;
-use kuaukutsu\ps\onion\domain\interface\Request;
+use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\hydrate\EntityResponse;
 
 /**
- * @implements Request<TestResponse>
+ * @implements RequestEntity<TestResponse>
  * @psalm-internal kuaukutsu\ps\onion\domain\service
  */
-final readonly class TestImportRequest implements Request
+final readonly class TestImportRequest implements RequestEntity
 {
     public function __construct(private TestImportData $data)
     {

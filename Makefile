@@ -21,6 +21,11 @@ psalm:
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/psalm
 
+phpstan:
+	docker run --init -it --rm -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		./vendor/bin/phpstan analyse -c phpstan.neon
+
 infection:
 	docker-compose -f ./docker-compose.yml run --rm -u ${USER} -w /src \
 		cli ./vendor/bin/roave-infection-static-analysis-plugin --psalm-config psalm.xml
