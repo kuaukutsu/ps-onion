@@ -16,6 +16,10 @@
 - presentation
   Точка входа: API / console / etc.
 
+### Вопросики
+
+- нужно ли разбивать внутреннюю структуру каталогов domain/service на use cases?
+
 ## Docker
 
 ```shell
@@ -40,6 +44,10 @@ The code is statically analyzed with [Psalm](https://psalm.dev/). To run static 
 make psalm
 ```
 
+```shell
+make phpstan
+```
+
 ### Code Sniffer
 
 ```shell
@@ -51,3 +59,9 @@ make phpcs
 ```shell
 make rector
 ```
+
+## Примечание
+
+**phpunit**, чтобы перейти на 11 версию, нужно отказываться от psalm, 
+который цепляется за четвертую версию парсера от Никиты Попова (https://github.com/nikic/PHP-Parser).
+Плавно переезжаем на phpstan?.
