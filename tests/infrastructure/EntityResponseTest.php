@@ -54,7 +54,7 @@ final class EntityResponseTest extends TestCase
         $entityResponse = new EntityResponse(EntityStub::class);
         $entityResponse->makeWithCamelCase(
             [
-                'name2' => 'John'
+                'name2' => 'John',
             ]
         );
     }

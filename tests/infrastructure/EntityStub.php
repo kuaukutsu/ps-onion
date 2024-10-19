@@ -14,7 +14,6 @@ final readonly class EntityStub implements EntityDto, Response
         public string $name,
         public ?EntityStub $object = null,
     ) {
-
     }
 
     #[Override]
