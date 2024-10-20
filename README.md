@@ -50,6 +50,10 @@ make psalm
 make phpstan
 ```
 
+```shell
+make check
+```
+
 ### Code Sniffer
 
 ```shell
@@ -62,8 +66,14 @@ make phpcs
 make rector
 ```
 
-## Примечание
+### Unit testing
 
-**phpunit**, чтобы перейти на 11 версию, нужно отказываться от psalm, 
+The package is tested with [PHPUnit](https://phpunit.de/). To run tests:
+
+```shell
+make phpunit
+```
+**phpunit**, чтобы перейти на 11 версию, нужно отказываться от psalm,
 который цепляется за четвертую версию парсера от Никиты Попова (https://github.com/nikic/PHP-Parser).
 Плавно переезжаем на phpstan?.
+
