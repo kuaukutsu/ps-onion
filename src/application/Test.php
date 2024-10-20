@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
+use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\entity\TestResponse;
 use kuaukutsu\ps\onion\domain\exception\RequestException;
 use kuaukutsu\ps\onion\domain\exception\ResponseException;
@@ -21,6 +22,7 @@ final readonly class Test
     /**
      * @throws RequestException
      * @throws ResponseException
+     * @throws ContainerExceptionInterface
      */
     public function get(): TestResponse
     {
@@ -31,6 +33,7 @@ final readonly class Test
     /**
      * @throws RequestException
      * @throws ResponseException
+     * @throws ContainerExceptionInterface
      */
     public function import(string $name): TestResponse
     {

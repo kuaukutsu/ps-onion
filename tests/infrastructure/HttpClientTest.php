@@ -8,6 +8,7 @@ use Override;
 use DI\DependencyException;
 use DI\NotFoundException;
 use GuzzleHttp\Psr7\Response;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -24,6 +25,7 @@ final class HttpClientTest extends TestCase
     /**
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws ContainerExceptionInterface
      */
     public function testSend(): void
     {
