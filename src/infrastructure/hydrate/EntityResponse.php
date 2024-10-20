@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\hydrate;
 
+use Error;
 use ReflectionClass;
 use ReflectionException;
 use TypeError;
@@ -22,9 +23,10 @@ final readonly class EntityResponse
     }
 
     /**
-     * @param array<string, scalar|array|null> $data
-     * @param array<string, scalar|array|null> $default
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $default
      * @return TResponse
+     * @throws Error Unknown named parameter
      * @throws TypeError
      * @noinspection PhpDocSignatureInspection
      * @psalm-internal kuaukutsu\ps\onion\domain\entity
