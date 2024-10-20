@@ -16,7 +16,7 @@ final readonly class HttpContext implements RequestHttpContext
     private string $uuid;
 
     public function __construct(
-        private float $timeout = 1.,
+        private float $timeout = 3.,
     ) {
         $this->uuid = Uuid::uuid7()->toString();
     }

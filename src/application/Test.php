@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
+use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\entity\TestResponse;
-use kuaukutsu\ps\onion\domain\exception\RequestException;
-use kuaukutsu\ps\onion\domain\exception\ResponseException;
+use kuaukutsu\ps\onion\domain\interface\RequestException;
 use kuaukutsu\ps\onion\domain\service\test\Service;
 
 /**
@@ -21,8 +21,8 @@ final readonly class Test
 
     /**
      * @throws RequestException
-     * @throws ResponseException
      * @throws ContainerExceptionInterface
+     * @throws InvalidArgumentException
      */
     public function get(): TestResponse
     {
@@ -32,8 +32,8 @@ final readonly class Test
 
     /**
      * @throws RequestException
-     * @throws ResponseException
      * @throws ContainerExceptionInterface
+     * @throws InvalidArgumentException
      */
     public function import(string $name): TestResponse
     {

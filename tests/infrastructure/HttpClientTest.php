@@ -9,10 +9,12 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Http\Client\ClientInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
+use kuaukutsu\ps\onion\domain\interface\ClientInterface;
+use kuaukutsu\ps\onion\domain\interface\RequestContext;
 use kuaukutsu\ps\onion\infrastructure\http\HttpClient;
 use kuaukutsu\ps\onion\tests\Container;
 
@@ -26,6 +28,7 @@ final class HttpClientTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      * @throws ContainerExceptionInterface
+     * @throws ClientExceptionInterface
      */
     public function testSend(): void
     {
@@ -45,7 +48,7 @@ final class HttpClientTest extends TestCase
         self::setDefinition(ClientInterface::class, factory(
             static function (): ClientInterface {
                 return new class implements ClientInterface {
-                    public function sendRequest(RequestInterface $request): ResponseInterface
+                    public function send(RequestInterface $request, RequestContext $context): ResponseInterface
                     {
                         $requestId = current($request->getHeader('X-Request-Id'));
                         $responseDataJson = <<<JSON
