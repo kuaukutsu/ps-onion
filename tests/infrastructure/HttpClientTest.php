@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\tests\infrastructure;
 
 use Override;
-use DI\DependencyException;
-use DI\NotFoundException;
-use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use PHPUnit\Framework\TestCase;
+use DI\DependencyException;
+use DI\NotFoundException;
+use GuzzleHttp\Psr7\Response;
 use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
 use kuaukutsu\ps\onion\infrastructure\http\HttpClient;
 use kuaukutsu\ps\onion\tests\Container;
+use kuaukutsu\ps\onion\tests\domain\EntityRequestStub;
+use kuaukutsu\ps\onion\tests\domain\EntityStub;
 
 use function DI\factory;
 

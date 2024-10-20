@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\infrastructure;
+namespace kuaukutsu\ps\onion\tests\domain;
 
 use Override;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
-use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\domain\interface\Response;
-use kuaukutsu\ps\onion\infrastructure\hydrate\EntityResponse;
+use kuaukutsu\ps\onion\domain\interface\StreamDecode;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
 
 /**
  * @implements RequestEntity<EntityStub>

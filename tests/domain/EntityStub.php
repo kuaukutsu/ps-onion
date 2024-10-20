@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\infrastructure;
+namespace kuaukutsu\ps\onion\tests\domain;
 
 use Override;
-use kuaukutsu\ps\onion\domain\interface\Response;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
+use kuaukutsu\ps\onion\domain\interface\Response;
 
 final readonly class EntityStub implements EntityDto, Response
 {

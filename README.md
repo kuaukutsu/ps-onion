@@ -19,8 +19,7 @@
 ### Вопросики
 
 - нужно ли разбивать внутреннюю структуру каталогов domain/service на use cases?
-- куда положить хелперы, например \kuaukutsu\ps\onion\infrastructure\hydrate\EntityResponse, 
-сейчас получается domain работает с infrastructure, корректно ли?
+- куда положить хелперы, например EntityResponse? верно ли что это domain/service?
 
 ## Docker
 

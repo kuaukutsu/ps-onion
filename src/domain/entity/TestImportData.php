@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\domain\entity;
 use Override;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\interface\EntityData;
-use kuaukutsu\ps\onion\infrastructure\hydrate\Json;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityJson;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain
@@ -35,6 +35,6 @@ final readonly class TestImportData implements EntityData
     #[Override]
     public function __toString(): string
     {
-        return Json::encode($this->toArray());
+        return EntityJson::encode($this->toArray());
     }
 }

@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\infrastructure\hydrate;
+namespace kuaukutsu\ps\onion\domain\service\serialize;
 
 use Error;
+use TypeError;
 use ReflectionClass;
 use ReflectionException;
-use TypeError;
 use kuaukutsu\ps\onion\domain\interface\Response;
 
 /**
  * @template TResponse of Response
+ * @psalm-internal kuaukutsu\ps\onion\domain
  */
 final readonly class EntityResponse
 {

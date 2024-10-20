@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\infrastructure\hydrate;
+namespace kuaukutsu\ps\onion\domain\service\serialize;
 
 use Throwable;
 use InvalidArgumentException;
 
-final readonly class Json
+/**
+ * @psalm-internal kuaukutsu\ps\onion\domain
+ */
+final readonly class EntityJson
 {
     /**
      * @param array<string, scalar|array|null> $entityData
