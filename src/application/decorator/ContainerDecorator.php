@@ -10,8 +10,14 @@ use Override;
 use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\application
+ */
 final readonly class ContainerDecorator implements ContainerInterface
 {
+    /**
+     * @psalm-internal kuaukutsu\ps\onion\presentation
+     */
     public function __construct(private Container $container)
     {
     }

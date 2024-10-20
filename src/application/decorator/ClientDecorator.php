@@ -17,6 +17,9 @@ use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\application
+ */
 final readonly class ClientDecorator implements ClientInterface
 {
     public function __construct(

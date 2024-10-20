@@ -23,6 +23,9 @@ use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
 use kuaukutsu\ps\onion\domain\interface\RequestHttpContext;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\application
+ */
 final readonly class GuzzleDecorator implements ClientInterface
 {
     public function __construct(
