@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\infrastructure;
+namespace kuaukutsu\ps\onion\tests\domain;
 
 use Error;
 use TypeError;
 use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\infrastructure\hydrate\EntityResponse;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
 
 final class EntityResponseTest extends TestCase
 {
