@@ -6,9 +6,9 @@ namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use Override;
 use Ramsey\Uuid\Uuid;
-use kuaukutsu\ps\onion\domain\interface\RequestContext;
+use kuaukutsu\ps\onion\domain\interface\RequestHttpContext;
 
-final readonly class HttpContext implements RequestContext
+final readonly class HttpContext implements RequestHttpContext
 {
     /**
      * @var non-empty-string
@@ -16,7 +16,7 @@ final readonly class HttpContext implements RequestContext
     private string $uuid;
 
     public function __construct(
-        public float $timeout = 1.,
+        private float $timeout = 1.,
     ) {
         $this->uuid = Uuid::uuid7()->toString();
     }
@@ -25,5 +25,11 @@ final readonly class HttpContext implements RequestContext
     public function getUuid(): string
     {
         return $this->uuid;
+    }
+
+    #[Override]
+    public function getTimeout(): float
+    {
+        return $this->timeout;
     }
 }

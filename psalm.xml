@@ -21,6 +21,5 @@
 
     <issueHandlers>
         <MixedAssignment errorLevel="suppress"/>
-        <MixedArrayAssignment errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

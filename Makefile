@@ -50,6 +50,16 @@ rector:
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/rector
 
+check:
+	-make phpcs
+	-make psalm
+	-make phpstan
+	-make phpunit
+
+auto-repair:
+	-make phpcbf
+	-make rector
+
 run:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \

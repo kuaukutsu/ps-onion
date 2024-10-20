@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\service\test;
 
+use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\entity\TestImportData;
 use kuaukutsu\ps\onion\domain\entity\TestImportRequest;
 use kuaukutsu\ps\onion\domain\entity\TestRequest;
@@ -25,6 +26,7 @@ final readonly class Service
     /**
      * @throws RequestException
      * @throws ResponseException
+     * @throws ContainerExceptionInterface
      */
     public function get(): TestResponse
     {
@@ -38,6 +40,7 @@ final readonly class Service
     /**
      * @throws RequestException
      * @throws ResponseException
+     * @throws ContainerExceptionInterface
      */
     public function import(string $name): TestResponse
     {
