@@ -7,11 +7,11 @@ namespace kuaukutsu\ps\onion\tests;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use DI\DependencyException;
 use DI\NotFoundException;
+use GuzzleHttp\Psr7\HttpFactory;
+use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
+use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use GuzzleHttp\Psr7\HttpFactory;
-use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
-use kuaukutsu\ps\onion\infrastructure\container\ContainerDecorator;
 
 use function DI\create;
 use function DI\factory;

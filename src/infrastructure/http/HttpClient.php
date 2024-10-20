@@ -5,23 +5,20 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use Error;
+use kuaukutsu\ps\onion\domain\interface\RequestException;
 use Override;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use kuaukutsu\ps\onion\domain\exception\RequestException;
-use kuaukutsu\ps\onion\domain\exception\ResponseException;
+use kuaukutsu\ps\onion\domain\exception\UnexpectedRequestException;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
-use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
+use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\Request;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
-use kuaukutsu\ps\onion\domain\interface\RequestHttpContext;
 use kuaukutsu\ps\onion\domain\interface\RequestHandler;
 use kuaukutsu\ps\onion\domain\interface\Response;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
@@ -29,7 +26,7 @@ use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 final readonly class HttpClient implements RequestHandler
 {
     public function __construct(
-        private ContainerInterface $container,
+        private ClientInterface $client,
         private RequestFactoryInterface $requestFactory,
         private StreamFactoryInterface $streamFactory,
     ) {
@@ -37,55 +34,30 @@ final readonly class HttpClient implements RequestHandler
 
     /**
      * @psalm-internal kuaukutsu\ps\onion\domain\service
-     * @throws ContainerExceptionInterface
      * @throws RequestException
-     * @throws ResponseException
+     * @throws ContainerExceptionInterface
+     * @throws InvalidArgumentException
      */
     #[Override]
-    public function send(RequestEntity $request, RequestContext $context): Response
+    public function send(RequestEntity $requestEntity, RequestContext $context): Response
     {
-        $client = $this->makeClient($context);
+        $request = $this->isRequestHasBody($requestEntity)
+            ? $this->makePostRequest($requestEntity, $context)
+            : $this->makeRequest($requestEntity, $context);
+
+        $response = $this->client->send($request, $context);
+
+        // Exception handler: middleware
+        // prepare exception: GuzzleHttp\Exception
+        // rule exception: retry, logger
 
         try {
-            $response = $client->sendRequest(
-                $this->isRequestHasBody($request)
-                    ? $this->makePostRequest($request, $context)
-                    : $this->makeRequest($request, $context)
-            );
-        } catch (ClientExceptionInterface $e) {
-            // Exception handler: middleware
-            // prepare exception: GuzzleHttp\Exception
-            // rule exception: retry, logger
-            throw new RequestException($e->getMessage(), $e->getCode(), $e);
-        } catch (InvalidArgumentException $e) {
-            throw new RequestException($e->getMessage());
-        }
-
-        try {
-            return $request->makeResponse(
+            return $requestEntity->makeResponse(
                 $this->makeStreamDecode($response),
             );
         } catch (Error | StreamDecodeException $e) {
-            throw new ResponseException($e->getMessage(), $e->getCode(), $e);
+            throw new UnexpectedRequestException($request, $e);
         }
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     */
-    private function makeClient(RequestContext $context): ClientInterface
-    {
-        $config = [];
-        if ($context instanceof RequestHttpContext) {
-            $config['timeout'] = $context->getTimeout();
-        }
-
-        /**
-         * @var ClientInterface
-         */
-        return $config === []
-            ? $this->container->get(ClientInterface::class)
-            : $this->container->make(ClientInterface::class, ['config' => $config]);
     }
 
     /**
