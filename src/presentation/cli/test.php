@@ -40,9 +40,9 @@ $container = new Container(
         ),
         RequestFactoryInterface::class => create(HttpFactory::class),
         StreamFactoryInterface::class => create(HttpFactory::class),
-        ClientInterface::class => autowire(GuzzleDecorator::class),
         UuidFactoryInterface::class => create(UuidFactory::class),
         ValidatorInterface::class => create(Validator::class),
+        ClientInterface::class => autowire(GuzzleDecorator::class),
     ]
 );
 

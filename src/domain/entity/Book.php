@@ -9,7 +9,7 @@ use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\domain\interface\Response;
 
 /**
- * @psalm-internal kuaukutsu\ps\onion\domain\entity
+ * @psalm-internal kuaukutsu\ps\onion\domain
  */
 final readonly class Book implements EntityDto, Response
 {
