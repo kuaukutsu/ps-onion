@@ -12,7 +12,7 @@ use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
 
 /**
  * @implements RequestEntity<ExampleResponse>
- * @psalm-internal kuaukutsu\ps\onion\domain\service
+ * @psalm-internal kuaukutsu\ps\onion\domain
  */
 final readonly class ExampleRequest implements RequestEntity
 {
