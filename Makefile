@@ -16,6 +16,18 @@ composer-dump:
 		composer:latest \
 		composer dump-autoload
 
+# https://php.watch/articles/composer-audit#composer-audit
+composer-audit:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		composer:latest \
+		composer audit
+
+# https://github.com/ergebnis/composer-normalize
+composer-normalize:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		composer:latest \
+		composer normalize
+
 psalm:
 	docker run --init -it --rm -v "$$(pwd):/app" -e XDG_CACHE_HOME=/tmp -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
@@ -27,26 +39,22 @@ phpstan:
 		./vendor/bin/phpstan analyse -c phpstan.neon
 
 phpunit:
-	docker run --init -it --rm -v "$$(pwd):/app" -u $$(id -u) -w /app \
+	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/phpunit
 
-infection:
-	docker-compose -f ./docker-compose.yml run --rm -u ${USER} -w /src \
-		cli ./vendor/bin/roave-infection-static-analysis-plugin --psalm-config psalm.xml
-
 phpcs:
-	docker run --init -it --rm -v "$$(pwd):/app" -u $$(id -u) -w /app \
+	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/phpcs
 
 phpcbf:
-	docker run --init -it --rm -v "$$(pwd):/app" -u $$(id -u) -w /app \
+	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/phpcbf
 
 rector:
-	docker run --init -it --rm -v "$$(pwd):/app" -u $$(id -u) -w /app \
+	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/rector
 
