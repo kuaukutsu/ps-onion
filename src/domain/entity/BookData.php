@@ -10,11 +10,12 @@ use kuaukutsu\ps\onion\domain\interface\EntityDto;
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
-final readonly class TestImportData implements EntityDto
+final readonly class BookData implements EntityDto
 {
     public function __construct(
-        private string $name,
-        private int $time,
+        private string $uuid,
+        private string $title,
+        private string $author,
     ) {
     }
 
@@ -22,8 +23,9 @@ final readonly class TestImportData implements EntityDto
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
-            'time' => $this->time,
+            'uuid' => $this->uuid,
+            'title' => $this->title,
+            'author' => $this->author,
         ];
     }
 }
