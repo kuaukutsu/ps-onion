@@ -7,6 +7,7 @@ namespace kuaukutsu\ps\onion\domain\entity;
 use Override;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityJson;
 use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
 
 /**
@@ -34,7 +35,7 @@ final readonly class TestImportRequest implements RequestEntity
     #[Override]
     public function getBody(): string
     {
-        return (string)$this->data;
+        return EntityJson::encode($this->data->toArray());
     }
 
     #[Override]
