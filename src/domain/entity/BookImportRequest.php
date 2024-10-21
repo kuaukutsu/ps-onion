@@ -11,12 +11,12 @@ use kuaukutsu\ps\onion\domain\service\serialize\EntityJson;
 use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
 
 /**
- * @implements RequestEntity<TestResponse>
+ * @implements RequestEntity<Book>
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
-final readonly class TestImportRequest implements RequestEntity
+final readonly class BookImportRequest implements RequestEntity
 {
-    public function __construct(private TestImportData $data)
+    public function __construct(private BookData $data)
     {
     }
 
@@ -39,14 +39,12 @@ final readonly class TestImportRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): TestResponse
+    public function makeResponse(StreamDecode $stream): Book
     {
-        return (new EntityResponse(TestResponse::class))
+        return (new EntityResponse(Book::class))
             ->makeWithCamelCase(
                 $stream->decode(),
-                [
-                    'name' => 'test default name',
-                ]
+                $this->data->toArray(),
             );
     }
 }

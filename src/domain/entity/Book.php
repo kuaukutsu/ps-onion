@@ -11,10 +11,12 @@ use kuaukutsu\ps\onion\domain\interface\Response;
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain\entity
  */
-final readonly class TestResponse implements EntityDto, Response
+final readonly class Book implements EntityDto, Response
 {
     public function __construct(
-        public string $name,
+        public string $uuid,
+        public string $title,
+        public string $author,
     ) {
     }
 
@@ -22,7 +24,9 @@ final readonly class TestResponse implements EntityDto, Response
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
+            'uuid' => $this->uuid,
+            'title' => $this->title,
+            'author' => $this->author,
         ];
     }
 }

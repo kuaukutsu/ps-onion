@@ -11,11 +11,15 @@ use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
 
 /**
- * @implements RequestEntity<ExampleResponse>
+ * @implements RequestEntity<Book>
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
-final readonly class ExampleRequest implements RequestEntity
+final readonly class BookRequest implements RequestEntity
 {
+    public function __construct(private string $uuid)
+    {
+    }
+
     #[Override]
     public function getMethod(): string
     {
@@ -25,7 +29,7 @@ final readonly class ExampleRequest implements RequestEntity
     #[Override]
     public function getUri(): string
     {
-        return 'http://localhost:8080/example';
+        return 'https://webhook.site/' . $this->uuid;
     }
 
     /**
@@ -38,9 +42,15 @@ final readonly class ExampleRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): ExampleResponse
+    public function makeResponse(StreamDecode $stream): Book
     {
-        return (new EntityResponse(ExampleResponse::class))
-            ->makeWithCamelCase($stream->decode());
+        return (new EntityResponse(Book::class))
+            ->makeWithCamelCase(
+                $stream->decode(),
+                [
+                    'uuid' => $this->uuid,
+                    'title' => 'Name Default',
+                ]
+            );
     }
 }
