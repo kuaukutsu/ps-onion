@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\domain\entity;
 
 use Override;
-use InvalidArgumentException;
-use kuaukutsu\ps\onion\domain\interface\EntityData;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityJson;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
-final readonly class TestImportData implements EntityData
+final readonly class TestImportData implements EntityDto
 {
     public function __construct(
         private string $name,
@@ -27,14 +25,5 @@ final readonly class TestImportData implements EntityData
             'name' => $this->name,
             'time' => $this->time,
         ];
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    #[Override]
-    public function __toString(): string
-    {
-        return EntityJson::encode($this->toArray());
     }
 }
