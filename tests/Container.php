@@ -7,11 +7,13 @@ namespace kuaukutsu\ps\onion\tests;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use GuzzleHttp\Psr7\HttpFactory;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
+use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
+use Psr\SimpleCache\CacheInterface;
 
 use function DI\create;
 use function DI\factory;
@@ -49,13 +51,14 @@ trait Container
     {
         return new \DI\Container(
             [
-                RequestFactoryInterface::class => create(HttpFactory::class),
-                StreamFactoryInterface::class => create(HttpFactory::class),
                 ContainerInterface::class => factory(
                     static function (\DI\Container $container): ContainerInterface {
                         return new ContainerDecorator($container);
                     }
                 ),
+                RequestFactoryInterface::class => create(HttpFactory::class),
+                StreamFactoryInterface::class => create(HttpFactory::class),
+                CacheInterface::class => create(FileCache::class),
             ]
         );
     }

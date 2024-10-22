@@ -23,6 +23,7 @@ use kuaukutsu\ps\onion\infrastructure\http\HttpContext;
 final readonly class Repository
 {
     public function __construct(
+        private BookCache $cache,
         private HttpClient $client,
         private UuidFactoryInterface $uuidFactory,
     ) {
@@ -35,11 +36,18 @@ final readonly class Repository
      */
     public function get(string $uuid): Book
     {
-        // Logic: validate domain rule
-        return $this->client->send(
+        $model = $this->cache->find($uuid);
+        if ($model instanceof Book) {
+            return $model;
+        }
+
+        $model = $this->client->send(
             new BookRequest($uuid),
             new HttpContext(),
         );
+
+        $this->cache->set($model);
+        return $model;
     }
 
     /**
