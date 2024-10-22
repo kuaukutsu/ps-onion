@@ -36,15 +36,11 @@ final readonly class Repository
      */
     public function get(string $uuid): Book
     {
-        $model = $this->cache->find($uuid);
-        if ($model instanceof Book) {
-            return $model;
-        }
-
-        $model = $this->client->send(
-            new BookRequest($uuid),
-            new HttpContext(),
-        );
+        $model = $this->cache->find($uuid)
+            ?? $this->client->send(
+                new BookRequest($uuid),
+                new HttpContext(),
+            );
 
         $this->cache->set($model);
         return $model;

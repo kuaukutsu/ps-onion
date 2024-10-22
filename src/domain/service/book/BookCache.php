@@ -32,8 +32,12 @@ final readonly class BookCache
 
     public function set(Book $book): void
     {
+        $key = $this->generateKey($book->uuid);
+
         try {
-            $this->cache->set($this->generateKey($book->uuid), $book);
+            if ($this->cache->has($key) === false) {
+                $this->cache->set($key, $book);
+            }
         } catch (InvalidArgumentException) {
         }
     }
