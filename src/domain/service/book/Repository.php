@@ -23,7 +23,7 @@ use kuaukutsu\ps\onion\infrastructure\http\HttpContext;
 final readonly class Repository
 {
     public function __construct(
-        private BookCache $cache,
+        private Cache $cache,
         private HttpClient $client,
         private UuidFactoryInterface $uuidFactory,
     ) {
@@ -36,7 +36,7 @@ final readonly class Repository
      */
     public function get(string $uuid): Book
     {
-        $cacheKey = $this->cache->makeKey($uuid);
+        $cacheKey = Cache::makeKey($uuid);
         $model = $this->cache->get($cacheKey)
             ?? $this->client->send(
                 new BookRequest($uuid),
@@ -84,7 +84,7 @@ final readonly class Repository
      */
     private function findByTitle(string $title, string $author): ?Book
     {
-        $cacheKey = $this->cache->makeKey($author, $title);
+        $cacheKey = Cache::makeKey($author, $title);
 
         try {
             $model = $this->cache->get($cacheKey)

@@ -8,14 +8,17 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\entity\Book;
 
-final readonly class BookCache
+final readonly class Cache
 {
     public function __construct(
         private CacheInterface $cache,
     ) {
     }
 
-    public function makeKey(string ...$keys): string
+    /**
+     * Generated string key
+     */
+    public static function makeKey(string ...$keys): string
     {
         return 'book:' . implode('-', $keys);
     }
