@@ -63,12 +63,12 @@ final class FileCache implements CacheInterface
 
     public function has(string $key): bool
     {
-        $exists = file_exists($this->makeFilePath($key));
-        if ($exists === false) {
+        $filepath = $this->makeFilePath($key);
+        if (file_exists($filepath) === false) {
             return false;
         }
 
-        $data = @file_get_contents($this->makeFilePath($key));
+        $data = @file_get_contents($filepath);
         if ($data === false) {
             return false;
         }
