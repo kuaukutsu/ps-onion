@@ -20,7 +20,7 @@ final readonly class UuidValidator
      */
     public function exception(string $uuid): void
     {
-        if ($this->uuidValidator->validate($uuid) === false) {
+        if ($this->validate($uuid) === false) {
             throw new InvalidArgumentException("UUID '$uuid' is not valid.");
         }
     }
