@@ -27,14 +27,20 @@ final class FileCache implements CacheInterface
             return $default;
         }
 
-        return unserialize($data, ['allowed_classes' => true]);
+        $payload = FileData::unserialize($data);
+        if ($payload === false) {
+            $this->delete($key);
+            return $default;
+        }
+
+        return $payload;
     }
 
     public function set(string $key, mixed $value, DateInterval | int | null $ttl = null): bool
     {
         return (bool)file_put_contents(
             $this->makeFilePath($key),
-            serialize($value),
+            FileData::serialize($value, $ttl),
             LOCK_EX,
         );
     }
@@ -57,7 +63,23 @@ final class FileCache implements CacheInterface
 
     public function has(string $key): bool
     {
-        return file_exists($this->makeFilePath($key));
+        $exists = file_exists($this->makeFilePath($key));
+        if ($exists === false) {
+            return false;
+        }
+
+        $data = @file_get_contents($this->makeFilePath($key));
+        if ($data === false) {
+            return false;
+        }
+
+        $expired = FileData::checkTtl($data);
+        if ($expired === false) {
+            $this->delete($key);
+            return false;
+        }
+
+        return true;
     }
 
     /**
