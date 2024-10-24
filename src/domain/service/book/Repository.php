@@ -36,13 +36,14 @@ final readonly class Repository
      */
     public function get(string $uuid): Book
     {
-        $model = $this->cache->find($uuid)
+        $cacheKey = $this->cache->makeKey($uuid);
+        $model = $this->cache->get($cacheKey)
             ?? $this->client->send(
                 new BookRequest($uuid),
                 new HttpContext(),
             );
 
-        $this->cache->set($model);
+        $this->cache->set($cacheKey, $model);
         return $model;
     }
 
@@ -56,9 +57,9 @@ final readonly class Repository
      */
     public function import(string $title, string $author): Book
     {
-        $model = $this->findByTitle($title);
+        $model = $this->findByTitle($title, $author);
         if ($model instanceof Book) {
-            throw new LogicException("Book `$title` already exists.");
+            throw new LogicException("[$model->uuid] Book `$title` already exists.");
         }
 
         return $this->client->send(
@@ -75,20 +76,27 @@ final readonly class Repository
 
     /**
      * @param non-empty-string $title
+     * @param non-empty-string $author
      * @throws ContainerExceptionInterface
      * @throws InvalidArgumentException
      * @throws LogicException
      * @psalm-internal kuaukutsu\ps\onion\domain\service\book
      */
-    private function findByTitle(string $title): ?Book
+    private function findByTitle(string $title, string $author): ?Book
     {
+        $cacheKey = $this->cache->makeKey($author, $title);
+
         try {
-            return $this->client->send(
-                new BookFindByPropertyRequest(title: $title),
-                new HttpContext(),
-            );
+            $model = $this->cache->get($cacheKey)
+                ?? $this->client->send(
+                    new BookFindByPropertyRequest(author: $author, title: $title),
+                    new HttpContext(),
+                );
         } catch (RequestException) {
             return null;
         }
+
+        $this->cache->set($cacheKey, $model);
+        return $model;
     }
 }

@@ -15,10 +15,15 @@ final readonly class BookCache
     ) {
     }
 
-    public function find(string $uuid): ?Book
+    public function makeKey(string ...$keys): string
+    {
+        return 'book:' . implode('-', $keys);
+    }
+
+    public function get(string $key): ?Book
     {
         try {
-            $model = $this->cache->get($this->generateKey($uuid));
+            $model = $this->cache->get($key);
         } catch (InvalidArgumentException) {
             return null;
         }
@@ -30,20 +35,13 @@ final readonly class BookCache
         return null;
     }
 
-    public function set(Book $book): void
+    public function set(string $key, Book $book): void
     {
-        $key = $this->generateKey($book->uuid);
-
         try {
             if ($this->cache->has($key) === false) {
                 $this->cache->set($key, $book);
             }
         } catch (InvalidArgumentException) {
         }
-    }
-
-    private function generateKey(string $uuid): string
-    {
-        return 'book:' . $uuid;
     }
 }
