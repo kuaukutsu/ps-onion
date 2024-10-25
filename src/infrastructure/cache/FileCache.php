@@ -22,64 +22,50 @@ final class FileCache implements CacheInterface
 
     public function get(string $key, mixed $default = null): mixed
     {
-        $data = @file_get_contents($this->makeFilePath($key));
-        if ($data === false) {
-            return $default;
-        }
+        assert($key !== '', 'non-empty-string');
 
-        $payload = FileData::unserialize($data);
-        if ($payload === false) {
-            $this->delete($key);
-            return $default;
-        }
-
-        return $payload;
+        return (new FileDataStorage($this->makeFilePath($key)))
+            ->read() ?: $default;
     }
 
     public function set(string $key, mixed $value, DateInterval | int | null $ttl = null): bool
     {
-        return (bool)file_put_contents(
-            $this->makeFilePath($key),
-            FileData::serialize($value, $ttl),
-            LOCK_EX,
-        );
+        assert($key !== '', 'non-empty-string');
+
+        return (new FileDataStorage($this->makeFilePath($key)))
+            ->write($value, $ttl);
     }
 
     public function delete(string $key): bool
     {
-        return @unlink($this->makeFilePath($key));
+        assert($key !== '', 'non-empty-string');
+
+        return (new FileDataStorage($this->makeFilePath($key)))
+            ->delete();
     }
 
     public function clear(): bool
     {
+        /** @var non-empty-string[]|false $filesInDir */
         $filesInDir = glob($this->tmpdir . DIRECTORY_SEPARATOR . '*');
         if ($filesInDir === false) {
             return false;
         }
 
-        $filesProccessed = array_map('unlink', $filesInDir);
+        $filesProccessed = array_map(
+            static fn(string $filePath) => (new FileDataStorage($filePath))->delete(),
+            $filesInDir,
+        );
+
         return count($filesProccessed) === count($filesInDir);
     }
 
     public function has(string $key): bool
     {
-        $filepath = $this->makeFilePath($key);
-        if (file_exists($filepath) === false) {
-            return false;
-        }
+        assert($key !== '', 'non-empty-string');
 
-        $data = @file_get_contents($filepath);
-        if ($data === false) {
-            return false;
-        }
-
-        $expired = FileData::checkTtl($data);
-        if ($expired === false) {
-            $this->delete($key);
-            return false;
-        }
-
-        return true;
+        return (new FileDataStorage($this->makeFilePath($key)))
+            ->exists();
     }
 
     /**
@@ -107,11 +93,19 @@ final class FileCache implements CacheInterface
         throw new NotImplementedException();
     }
 
+    /**
+     * @param non-empty-string $key
+     * @return non-empty-string
+     */
     private function makeFilePath(string $key): string
     {
         return $this->tmpdir . DIRECTORY_SEPARATOR . $this->generateFilename($key);
     }
 
+    /**
+     * @param non-empty-string $key
+     * @return non-empty-string
+     */
     private function generateFilename(string $key): string
     {
         /**
