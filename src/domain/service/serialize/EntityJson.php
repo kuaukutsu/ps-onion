@@ -12,6 +12,10 @@ use InvalidArgumentException;
  */
 final readonly class EntityJson
 {
+    private function __construct()
+    {
+    }
+
     /**
      * @param array<string, scalar|array|null> $entityData
      * @throws InvalidArgumentException
