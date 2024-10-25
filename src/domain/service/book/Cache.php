@@ -8,6 +8,9 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\entity\Book;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\domain\service\book
+ */
 final readonly class Cache
 {
     public function __construct(

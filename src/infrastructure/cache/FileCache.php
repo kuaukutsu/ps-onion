@@ -99,18 +99,11 @@ final class FileCache implements CacheInterface
      */
     private function makeFilePath(string $key): string
     {
-        return $this->tmpdir . DIRECTORY_SEPARATOR . $this->generateFilename($key);
-    }
-
-    /**
-     * @param non-empty-string $key
-     * @return non-empty-string
-     */
-    private function generateFilename(string $key): string
-    {
         /**
          * @note https://php.watch/articles/php-hash-benchmark
          */
-        return hash('xxh3', strtolower($key));
+        return $this->tmpdir
+            . DIRECTORY_SEPARATOR
+            . hash('xxh3', strtolower($key));
     }
 }

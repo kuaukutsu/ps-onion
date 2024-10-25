@@ -55,7 +55,7 @@ final readonly class FileDataStorage
     public function read(): mixed
     {
         $data = @file_get_contents($this->filepath);
-        if ($data === false || $this->hasNotExpired($data) === false) {
+        if ($data === false || $this->hasTtlExpired($data) === false) {
             return false;
         }
 
@@ -78,7 +78,7 @@ final readonly class FileDataStorage
             return false;
         }
 
-        return $this->hasNotExpired($header);
+        return $this->hasTtlExpired($header);
     }
 
     public function delete(): bool
@@ -92,7 +92,7 @@ final readonly class FileDataStorage
             . str_pad((string)$expirationTimestamp, self::HEADER_TTL_SIZE);
     }
 
-    private function hasNotExpired(string $data): bool
+    private function hasTtlExpired(string $data): bool
     {
         $version = substr($data, 0, self::HEADER_VERSION_SIZE);
         if ($version === self::VERSION) {
