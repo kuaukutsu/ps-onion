@@ -86,10 +86,6 @@ final readonly class FileDataStorage
         return @unlink($this->filepath);
     }
 
-    /**
-     * 2 byte version
-     * 14 byte timestamp
-     */
     private function makeHeader(int $expirationTimestamp): string
     {
         return str_pad(self::VERSION, self::HEADER_VERSION_SIZE)
