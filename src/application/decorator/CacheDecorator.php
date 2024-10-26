@@ -15,7 +15,9 @@ final readonly class CacheDecorator implements CacheInterface
 
     public function __construct()
     {
-        $this->cache = new FileCache(sys_get_temp_dir());
+        $this->cache = new FileCache(
+            dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'cache'
+        );
     }
 
     public function get(string $key, mixed $default = null): mixed

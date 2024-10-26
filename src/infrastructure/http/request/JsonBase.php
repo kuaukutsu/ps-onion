@@ -17,6 +17,7 @@ final readonly class JsonBase implements HandlerInterface
         return $next(
             $request
                 ->withAddedHeader('Accept', 'application/json')
+                ->withAddedHeader('Cache-Control', 'no-cache')
                 ->withAddedHeader('X-Request-Id', $context->getUuid()),
             $context,
         );
