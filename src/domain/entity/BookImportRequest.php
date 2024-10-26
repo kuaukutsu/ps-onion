@@ -29,7 +29,7 @@ final readonly class BookImportRequest implements RequestEntity
     #[Override]
     public function getUri(): string
     {
-        return 'https://webhook.site/5669bc32-92b7-4b31-9bc7-203b9d11438d';
+        return 'https://webhook.site/8cabc407-a3f0-41b3-8f53-b5f1edcff4f0';
     }
 
     #[Override]
