@@ -13,10 +13,12 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use GuzzleHttp\Psr7\HttpFactory;
+use Psr\SimpleCache\CacheInterface;
 use Ramsey\Uuid\Rfc4122\Validator;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidFactoryInterface;
 use Ramsey\Uuid\Validator\ValidatorInterface;
+use kuaukutsu\ps\onion\application\decorator\CacheDecorator;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\application\decorator\GuzzleDecorator;
 use kuaukutsu\ps\onion\application\Bookshelf;
@@ -42,6 +44,7 @@ $container = new Container(
         StreamFactoryInterface::class => create(HttpFactory::class),
         UuidFactoryInterface::class => create(UuidFactory::class),
         ValidatorInterface::class => create(Validator::class),
+        CacheInterface::class => create(CacheDecorator::class),
         ClientInterface::class => autowire(GuzzleDecorator::class),
     ]
 );
@@ -55,7 +58,7 @@ try {
 }
 
 try {
-    $_test = $app->get('5669bc32-92b7-4b31-9bc7-203b9d11438d');
+    $_test = $app->get('8cabc407-a3f0-41b3-8f53-b5f1edcff4f0');
 } catch (ContainerExceptionInterface | RequestException | InvalidArgumentException $e) {
     echo $e->getMessage() . PHP_EOL;
     exit(-1);

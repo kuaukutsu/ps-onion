@@ -8,10 +8,7 @@ use Error;
 use Override;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use kuaukutsu\ps\onion\domain\exception\UnexpectedRequestException;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
 use kuaukutsu\ps\onion\domain\interface\ClientInterface;
@@ -22,13 +19,16 @@ use kuaukutsu\ps\onion\domain\interface\RequestException;
 use kuaukutsu\ps\onion\domain\interface\RequestHandler;
 use kuaukutsu\ps\onion\domain\interface\Response;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
+use kuaukutsu\ps\onion\infrastructure\http\request\Builder;
+use kuaukutsu\ps\onion\infrastructure\http\request\HandlerContainer;
+use kuaukutsu\ps\onion\infrastructure\http\request\JsonBase;
+use kuaukutsu\ps\onion\infrastructure\http\request\JsonBody;
 
 final readonly class HttpClient implements RequestHandler
 {
     public function __construct(
+        private Builder $requestBuilder,
         private ClientInterface $client,
-        private RequestFactoryInterface $requestFactory,
-        private StreamFactoryInterface $streamFactory,
     ) {
     }
 
@@ -41,14 +41,22 @@ final readonly class HttpClient implements RequestHandler
     #[Override]
     public function send(RequestEntity $requestEntity, RequestContext $context): Response
     {
-        $request = $this->isRequestHasBody($requestEntity)
-            ? $this->makePostRequest($requestEntity, $context)
-            : $this->makeRequest($requestEntity, $context);
+        $requestHandlers = [
+            new HandlerContainer(class: JsonBase::class),
+        ];
+        if ($this->isRequestHasBody($requestEntity)) {
+            $requestHandlers[] = new HandlerContainer(
+                class: JsonBody::class,
+                parameters: [
+                    'body' => $requestEntity->getBody(),
+                ]
+            );
+        }
 
+        $request = $this->requestBuilder->process($requestEntity, $context, $requestHandlers);
         $response = $this->client->send($request, $context);
 
-        // Exception handler: middleware
-        // prepare exception: GuzzleHttp\Exception
+        // response handler: middleware
         // rule exception: retry, logger
 
         try {
@@ -58,34 +66,6 @@ final readonly class HttpClient implements RequestHandler
         } catch (Error | StreamDecodeException $e) {
             throw new UnexpectedRequestException($request, $e);
         }
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    private function makeRequest(Request $request, RequestContext $context): RequestInterface
-    {
-        return $this->requestFactory
-            ->createRequest(
-                $request->getMethod(),
-                $request->getUri(),
-            )
-            ->withAddedHeader('Accept', 'application/json')
-            ->withAddedHeader('X-Request-Id', $context->getUuid());
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    private function makePostRequest(Request $request, RequestContext $context): RequestInterface
-    {
-        return $this->makeRequest($request, $context)
-            ->withAddedHeader('Content-Type', 'application/json')
-            ->withBody(
-                $this->streamFactory->createStream(
-                    $request->getBody()
-                )
-            );
     }
 
     private function isRequestHasBody(Request $request): bool

@@ -50,6 +50,7 @@ final readonly class BookRequest implements RequestEntity
                 [
                     'uuid' => $this->uuid,
                     'title' => 'Name Default',
+                    'author' => 'Author',
                 ]
             );
     }
