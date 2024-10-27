@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\http\request;
 
+use Override;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
@@ -19,6 +20,7 @@ final readonly class JsonBody implements HandlerInterface
     ) {
     }
 
+    #[Override]
     public function handle(RequestInterface $request, RequestContext $context, callable $next): RequestInterface
     {
         return $next(
