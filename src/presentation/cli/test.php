@@ -10,44 +10,14 @@ use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use GuzzleHttp\Psr7\HttpFactory;
-use Psr\SimpleCache\CacheInterface;
-use Ramsey\Uuid\Rfc4122\Validator;
-use Ramsey\Uuid\UuidFactory;
-use Ramsey\Uuid\UuidFactoryInterface;
-use Ramsey\Uuid\Validator\ValidatorInterface;
-use kuaukutsu\ps\onion\application\decorator\CacheDecorator;
-use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
-use kuaukutsu\ps\onion\application\decorator\GuzzleDecorator;
 use kuaukutsu\ps\onion\application\Bookshelf;
 use kuaukutsu\ps\onion\domain\entity\Book;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
-use kuaukutsu\ps\onion\domain\interface\ClientInterface;
-use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 
-use function DI\autowire;
-use function DI\create;
-use function DI\factory;
-
-require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
-
-$container = new Container(
-    [
-        ContainerInterface::class => factory(
-            static function (Container $container): ContainerInterface {
-                return new ContainerDecorator($container);
-            }
-        ),
-        RequestFactoryInterface::class => create(HttpFactory::class),
-        StreamFactoryInterface::class => create(HttpFactory::class),
-        UuidFactoryInterface::class => create(UuidFactory::class),
-        ValidatorInterface::class => create(Validator::class),
-        CacheInterface::class => create(CacheDecorator::class),
-        ClientInterface::class => autowire(GuzzleDecorator::class),
-    ]
-);
+/**
+ * @var Container $container
+ */
+$container = require __DIR__ . '/container.php';
 
 try {
     /** @var Bookshelf $app */
