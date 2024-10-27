@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\service\book;
 
-use InvalidArgumentException;
 use LogicException;
-use Psr\Container\ContainerExceptionInterface;
 use Ramsey\Uuid\UuidFactoryInterface;
 use kuaukutsu\ps\onion\domain\entity\Book;
 use kuaukutsu\ps\onion\domain\entity\BookData;
 use kuaukutsu\ps\onion\domain\entity\BookFindByPropertyRequest;
 use kuaukutsu\ps\onion\domain\entity\BookImportRequest;
 use kuaukutsu\ps\onion\domain\entity\BookRequest;
+use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerTracePreset;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 use kuaukutsu\ps\onion\infrastructure\http\HttpClient;
 use kuaukutsu\ps\onion\infrastructure\http\HttpContext;
 
@@ -26,13 +27,12 @@ final readonly class Repository
         private Cache $cache,
         private HttpClient $client,
         private UuidFactoryInterface $uuidFactory,
+        private LoggerInterface $logger,
     ) {
     }
 
     /**
      * @throws RequestException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      */
     public function get(string $uuid): Book
     {
@@ -43,6 +43,11 @@ final readonly class Repository
                 new HttpContext(),
             );
 
+        $this->logger->preset(
+            new LoggerTracePreset('Book', ['model' => $model]),
+            __METHOD__,
+        );
+
         $this->cache->set($cacheKey, $model);
         return $model;
     }
@@ -51,8 +56,6 @@ final readonly class Repository
      * @param non-empty-string $title
      * @param non-empty-string $author
      * @throws RequestException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      * @throws LogicException
      */
     public function import(string $title, string $author): Book
@@ -77,8 +80,6 @@ final readonly class Repository
     /**
      * @param non-empty-string $title
      * @param non-empty-string $author
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      * @throws LogicException
      * @psalm-internal kuaukutsu\ps\onion\domain\service\book
      */
@@ -92,7 +93,18 @@ final readonly class Repository
                     new BookFindByPropertyRequest(author: $author, title: $title),
                     new HttpContext(),
                 );
-        } catch (RequestException) {
+        } catch (RequestException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset(
+                    $exception,
+                    [
+                        'title' => $title,
+                        'author' => $author,
+                    ]
+                ),
+                __METHOD__,
+            );
+
             return null;
         }
 

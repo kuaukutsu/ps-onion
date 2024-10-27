@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\domain\entity;
 
 use Override;
+use InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\domain\service\serialize\EntityJson;
@@ -16,8 +17,14 @@ use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
  */
 final readonly class BookImportRequest implements RequestEntity
 {
-    public function __construct(private BookData $data)
+    private string $body;
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function __construct(BookData $data)
     {
+        $this->body = EntityJson::encode($data->toArray());
     }
 
     #[Override]
@@ -35,7 +42,7 @@ final readonly class BookImportRequest implements RequestEntity
     #[Override]
     public function getBody(): string
     {
-        return EntityJson::encode($this->data->toArray());
+        return $this->body;
     }
 
     #[Override]
@@ -44,7 +51,6 @@ final readonly class BookImportRequest implements RequestEntity
         return (new EntityResponse(Book::class))
             ->makeWithCamelCase(
                 $stream->decode(),
-                $this->data->toArray(),
             );
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\http\request;
 
+use Override;
 use Psr\Http\Message\RequestInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
 
@@ -12,6 +13,7 @@ use kuaukutsu\ps\onion\domain\interface\RequestContext;
  */
 final readonly class JsonBase implements HandlerInterface
 {
+    #[Override]
     public function handle(RequestInterface $request, RequestContext $context, callable $next): RequestInterface
     {
         return $next(

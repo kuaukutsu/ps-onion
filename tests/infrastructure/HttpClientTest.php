@@ -59,7 +59,7 @@ final class HttpClientTest extends TestCase
 }
 JSON;
 
-                        return new Response(200, [], $responseDataJson);
+                        return new Response(200, ['Content-Type' => ['application/json']], $responseDataJson);
                     }
                 };
             }

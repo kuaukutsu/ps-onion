@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application\decorator;
 
+use Override;
 use InvalidArgumentException;
 use DI\Container;
-use Override;
 use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 

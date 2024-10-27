@@ -9,7 +9,6 @@ use LogicException;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\application\Bookshelf;
 use kuaukutsu\ps\onion\domain\entity\Book;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
@@ -29,7 +28,7 @@ try {
 
 try {
     $_test = $app->get('8cabc407-a3f0-41b3-8f53-b5f1edcff4f0');
-} catch (ContainerExceptionInterface | RequestException | InvalidArgumentException $e) {
+} catch (RequestException | InvalidArgumentException $e) {
     echo $e->getMessage() . PHP_EOL;
     exit(-1);
 }
@@ -38,7 +37,7 @@ try {
 
 try {
     $test = $app->import('test', 'testov');
-} catch (ContainerExceptionInterface | RequestException | InvalidArgumentException | LogicException $e) {
+} catch (RequestException | InvalidArgumentException | LogicException $e) {
     echo $e->getMessage() . PHP_EOL;
     exit(-1);
 }

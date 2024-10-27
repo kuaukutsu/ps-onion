@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\infrastructure;
 
+use Override;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +20,7 @@ final class FileCacheTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
+    #[Override]
     public static function tearDownAfterClass(): void
     {
         $cache = self::get(CacheInterface::class);
