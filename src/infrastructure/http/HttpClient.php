@@ -78,13 +78,19 @@ final readonly class HttpClient implements RequestHandler
         };
     }
 
+    /**
+     * @throws StreamDecodeException
+     */
     private function makeStreamDecode(ResponseInterface $response): StreamDecode
     {
-        $headers = $response->getHeader('Content-Type');
+        $headerContentType = current($response->getHeader('Content-Type'));
 
-        return match (current($headers)) {
+        return match ($headerContentType) {
             'application/xml' => new StreamXml($response->getBody()),
-            default => new StreamJson($response->getBody()),
+            'application/json' => new StreamJson($response->getBody()),
+            default => throw new StreamDecodeException(
+                "Unsupported response content-type: $headerContentType"
+            ),
         };
     }
 }

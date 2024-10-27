@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\application\decorator;
 
 use Override;
+use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as PsrClientInterface;
@@ -22,16 +23,23 @@ use kuaukutsu\ps\onion\domain\interface\RequestContext;
  */
 final readonly class ClientDecorator implements ClientInterface
 {
+    private PsrClientInterface $client;
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws ContainerExceptionInterface
+     */
     public function __construct(
-        private ContainerInterface $container,
+        ContainerInterface $container,
     ) {
+        $this->client = $container->make(PsrClientInterface::class);
     }
 
     #[Override]
     public function send(RequestInterface $request, RequestContext $context): ResponseInterface
     {
         try {
-            $response = $this->make()->sendRequest($request);
+            $response = $this->client->sendRequest($request);
         } catch (ClientExceptionInterface $e) {
             throw new ConnectRequestException($request, $e);
         }
@@ -46,16 +54,5 @@ final readonly class ClientDecorator implements ClientInterface
         }
 
         return $response;
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     */
-    private function make(): PsrClientInterface
-    {
-        /**
-         * @var PsrClientInterface
-         */
-        return $this->container->get(PsrClientInterface::class);
     }
 }

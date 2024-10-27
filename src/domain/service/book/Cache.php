@@ -7,6 +7,8 @@ namespace kuaukutsu\ps\onion\domain\service\book;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\entity\Book;
+use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain\service\book
@@ -15,6 +17,7 @@ final readonly class Cache
 {
     public function __construct(
         private CacheInterface $cache,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -30,7 +33,12 @@ final readonly class Cache
     {
         try {
             $model = $this->cache->get($key);
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset($exception, ['key' => $key]),
+                __METHOD__,
+            );
+
             return null;
         }
 
@@ -47,7 +55,11 @@ final readonly class Cache
             if ($this->cache->has($key) === false) {
                 $this->cache->set($key, $book);
             }
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset($exception, ['key' => $key]),
+                __METHOD__,
+            );
         }
     }
 }

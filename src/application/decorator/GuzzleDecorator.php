@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\application\decorator;
 
 use Override;
+use InvalidArgumentException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
@@ -28,9 +29,16 @@ use kuaukutsu\ps\onion\domain\interface\RequestHttpContext;
  */
 final readonly class GuzzleDecorator implements ClientInterface
 {
+    private Client $client;
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws ContainerExceptionInterface
+     */
     public function __construct(
-        private ContainerInterface $container,
+        ContainerInterface $container,
     ) {
+        $this->client = $container->make(Client::class);
     }
 
     #[Override]
@@ -42,7 +50,7 @@ final readonly class GuzzleDecorator implements ClientInterface
         }
 
         try {
-            return $this->make()->send($request, $options);
+            return $this->client->send($request, $options);
         } catch (ClientException $e) {
             throw new ClientRequestException($request, $e->getResponse(), $e);
         } catch (ServerException $e) {
@@ -52,16 +60,5 @@ final readonly class GuzzleDecorator implements ClientInterface
         } catch (GuzzleException $e) {
             throw new UnexpectedRequestException($request, $e);
         }
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     */
-    private function make(): Client
-    {
-        /**
-         * @var Client
-         */
-        return $this->container->get(Client::class);
     }
 }

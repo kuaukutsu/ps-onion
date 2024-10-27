@@ -45,7 +45,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     #[Override]
     public function getUri(): string
     {
-        return 'https://webhook.site/?' . $this->query;
+        return 'https://webhook.site/8cabc407-a3f0-41b3-8f53-b5f1edcff4f0?' . $this->query;
     }
 
     /**
@@ -63,9 +63,6 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
         return (new EntityResponse(Book::class))
             ->makeWithCamelCase(
                 $stream->decode(),
-                [
-                    'title' => 'Name Default',
-                ]
             );
     }
 

@@ -13,7 +13,10 @@ use kuaukutsu\ps\onion\domain\entity\BookData;
 use kuaukutsu\ps\onion\domain\entity\BookFindByPropertyRequest;
 use kuaukutsu\ps\onion\domain\entity\BookImportRequest;
 use kuaukutsu\ps\onion\domain\entity\BookRequest;
+use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerTracePreset;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 use kuaukutsu\ps\onion\infrastructure\http\HttpClient;
 use kuaukutsu\ps\onion\infrastructure\http\HttpContext;
 
@@ -26,6 +29,7 @@ final readonly class Repository
         private Cache $cache,
         private HttpClient $client,
         private UuidFactoryInterface $uuidFactory,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -42,6 +46,11 @@ final readonly class Repository
                 new BookRequest($uuid),
                 new HttpContext(),
             );
+
+        $this->logger->preset(
+            new LoggerTracePreset('Book', ['model' => $model]),
+            __METHOD__,
+        );
 
         $this->cache->set($cacheKey, $model);
         return $model;
@@ -92,7 +101,18 @@ final readonly class Repository
                     new BookFindByPropertyRequest(author: $author, title: $title),
                     new HttpContext(),
                 );
-        } catch (RequestException) {
+        } catch (RequestException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset(
+                    $exception,
+                    [
+                        'title' => $title,
+                        'author' => $author,
+                    ]
+                ),
+                __METHOD__,
+            );
+
             return null;
         }
 

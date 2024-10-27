@@ -9,6 +9,9 @@ use Psr\SimpleCache\CacheInterface;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\application
+ */
 final readonly class CacheDecorator implements CacheInterface
 {
     private CacheInterface $cache;

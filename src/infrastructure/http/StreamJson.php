@@ -22,11 +22,16 @@ final readonly class StreamJson implements StreamDecode
     #[Override]
     public function decode(): array
     {
+        $body = trim((string)$this->stream);
+        if ($body === '' || $body === '{}') {
+            return [];
+        }
+
         try {
             /**
              * @var array<string, scalar|array|null>
              */
-            return json_decode((string)$this->stream, true, 512, JSON_THROW_ON_ERROR);
+            return json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         } catch (Throwable $e) {
             throw new StreamDecodeException($e->getMessage());
         }

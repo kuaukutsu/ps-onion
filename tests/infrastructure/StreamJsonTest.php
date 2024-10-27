@@ -45,11 +45,43 @@ JSON;
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testDecodeFailure(): void
+    public function testDecodeEmpty(): void
     {
         $streamCoder = new StreamJson(
             self::get(StreamFactoryInterface::class)
                 ->createStream(''),
+        );
+
+        $responseData = $streamCoder->decode();
+
+        self::assertIsArray($responseData);
+        self::assertEmpty($responseData);
+
+        $streamJson = <<<JSON
+{
+}
+JSON;
+
+        $streamCoder = new StreamJson(
+            self::get(StreamFactoryInterface::class)
+                ->createStream($streamJson),
+        );
+
+        $responseData = $streamCoder->decode();
+
+        self::assertIsArray($responseData);
+        self::assertEmpty($responseData);
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testDecodeFailure(): void
+    {
+        $streamCoder = new StreamJson(
+            self::get(StreamFactoryInterface::class)
+                ->createStream('aaaa'),
         );
 
         $this->expectException(StreamDecodeException::class);
