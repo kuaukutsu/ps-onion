@@ -26,6 +26,11 @@
 - нужно ли разбивать внутреннюю структуру каталогов domain/service на use cases?
 - куда положить хелперы, например EntityResponse? верно ли что это domain/service?
 
+### Плюсы
+
++ domain ничего не знает об application, что отлично инкапсулирует логику от окружения;
++ infrastructure так же в достаточной степени изолирована от application, через decorator;
+
 ## Docker
 
 ```shell
