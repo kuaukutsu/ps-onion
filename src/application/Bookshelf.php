@@ -6,7 +6,6 @@ namespace kuaukutsu\ps\onion\application;
 
 use InvalidArgumentException;
 use LogicException;
-use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\entity\Book;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
 use kuaukutsu\ps\onion\domain\service\book\UuidValidator;
@@ -25,7 +24,6 @@ final readonly class Bookshelf
 
     /**
      * @throws RequestException
-     * @throws ContainerExceptionInterface
      * @throws InvalidArgumentException
      */
     public function get(string $uuid): Book
@@ -36,8 +34,6 @@ final readonly class Bookshelf
 
     /**
      * @throws RequestException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      * @throws LogicException
      */
     public function import(string $title, string $author): Book

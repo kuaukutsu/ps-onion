@@ -6,8 +6,6 @@ namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use Error;
 use Override;
-use InvalidArgumentException;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use kuaukutsu\ps\onion\domain\exception\UnexpectedRequestException;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
@@ -35,8 +33,6 @@ final readonly class HttpClient implements RequestHandler
     /**
      * @psalm-internal kuaukutsu\ps\onion\domain\service
      * @throws RequestException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      */
     #[Override]
     public function send(RequestEntity $requestEntity, RequestContext $context): Response

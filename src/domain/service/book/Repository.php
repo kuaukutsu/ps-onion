@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\service\book;
 
-use InvalidArgumentException;
 use LogicException;
-use Psr\Container\ContainerExceptionInterface;
 use Ramsey\Uuid\UuidFactoryInterface;
 use kuaukutsu\ps\onion\domain\entity\Book;
 use kuaukutsu\ps\onion\domain\entity\BookData;
@@ -35,8 +33,6 @@ final readonly class Repository
 
     /**
      * @throws RequestException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      */
     public function get(string $uuid): Book
     {
@@ -60,8 +56,6 @@ final readonly class Repository
      * @param non-empty-string $title
      * @param non-empty-string $author
      * @throws RequestException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      * @throws LogicException
      */
     public function import(string $title, string $author): Book
@@ -86,8 +80,6 @@ final readonly class Repository
     /**
      * @param non-empty-string $title
      * @param non-empty-string $author
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      * @throws LogicException
      * @psalm-internal kuaukutsu\ps\onion\domain\service\book
      */
