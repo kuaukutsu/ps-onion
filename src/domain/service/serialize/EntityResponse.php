@@ -8,10 +8,10 @@ use Error;
 use TypeError;
 use ReflectionClass;
 use ReflectionException;
-use kuaukutsu\ps\onion\domain\interface\Response;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
 /**
- * @template TResponse of Response
+ * @template TResponse of EntityDto
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
 final readonly class EntityResponse
@@ -32,7 +32,7 @@ final readonly class EntityResponse
      * @noinspection PhpDocSignatureInspection
      * @psalm-internal kuaukutsu\ps\onion\domain\entity
      */
-    public function makeWithCamelCase(array $data, array $default = []): Response
+    public function makeWithCamelCase(array $data, array $default = []): EntityDto
     {
         if ($default !== []) {
             $data = [...$default, ...$data];

@@ -44,7 +44,7 @@ final readonly class Repository
             );
 
         $this->logger->preset(
-            new LoggerTracePreset('Book', ['model' => $model]),
+            new LoggerTracePreset('Book', ['book' => $model]),
             __METHOD__,
         );
 

@@ -71,4 +71,4 @@ auto-repair:
 run:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		php ./src/presentation/cli/test.php
+		php ./src/presentation/cli/testa.php

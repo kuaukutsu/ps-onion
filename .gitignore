@@ -18,6 +18,7 @@ Thumbs.db
 # composer vendor dir
 /vendor
 /runtime
+/src/runtime
 
 # phpunit itself is not needed
 phpunit.phar
