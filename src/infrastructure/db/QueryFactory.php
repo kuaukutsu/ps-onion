@@ -20,7 +20,7 @@ final readonly class QueryFactory
     /**
      * @throws DbException
      */
-    public function makeQuery(string $connectionIdentity): Query
+    public function make(string $connectionIdentity): Query
     {
         $connection = $this->map->get($connectionIdentity);
         return match ($connection->getDriver()) {

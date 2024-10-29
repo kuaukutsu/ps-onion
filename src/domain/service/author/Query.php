@@ -107,7 +107,7 @@ SQL;
     private function fetchOne(string $query, array $bindValues): array
     {
         return $this->queryFactory
-            ->makeQuery(Author::class)
+            ->make(Author::class)
             ->fetch($query, $bindValues);
     }
 
@@ -121,7 +121,7 @@ SQL;
     private function fetchAll(string $query, array $bindValues): array
     {
         return $this->queryFactory
-            ->makeQuery(Author::class)
+            ->make(Author::class)
             ->fetchAll($query, $bindValues);
     }
 }
