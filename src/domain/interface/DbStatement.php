@@ -6,10 +6,7 @@ namespace kuaukutsu\ps\onion\domain\interface;
 
 interface DbStatement
 {
-    /**
-     * @param array<string, scalar|array|null> $bindValues
-     */
-    public function bindValues(array $bindValues): void;
+    public function bindValue(string $param, mixed $value, int $type): bool;
 
     public function execute(): bool;
 

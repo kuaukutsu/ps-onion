@@ -6,6 +6,8 @@ namespace kuaukutsu\ps\onion\domain\interface;
 
 interface DbConnection
 {
+    public function getDriver(): DbConnectionDriver;
+
     /**
      * @param non-empty-string $query
      */

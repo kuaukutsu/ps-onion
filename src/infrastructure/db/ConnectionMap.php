@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\infrastructure\db;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\interface\DbConnection;
 
-final class ConnectionPool
+final class ConnectionMap
 {
     /**
      * @var array<string, ConnectionContainer>
@@ -22,13 +22,13 @@ final class ConnectionPool
     /**
      * @throws DbException
      */
-    public function get(string $key, bool $reconnect = false): DbConnection
+    public function get(string $identity, bool $reset = false): DbConnection
     {
-        if ($this->map === [] || array_key_exists($key, $this->map) === false) {
-            throw new DbException("Connection $key does not exist.");
+        if ($this->map === [] || array_key_exists($identity, $this->map) === false) {
+            throw new DbException("Connection $identity does not exist.");
         }
 
-        return $this->makeConnection($this->map[$key], $reconnect);
+        return $this->makeConnection($this->map[$identity], $reset);
     }
 
     public function push(ConnectionContainer $connection): void
@@ -36,12 +36,18 @@ final class ConnectionPool
         $this->map[$connection->identity()] = $connection;
     }
 
+    public function clear(): void
+    {
+        $this->map = [];
+        $this->connections = [];
+    }
+
     /**
      * @throws DbException
      */
-    private function makeConnection(ConnectionContainer $connection, bool $reconnect): DbConnection
+    private function makeConnection(ConnectionContainer $connection, bool $reset): DbConnection
     {
-        if ($reconnect || array_key_exists($connection->uniqueKey(), $this->connections) === false) {
+        if ($reset || array_key_exists($connection->uniqueKey(), $this->connections) === false) {
             $this->connections[$connection->uniqueKey()] = $connection->makeConnection();
         }
 

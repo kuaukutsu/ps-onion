@@ -6,19 +6,20 @@ namespace kuaukutsu\ps\onion\tests\infrastructure\db;
 
 use DI\DependencyException;
 use DI\NotFoundException;
-use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\interface\DbConnection;
 use kuaukutsu\ps\onion\infrastructure\db\ConnectionContainer;
-use kuaukutsu\ps\onion\infrastructure\db\ConnectionPool;
-use kuaukutsu\ps\onion\infrastructure\pdo\Connection;
+use kuaukutsu\ps\onion\infrastructure\db\ConnectionMap;
+use kuaukutsu\ps\onion\infrastructure\db\pdo\Connection;
 use kuaukutsu\ps\onion\tests\Container;
+use Override;
+use PHPUnit\Framework\TestCase;
 
 final class ConnectionPoolTest extends TestCase
 {
     use Container;
 
-    private ConnectionPool $pool;
+    private ConnectionMap $pool;
 
     public function testSuccess(): void
     {
@@ -35,6 +36,15 @@ final class ConnectionPoolTest extends TestCase
         $this->pool->get('fail');
     }
 
+
+    public function testReset(): void
+    {
+        $this->expectException(DbException::class);
+
+        $this->pool->clear();
+        $this->pool->get('test');
+    }
+
     public function testException(): void
     {
         $this->expectException(DbException::class);
@@ -46,11 +56,12 @@ final class ConnectionPoolTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->pool = self::get(ConnectionPool::class);
+        $this->pool = self::get(ConnectionMap::class);
         $this->pool->push(
             new class implements ConnectionContainer {
                 public function identity(): string
