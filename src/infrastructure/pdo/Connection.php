@@ -17,10 +17,14 @@ final readonly class Connection implements DbConnection
     /**
      * @throws DbException
      */
-    public function __construct(string $dsn)
-    {
+    public function __construct(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        array $options = [],
+    ) {
         try {
-            $this->connection = new PDO($dsn);
+            $this->connection = new PDO($dsn, $username, $password, $options);
         } catch (PDOException $e) {
             throw new DbException($e->getMessage(), (int)$e->getCode(), $e);
         }

@@ -26,9 +26,6 @@ final readonly class Uuid
      */
     public function toValue(): string
     {
-        /**
-         * @var non-empty-string
-         */
         return $this->uuid;
     }
 
@@ -37,7 +34,7 @@ final readonly class Uuid
      */
     public function toConditions(): array
     {
-        return ['uuid' => $this->uuid];
+        return ['uuid' => $this->toValue()];
     }
 
     /**
