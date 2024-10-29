@@ -15,6 +15,7 @@
   },
   "require": {
     "php": ">=8.3",
+    "ext-pdo": "*",
     "ext-sqlite3": "*",
     "guzzlehttp/guzzle": "^7.1",
     "monolog/monolog": "^3.7",

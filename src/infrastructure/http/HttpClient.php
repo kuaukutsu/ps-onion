@@ -53,7 +53,6 @@ final readonly class HttpClient implements RequestHandler
         $response = $this->client->send($request, $context);
 
         // response handler: middleware
-        // rule exception: retry, logger
 
         try {
             return $requestEntity->makeResponse(
@@ -84,6 +83,7 @@ final readonly class HttpClient implements RequestHandler
         return match ($headerContentType) {
             'application/xml' => new StreamXml($response->getBody()),
             'application/json' => new StreamJson($response->getBody()),
+            'text/html' => new StreamHtml($response->getBody()),
             default => throw new StreamDecodeException(
                 "Unsupported response content-type: $headerContentType"
             ),

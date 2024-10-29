@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\infrastructure;
+namespace kuaukutsu\ps\onion\tests\infrastructure\cache;
 
 use Override;
 use DI\DependencyException;
@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use kuaukutsu\ps\onion\tests\Container;
+use kuaukutsu\ps\onion\tests\infrastructure\http\RequestContextStub;
 
 final class FileCacheTest extends TestCase
 {

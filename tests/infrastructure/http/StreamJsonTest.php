@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\infrastructure;
+namespace kuaukutsu\ps\onion\tests\infrastructure\http;
 
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\StreamFactoryInterface;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Psr\Http\Message\StreamFactoryInterface;
-use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\tests\Container;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
 use kuaukutsu\ps\onion\infrastructure\http\StreamJson;
+use kuaukutsu\ps\onion\tests\Container;
 
 final class StreamJsonTest extends TestCase
 {

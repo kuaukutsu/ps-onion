@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\infrastructure;
+namespace kuaukutsu\ps\onion\tests\infrastructure\http;
 
 use Override;
 use PHPUnit\Framework\TestCase;
