@@ -12,6 +12,9 @@ use kuaukutsu\ps\onion\domain\interface\DbConnection;
 use kuaukutsu\ps\onion\domain\interface\DbConnectionDriver;
 use kuaukutsu\ps\onion\domain\interface\DbStatement;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure\db
+ */
 final readonly class Connection implements DbConnection
 {
     private PDO $connection;
@@ -19,6 +22,10 @@ final readonly class Connection implements DbConnection
     private DbConnectionDriver $driver;
 
     /**
+     * @param non-empty-string $dsn
+     * @param non-empty-string|null $username
+     * @param non-empty-string|null $password
+     * @param array<string, string|int> $options
      * @throws DbException
      */
     public function __construct(

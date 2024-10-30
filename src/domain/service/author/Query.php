@@ -47,7 +47,9 @@ final readonly class Query
 SELECT * FROM author WHERE uuid = :uuid
 SQL;
 
-        $data = $this->fetchOne($query, $pk->toConditions());
+        $data = $this->queryFactory
+            ->make(Author::class)
+            ->fetch($query, $pk->toConditions());
         if ($data === []) {
             return null;
         }
@@ -77,7 +79,9 @@ SQL;
 SELECT * FROM author WHERE $conditions;
 SQL;
 
-        $data = $this->fetchAll($query, $params);
+        $data = $this->queryFactory
+            ->make(Author::class)
+            ->fetchAll($query, $params);
         if ($data === []) {
             return [];
         }
@@ -95,33 +99,5 @@ SQL;
         }
 
         return $list;
-    }
-
-    /**
-     * @param non-empty-string $query
-     * @param array<string, scalar> $bindValues
-     * @return array<string, mixed>
-     * @throws DbException connection failed.
-     * @throws DbStatementException query failed.
-     */
-    private function fetchOne(string $query, array $bindValues): array
-    {
-        return $this->queryFactory
-            ->make(Author::class)
-            ->fetch($query, $bindValues);
-    }
-
-    /**
-     * @param non-empty-string $query
-     * @param array<string, scalar> $bindValues
-     * @return array<array<string, mixed>>
-     * @throws DbException connection failed.
-     * @throws DbStatementException query failed.
-     */
-    private function fetchAll(string $query, array $bindValues): array
-    {
-        return $this->queryFactory
-            ->make(Author::class)
-            ->fetchAll($query, $bindValues);
     }
 }

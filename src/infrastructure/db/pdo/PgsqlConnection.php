@@ -9,6 +9,9 @@ use kuaukutsu\ps\onion\domain\interface\DbConnection;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\infrastructure\db\ConnectionContainer;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\domain\service
+ */
 final readonly class PgsqlConnection implements ConnectionContainer
 {
     /**
@@ -16,6 +19,7 @@ final readonly class PgsqlConnection implements ConnectionContainer
      * @param non-empty-string $dsn
      * @param non-empty-string $username
      * @param non-empty-string $password
+     * @param array<string, string|int> $options
      */
     public function __construct(
         private string $key,

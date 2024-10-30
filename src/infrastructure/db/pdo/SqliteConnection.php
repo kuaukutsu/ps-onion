@@ -9,11 +9,15 @@ use kuaukutsu\ps\onion\domain\interface\DbConnection;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\infrastructure\db\ConnectionContainer;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\domain\service
+ */
 final readonly class SqliteConnection implements ConnectionContainer
 {
     /**
      * @param class-string<EntityDto> $key
      * @param non-empty-string $dsn
+     * @param array<string, string|int> $options
      */
     public function __construct(
         private string $key,

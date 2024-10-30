@@ -9,6 +9,9 @@ use PDO;
 use PDOStatement;
 use kuaukutsu\ps\onion\domain\interface\DbStatement;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure\db
+ */
 final readonly class Statement implements DbStatement
 {
     public function __construct(private PDOStatement $statement)

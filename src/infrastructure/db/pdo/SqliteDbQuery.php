@@ -8,10 +8,13 @@ use Override;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\domain\interface\DbConnection;
+use kuaukutsu\ps\onion\domain\interface\DbQuery;
 use kuaukutsu\ps\onion\domain\interface\DbStatement;
-use kuaukutsu\ps\onion\infrastructure\db\Query;
 
-final readonly class SqliteQuery implements Query
+/**
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure\db
+ */
+final readonly class SqliteDbQuery implements DbQuery
 {
     public function __construct(private DbConnection $connection)
     {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\infrastructure\db;
+namespace kuaukutsu\ps\onion\domain\interface;
 
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 
-interface Query
+interface DbQuery
 {
     /**
      * @param non-empty-string $query
