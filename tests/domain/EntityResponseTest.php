@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\domain;
 
-use Error;
 use TypeError;
 use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
 
 final class EntityResponseTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $entityResponse = new EntityResponse(EntityStub::class);
+        $entityResponse = new EntityMapper(EntityStub::class);
         $entity = $entityResponse->makeWithCamelCase(
             [
                 'name' => 'John',
-                'object' => new EntityStub(name: 'Nested'),
+                'object' => [
+                    'name' => 'Nested',
+                ],
             ]
         );
 
@@ -40,7 +41,7 @@ final class EntityResponseTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $entityResponse = new EntityResponse(EntityStub::class);
+        $entityResponse = new EntityMapper(EntityStub::class);
         $entityResponse->makeWithCamelCase(
             [
             ]
@@ -49,9 +50,9 @@ final class EntityResponseTest extends TestCase
 
     public function testFailureArgumentName(): void
     {
-        $this->expectException(Error::class);
+        $this->expectException(TypeError::class);
 
-        $entityResponse = new EntityResponse(EntityStub::class);
+        $entityResponse = new EntityMapper(EntityStub::class);
         $entityResponse->makeWithCamelCase(
             [
                 'name2' => 'John',

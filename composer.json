@@ -25,7 +25,8 @@
     "psr/http-message": "^2.0",
     "psr/log": "^3.0",
     "psr/simple-cache": "^3.0",
-    "ramsey/uuid": "^4.7"
+    "ramsey/uuid": "^4.7",
+    "type-lang/mapper": "^0.1"
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.1",
