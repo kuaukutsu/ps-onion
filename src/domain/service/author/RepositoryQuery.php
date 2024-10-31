@@ -9,10 +9,10 @@ use kuaukutsu\ps\onion\domain\entity\Author;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
 use kuaukutsu\ps\onion\infrastructure\db\QueryFactory;
 
-final readonly class Query
+final readonly class RepositoryQuery
 {
     public function __construct(private QueryFactory $queryFactory)
     {
@@ -54,7 +54,7 @@ SQL;
             return null;
         }
 
-        return (new EntityResponse(Author::class))
+        return (new EntityMapper(Author::class))
             ->makeWithCamelCase($data);
     }
 
@@ -89,7 +89,7 @@ SQL;
         $list = [];
         foreach ($data as $item) {
             try {
-                $model = (new EntityResponse(Author::class))
+                $model = (new EntityMapper(Author::class))
                     ->makeWithCamelCase($item);
             } catch (Error) {
                 continue;

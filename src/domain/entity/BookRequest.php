@@ -8,7 +8,7 @@ use Override;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
 
 /**
  * @implements RequestEntity<Book>
@@ -44,7 +44,7 @@ final readonly class BookRequest implements RequestEntity
     #[Override]
     public function makeResponse(StreamDecode $stream): Book
     {
-        return (new EntityResponse(Book::class))
+        return (new EntityMapper(Book::class))
             ->makeWithCamelCase(
                 $stream->decode(),
                 [

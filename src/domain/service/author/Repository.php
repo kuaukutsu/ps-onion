@@ -20,7 +20,7 @@ final readonly class Repository
     public function __construct(
         Application $application,
         ConnectionMap $connectionMap,
-        private Query $query,
+        private RepositoryQuery $query,
         private LoggerInterface $logger,
     ) {
         $connectionMap->push(

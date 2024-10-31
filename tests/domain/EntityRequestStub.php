@@ -8,7 +8,7 @@ use Override;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\Response;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityResponse;
+use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
 
 /**
  * @implements RequestEntity<EntityStub>
@@ -36,7 +36,7 @@ final readonly class EntityRequestStub implements RequestEntity
     #[Override]
     public function makeResponse(StreamDecode $stream): Response
     {
-        return (new EntityResponse(EntityStub::class))
+        return (new EntityMapper(EntityStub::class))
             ->makeWithCamelCase(
                 $stream->decode()
             );

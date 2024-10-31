@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\service\serialize;
 
-use Error;
 use TypeError;
-use ReflectionClass;
-use ReflectionException;
+use TypeLang\Mapper\Exception\MapperExceptionInterface;
+use TypeLang\Mapper\Mapper;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
 /**
  * @template TResponse of EntityDto
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
-final readonly class EntityResponse
+final readonly class EntityMapper
 {
     /**
      * @param class-string<TResponse> $entityClass
@@ -27,10 +26,8 @@ final readonly class EntityResponse
      * @param array<string, mixed> $data
      * @param array<string, mixed> $default
      * @return TResponse
-     * @throws Error Unknown named parameter
-     * @throws TypeError
+     * @throws TypeError Unknown named parameter
      * @noinspection PhpDocSignatureInspection
-     * @psalm-internal kuaukutsu\ps\onion\domain\entity
      */
     public function makeWithCamelCase(array $data, array $default = []): EntityDto
     {
@@ -47,9 +44,9 @@ final readonly class EntityResponse
             /**
              * @var TResponse
              */
-            return (new ReflectionClass($this->entityClass))->newInstanceArgs($arguments);
-        } catch (ReflectionException $exception) {
-            throw new TypeError(message: $exception->getMessage(), previous: $exception);
+            return (new Mapper())->denormalize($arguments, $this->entityClass);
+        } catch (MapperExceptionInterface $exception) {
+            throw new TypeError($exception->getMessage(), 0, $exception);
         }
     }
 
