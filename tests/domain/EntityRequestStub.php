@@ -8,7 +8,7 @@ use Override;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\Response;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
+use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
  * @implements RequestEntity<EntityStub>

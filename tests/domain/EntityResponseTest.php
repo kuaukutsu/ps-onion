@@ -6,7 +6,7 @@ namespace kuaukutsu\ps\onion\tests\domain;
 
 use TypeError;
 use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
+use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 final class EntityResponseTest extends TestCase
 {

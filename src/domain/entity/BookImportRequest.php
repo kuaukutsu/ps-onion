@@ -8,8 +8,8 @@ use Override;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityJson;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
+use kuaukutsu\ps\onion\infrastructure\serialize\EntityJson;
+use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
  * @implements RequestEntity<Book>

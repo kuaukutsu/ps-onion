@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\service\serialize;
+namespace kuaukutsu\ps\onion\infrastructure\serialize;
 
 use TypeError;
 use TypeLang\Mapper\Exception\MapperExceptionInterface;

@@ -9,7 +9,7 @@ use LogicException;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
+use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
  * @implements RequestEntity<Book>

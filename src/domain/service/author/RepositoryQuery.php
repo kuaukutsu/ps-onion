@@ -9,8 +9,8 @@ use kuaukutsu\ps\onion\domain\entity\Author;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
-use kuaukutsu\ps\onion\domain\service\serialize\EntityMapper;
 use kuaukutsu\ps\onion\infrastructure\db\QueryFactory;
+use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 final readonly class RepositoryQuery
 {
