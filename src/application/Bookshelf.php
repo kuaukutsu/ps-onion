@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
-use InvalidArgumentException;
 use LogicException;
+use InvalidArgumentException;
+use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\Book;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
-use kuaukutsu\ps\onion\domain\service\book\UuidValidator;
 use kuaukutsu\ps\onion\domain\service\book\Repository;
 
 /**

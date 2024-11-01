@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\service\book;
+namespace kuaukutsu\ps\onion\application\validator;
 
 use InvalidArgumentException;
 use Ramsey\Uuid\Validator\ValidatorInterface;
