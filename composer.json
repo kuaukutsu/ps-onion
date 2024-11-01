@@ -3,6 +3,7 @@
   "description": "Project Structure: onion",
   "license": "MIT",
   "type": "library",
+  "version": "0.0.1",
   "authors": [
     {
       "name": "Dmitriy Krivopalov",

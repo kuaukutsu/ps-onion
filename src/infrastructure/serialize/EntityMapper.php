@@ -50,6 +50,9 @@ final readonly class EntityMapper
         }
     }
 
+    /**
+     * @psalm-internal kuaukutsu\ps\onion\infrastructure\serialize
+     */
     private function toCamelCase(string $variableName): string
     {
         $upper = static fn(
