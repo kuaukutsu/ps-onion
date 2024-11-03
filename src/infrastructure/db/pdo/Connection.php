@@ -47,6 +47,7 @@ final readonly class Connection implements DbConnection
         };
     }
 
+    #[Override]
     public function getDriver(): DbConnectionDriver
     {
         return $this->driver;

@@ -14,7 +14,6 @@ use kuaukutsu\ps\onion\domain\interface\Request;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
-use kuaukutsu\ps\onion\domain\interface\RequestHandler;
 use kuaukutsu\ps\onion\domain\interface\Response;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\http\request\Builder;
@@ -22,7 +21,7 @@ use kuaukutsu\ps\onion\infrastructure\http\request\HandlerContainer;
 use kuaukutsu\ps\onion\infrastructure\http\request\JsonBase;
 use kuaukutsu\ps\onion\infrastructure\http\request\JsonBody;
 
-final readonly class HttpClient implements RequestHandler
+final readonly class HttpClient
 {
     public function __construct(
         private Builder $requestBuilder,
