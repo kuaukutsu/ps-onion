@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\domain\entity;
 
 use Override;
-use kuaukutsu\ps\onion\domain\interface\EntityDto;
+use kuaukutsu\ps\onion\domain\interface\Entity;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
-final readonly class BookData implements EntityDto
+final readonly class BookData implements Entity
 {
     public function __construct(
         private string $uuid,

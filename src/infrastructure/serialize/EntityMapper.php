@@ -7,10 +7,10 @@ namespace kuaukutsu\ps\onion\infrastructure\serialize;
 use TypeError;
 use TypeLang\Mapper\Exception\MapperExceptionInterface;
 use TypeLang\Mapper\Mapper;
-use kuaukutsu\ps\onion\domain\interface\EntityDto;
+use kuaukutsu\ps\onion\domain\interface\Entity;
 
 /**
- * @template TResponse of EntityDto
+ * @template TResponse of Entity
  * @psalm-internal kuaukutsu\ps\onion\domain
  */
 final readonly class EntityMapper
@@ -29,7 +29,7 @@ final readonly class EntityMapper
      * @throws TypeError Unknown named parameter
      * @noinspection PhpDocSignatureInspection
      */
-    public function makeWithCamelCase(array $data, array $default = []): EntityDto
+    public function makeWithCamelCase(array $data, array $default = []): Entity
     {
         if ($default !== []) {
             $data = [...$default, ...$data];
