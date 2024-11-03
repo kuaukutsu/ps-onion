@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\db\pdo;
 
 use Override;
-use kuaukutsu\ps\onion\domain\interface\DbConnection;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
-use kuaukutsu\ps\onion\infrastructure\db\ConnectionContainer;
+use kuaukutsu\ps\onion\infrastructure\db\DbConnectionContainer;
+use kuaukutsu\ps\onion\infrastructure\db\DbConnection;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain\service
  */
-final readonly class PgsqlConnection implements ConnectionContainer
+final readonly class PgsqlConnection implements DbConnectionContainer
 {
     /**
      * @param class-string<EntityDto> $key

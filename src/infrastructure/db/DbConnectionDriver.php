@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\interface;
+namespace kuaukutsu\ps\onion\infrastructure\db;
 
 /**
  * @link https://www.php.net/manual/en/pdo.drivers.php
