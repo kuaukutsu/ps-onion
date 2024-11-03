@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use Error;
-use Override;
 use Psr\Http\Message\ResponseInterface;
 use kuaukutsu\ps\onion\domain\exception\UnexpectedRequestException;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
@@ -30,10 +29,12 @@ final readonly class HttpClient
     }
 
     /**
-     * @psalm-internal kuaukutsu\ps\onion\domain\service
+     * @template TResponse of Response
+     * @param RequestEntity<TResponse> $requestEntity
+     * @return TResponse
      * @throws RequestException
+     * @noinspection PhpDocSignatureInspection
      */
-    #[Override]
     public function send(RequestEntity $requestEntity, RequestContext $context): Response
     {
         $requestHandlers = [
