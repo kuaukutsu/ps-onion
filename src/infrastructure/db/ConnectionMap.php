@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\db;
 
 use kuaukutsu\ps\onion\domain\exception\DbException;
-use kuaukutsu\ps\onion\domain\interface\DbConnection;
 
 final class ConnectionMap
 {
     /**
-     * @var array<string, ConnectionContainer>
+     * @var array<string, DbConnectionContainer>
      */
     private array $map = [];
 
@@ -31,7 +30,7 @@ final class ConnectionMap
         return $this->makeConnection($this->map[$identity], $reset);
     }
 
-    public function push(ConnectionContainer $connection): void
+    public function push(DbConnectionContainer $connection): void
     {
         $this->map[$connection->identity()] = $connection;
     }
@@ -45,7 +44,7 @@ final class ConnectionMap
     /**
      * @throws DbException
      */
-    private function makeConnection(ConnectionContainer $connection, bool $reset): DbConnection
+    private function makeConnection(DbConnectionContainer $connection, bool $reset): DbConnection
     {
         if ($reset || array_key_exists($connection->uniqueKey(), $this->connections) === false) {
             $this->connections[$connection->uniqueKey()] = $connection->makeConnection();

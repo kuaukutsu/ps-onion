@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\infrastructure\db\pdo;
 use Override;
 use PDO;
 use PDOStatement;
-use kuaukutsu\ps\onion\domain\interface\DbStatement;
+use kuaukutsu\ps\onion\infrastructure\db\DbStatement;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\db

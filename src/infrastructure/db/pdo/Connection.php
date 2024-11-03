@@ -8,9 +8,9 @@ use Override;
 use PDO;
 use PDOException;
 use kuaukutsu\ps\onion\domain\exception\DbException;
-use kuaukutsu\ps\onion\domain\interface\DbConnection;
-use kuaukutsu\ps\onion\domain\interface\DbConnectionDriver;
-use kuaukutsu\ps\onion\domain\interface\DbStatement;
+use kuaukutsu\ps\onion\infrastructure\db\DbConnection;
+use kuaukutsu\ps\onion\infrastructure\db\DbConnectionDriver;
+use kuaukutsu\ps\onion\infrastructure\db\DbStatement;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\db
@@ -47,6 +47,7 @@ final readonly class Connection implements DbConnection
         };
     }
 
+    #[Override]
     public function getDriver(): DbConnectionDriver
     {
         return $this->driver;

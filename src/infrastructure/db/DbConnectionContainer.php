@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\db;
 
 use kuaukutsu\ps\onion\domain\exception\DbException;
-use kuaukutsu\ps\onion\domain\interface\DbConnection;
 
-interface ConnectionContainer
+interface DbConnectionContainer
 {
     /**
      * @return non-empty-string

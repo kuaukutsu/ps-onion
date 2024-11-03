@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\db;
 
 use kuaukutsu\ps\onion\domain\exception\DbException;
-use kuaukutsu\ps\onion\domain\interface\DbConnectionDriver;
-use kuaukutsu\ps\onion\domain\interface\DbQuery;
-use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteDbQuery;
+use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteQuery;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\domain\service
@@ -25,7 +23,7 @@ final readonly class QueryFactory
     {
         $connection = $this->map->get($connectionIdentity);
         return match ($connection->getDriver()) {
-            DbConnectionDriver::PDO_SQLITE => new SqliteDbQuery($connection),
+            DbConnectionDriver::PDO_SQLITE => new SqliteQuery($connection),
             default => throw new DbException(
                 "Connection driver '{$connection->getDriver()->value}' not supported.",
             )
