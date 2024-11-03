@@ -6,7 +6,7 @@ namespace kuaukutsu\ps\onion\tests\domain;
 
 use Override;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
-use kuaukutsu\ps\onion\domain\interface\Response;
+use kuaukutsu\ps\onion\domain\interface\Entity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
@@ -34,7 +34,7 @@ final readonly class EntityRequestStub implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): Response
+    public function makeResponse(StreamDecode $stream): Entity
     {
         return (new EntityMapper(EntityStub::class))
             ->makeWithCamelCase(

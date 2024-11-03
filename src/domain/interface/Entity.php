@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\domain\interface;
 /**
  * @readonly
  */
-interface EntityDto
+interface Entity
 {
     /**
      * @return array<string, scalar|array|null>
