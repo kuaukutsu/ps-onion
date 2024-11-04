@@ -7,6 +7,9 @@ namespace kuaukutsu\ps\onion\application\validator;
 use InvalidArgumentException;
 use Ramsey\Uuid\Validator\ValidatorInterface;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\application
+ */
 final readonly class UuidValidator
 {
     public function __construct(

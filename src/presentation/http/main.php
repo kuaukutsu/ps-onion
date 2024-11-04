@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\presentation\cli;
 use InvalidArgumentException;
 use DI\Container;
 use DI\Definition\Helper\DefinitionHelper;
-use kuaukutsu\ps\onion\application\console\Application;
+use kuaukutsu\ps\onion\application\web\Application;
 
 /**
  * @var array<string, DefinitionHelper> $definitions
@@ -21,4 +21,4 @@ try {
     exit(-1);
 }
 
-exit($app->run());
+$app->run();

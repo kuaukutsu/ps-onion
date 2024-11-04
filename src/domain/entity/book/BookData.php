@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\entity\book;
 
+use Override;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
 final readonly class BookData implements EntityDto
@@ -15,6 +16,7 @@ final readonly class BookData implements EntityDto
     ) {
     }
 
+    #[Override]
     public function toArray(): array
     {
         return [
