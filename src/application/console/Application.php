@@ -24,6 +24,7 @@ use function DI\create;
 
 /**
  * Entrypoint: точка конфигурирования и запуск приложения.
+ * Нарушение границ presentation, но в данном случае Application именно декоратор на SymfonyConsole.
  */
 final readonly class Application implements DomainApplication
 {

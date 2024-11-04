@@ -12,8 +12,7 @@ final class EntityResponseTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $entityResponse = new EntityMapper();
-        $entity = $entityResponse->denormalize(
+        $entity = EntityMapper::denormalize(
             EntityDtoStub::class,
             [
                 'name' => 'John',
@@ -28,7 +27,7 @@ final class EntityResponseTest extends TestCase
         self::assertNotEmpty($entity->object);
         self::assertEquals('Nested', $entity->object->name);
 
-        $entity = $entityResponse->denormalize(
+        $entity = EntityMapper::denormalize(
             EntityDtoStub::class,
             [
                 'name' => 'Test',
@@ -43,8 +42,7 @@ final class EntityResponseTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $entityResponse = new EntityMapper();
-        $entityResponse->denormalize(
+        EntityMapper::denormalize(
             EntityDtoStub::class,
             [
             ]
@@ -55,8 +53,7 @@ final class EntityResponseTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $entityResponse = new EntityMapper();
-        $entityResponse->denormalize(
+        EntityMapper::denormalize(
             EntityDtoStub::class,
             [
                 'name2' => 'John',

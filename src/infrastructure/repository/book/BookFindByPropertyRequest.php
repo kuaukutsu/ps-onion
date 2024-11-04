@@ -61,11 +61,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     #[Override]
     public function makeResponse(StreamDecode $stream): BookDto
     {
-        return (new EntityMapper())
-            ->denormalize(
-                BookDto::class,
-                $stream->decode(),
-            );
+        return EntityMapper::denormalize(BookDto::class, $stream->decode());
     }
 
     /**

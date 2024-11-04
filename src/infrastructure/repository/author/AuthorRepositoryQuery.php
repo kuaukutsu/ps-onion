@@ -61,8 +61,7 @@ SQL;
             return null;
         }
 
-        return (new EntityMapper())
-            ->denormalize(AuthorDto::class, $data);
+        return EntityMapper::denormalize(AuthorDto::class, $data);
     }
 
     /**
@@ -95,8 +94,7 @@ SQL;
 
         foreach ($data as $item) {
             try {
-                yield (new EntityMapper())
-                    ->denormalize(AuthorDto::class, $item);
+                yield EntityMapper::denormalize(AuthorDto::class, $item);
             } catch (Error) {
                 continue;
             }
