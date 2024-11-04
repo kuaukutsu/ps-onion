@@ -61,8 +61,7 @@ final class ConnectionPoolTest extends TestCase
     {
         parent::setUp();
 
-        $this->pool = self::get(ConnectionMap::class);
-        $this->pool->push(
+        $this->pool = new ConnectionMap(
             new class implements DbConnectionContainer {
                 public function identity(): string
                 {
