@@ -6,7 +6,6 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use LogicException;
 use Ramsey\Uuid\UuidFactoryInterface;
-use kuaukutsu\ps\onion\domain\entity\book\BookData;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
@@ -63,7 +62,7 @@ final readonly class BookRepository
 
         return $this->client->send(
             new BookImportRequest(
-                new BookData(
+                new BookDto(
                     uuid: $this->uuidFactory->uuid4()->toString(),
                     title: $title,
                     author: $author,

@@ -6,7 +6,6 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use InvalidArgumentException;
-use kuaukutsu\ps\onion\domain\entity\book\BookData;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
@@ -24,7 +23,7 @@ final readonly class BookImportRequest implements RequestEntity
     /**
      * @throws InvalidArgumentException
      */
-    public function __construct(BookData $data)
+    public function __construct(BookDto $data)
     {
         $this->body = EntityJson::encode($data->toArray());
     }
