@@ -14,13 +14,16 @@ use Symfony\Component\Console\Command\Command;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\application\decorator\GuzzleDecorator;
 use kuaukutsu\ps\onion\application\decorator\LoggerDecorator;
+use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\interface\Application as DomainApplication;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
+use kuaukutsu\ps\onion\infrastructure\db\ConnectionMap;
+use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteConnection;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 
-use function DI\create;
+use function DI\factory;
 
 /**
  * Entrypoint: точка конфигурирования и запуск приложения.
@@ -41,6 +44,7 @@ final readonly class Application implements DomainApplication
         $this->container = new ContainerDecorator($container);
 
         $this->setDefinitions($container);
+        $this->setRepository($container);
     }
 
     #[Override]
@@ -65,6 +69,7 @@ final readonly class Application implements DomainApplication
     {
         try {
             $commands = [
+                $this->container->make(AuthorInfoCommand::class),
                 $this->container->make(BookInfoCommand::class),
             ];
         } catch (ContainerExceptionInterface | InvalidArgumentException $e) {
@@ -97,8 +102,22 @@ final readonly class Application implements DomainApplication
 
         $container->set(
             ClientInterface::class,
-            create(GuzzleDecorator::class)
-                ->constructor($this->container),
+            factory(
+                fn(): ClientInterface => new GuzzleDecorator($this->container)
+            )
+        );
+    }
+
+    private function setRepository(Container $container): void
+    {
+        $container->set(
+            ConnectionMap::class,
+            new ConnectionMap(
+                new SqliteConnection(
+                    Author::class,
+                    "sqlite:{$this->getRuntime()}/sqlite/author.sq3"
+                )
+            )
         );
     }
 }

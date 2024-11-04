@@ -11,30 +11,19 @@ use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
-use kuaukutsu\ps\onion\domain\interface\Application;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
-use kuaukutsu\ps\onion\infrastructure\db\ConnectionMap;
-use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteConnection;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 
 final readonly class AuthorRepository
 {
     public function __construct(
-        Application $application,
-        ConnectionMap $connectionMap,
         private AuthorRepositoryQuery $query,
         private LoggerInterface $logger,
     ) {
-        $connectionMap->push(
-            new SqliteConnection(
-                Author::class,
-                "sqlite:{$application->getRuntime()}/sqlite/author.sq3"
-            )
-        );
     }
 
     /**
-     * @throws NotFoundException
+     * @throws NotFoundException entity not found.
      * @throws DbException connection failed.
      * @throws DbStatementException query failed.
      * @throws TypeError serialize data

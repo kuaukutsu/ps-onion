@@ -18,6 +18,14 @@ final class ConnectionMap
      */
     private array $connections = [];
 
+    public function __construct(
+        DbConnectionContainer ...$containers,
+    ) {
+        foreach ($containers as $container) {
+            $this->push($container);
+        }
+    }
+
     /**
      * @throws DbException
      */
