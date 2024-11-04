@@ -45,15 +45,14 @@ final readonly class BookRequest implements RequestEntity
     #[Override]
     public function makeResponse(StreamDecode $stream): BookDto
     {
-        return (new EntityMapper())
-            ->denormalize(
-                BookDto::class,
-                $stream->decode(),
-                [
-                    'uuid' => $this->uuid,
-                    'title' => 'Name Default',
-                    'author' => 'Author',
-                ]
-            );
+        return EntityMapper::denormalize(
+            BookDto::class,
+            $stream->decode(),
+            [
+                'uuid' => $this->uuid,
+                'title' => 'Name Default',
+                'author' => 'Author',
+            ]
+        );
     }
 }

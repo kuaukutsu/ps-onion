@@ -19,6 +19,9 @@ use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 
 use function DI\create;
 
+/**
+ * @note заглушка.
+ */
 final readonly class Application implements DomainApplication
 {
     private LoggerInterface $logger;

@@ -13,7 +13,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
+use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 use kuaukutsu\ps\onion\infrastructure\repository\book\BookRepository;
 
 /**
@@ -31,6 +33,7 @@ final class BookInfoCommand extends Command
     public function __construct(
         private readonly BookRepository $repository,
         private readonly UuidValidator $uuidValidator,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
     }
@@ -44,9 +47,6 @@ final class BookInfoCommand extends Command
         $this->addArgument('uuid', InputArgument::REQUIRED, 'UUID book');
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -56,7 +56,18 @@ final class BookInfoCommand extends Command
             );
         } catch (RequestException $e) {
             $output->writeln($e->getMessage());
+            $this->logger->preset(
+                new LoggerExceptionPreset($e, ['input' => $input->getArguments()]),
+                __METHOD__,
+            );
             return Command::FAILURE;
+        } catch (InvalidArgumentException $e) {
+            $output->writeln($e->getMessage());
+            $this->logger->preset(
+                new LoggerExceptionPreset($e, ['input' => $input->getArguments()]),
+                __METHOD__,
+            );
+            return Command::INVALID;
         }
 
         $output->writeln(sprintf('Book UUID: %s', $book->uuid));

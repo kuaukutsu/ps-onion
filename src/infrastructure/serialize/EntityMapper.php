@@ -14,6 +14,10 @@ use kuaukutsu\ps\onion\domain\interface\EntityDto;
  */
 final readonly class EntityMapper
 {
+    private function __construct()
+    {
+    }
+
     /**
      * @template TResponse of EntityDto
      * @param class-string<TResponse> $entityClass
@@ -23,31 +27,39 @@ final readonly class EntityMapper
      * @throws TypeError Unknown named parameter
      * @noinspection PhpDocSignatureInspection
      */
-    public function denormalize(string $entityClass, array $data, array $default = []): EntityDto
+    public static function denormalize(string $entityClass, array $data, array $default = []): EntityDto
     {
         if ($default !== []) {
             $data = [...$default, ...$data];
         }
 
-        $arguments = [];
-        foreach ($data as $key => $value) {
-            $arguments[$this->toCamelCase($key)] = $value;
-        }
+        $mapper = new Mapper();
 
         try {
             /**
              * @var TResponse
              */
-            return (new Mapper())->denormalize($arguments, $entityClass);
+            return $mapper->denormalize(self::prepareData($data), $entityClass);
         } catch (MapperExceptionInterface $exception) {
             throw new TypeError($exception->getMessage(), 0, $exception);
         }
     }
 
     /**
-     * @psalm-internal kuaukutsu\ps\onion\infrastructure\serialize
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
-    private function toCamelCase(string $variableName): string
+    private static function prepareData(array $data): array
+    {
+        $arguments = [];
+        foreach ($data as $key => $value) {
+            $arguments[self::toCamelCase($key)] = $value;
+        }
+
+        return $arguments;
+    }
+
+    private static function toCamelCase(string $variableName): string
     {
         $upper = static fn(
             array $matches
