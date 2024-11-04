@@ -2,17 +2,24 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\service\author;
+namespace kuaukutsu\ps\onion\infrastructure\repository\author;
 
 use Error;
-use kuaukutsu\ps\onion\domain\entity\Author;
+use TypeError;
+use Generator;
+use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\infrastructure\db\QueryFactory;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
-final readonly class RepositoryQuery
+/**
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
+ */
+final readonly class AuthorRepositoryQuery
 {
     public function __construct(private QueryFactory $queryFactory)
     {
@@ -22,12 +29,12 @@ final readonly class RepositoryQuery
      * @throws NotFoundException
      * @throws DbException connection failed.
      * @throws DbStatementException query failed.
-     * @throws Error serialize data
+     * @throws TypeError serialize data
      */
-    public function get(Uuid $pk): Author
+    public function get(AuthorUuid $pk): AuthorDto
     {
         $model = $this->find($pk);
-        if ($model instanceof Author) {
+        if ($model instanceof AuthorDto) {
             return $model;
         }
 
@@ -39,9 +46,9 @@ final readonly class RepositoryQuery
     /**
      * @throws DbException connection failed.
      * @throws DbStatementException query failed.
-     * @throws Error serialize data
+     * @throws TypeError serialize data
      */
-    public function find(Uuid $pk): ?Author
+    public function find(AuthorUuid $pk): ?AuthorDto
     {
         $query = <<<SQL
 SELECT * FROM author WHERE uuid = :uuid
@@ -54,17 +61,17 @@ SQL;
             return null;
         }
 
-        return (new EntityMapper(Author::class))
-            ->makeWithCamelCase($data);
+        return (new EntityMapper())
+            ->denormalize(AuthorDto::class, $data);
     }
 
     /**
      * @param array<string, scalar> $params
-     * @return array<string, Author>
+     * @return Generator<AuthorDto>
      * @throws DbException connection failed.
      * @throws DbStatementException query failed.
      */
-    public function findByParams(array $params): array
+    public function findByParams(array $params): Generator
     {
         $conditions = '';
         foreach (array_keys($params) as $key) {
@@ -83,21 +90,18 @@ SQL;
             ->make(Author::class)
             ->fetchAll($query, $params);
         if ($data === []) {
-            return [];
+            return null;
         }
 
-        $list = [];
         foreach ($data as $item) {
             try {
-                $model = (new EntityMapper(Author::class))
-                    ->makeWithCamelCase($item);
+                yield (new EntityMapper())
+                    ->denormalize(AuthorDto::class, $item);
             } catch (Error) {
                 continue;
             }
-
-            $list[$model->uuid] = $model;
         }
 
-        return $list;
+        return null;
     }
 }

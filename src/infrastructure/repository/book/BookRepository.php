@@ -2,29 +2,23 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\service\book;
+namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use LogicException;
 use Ramsey\Uuid\UuidFactoryInterface;
-use kuaukutsu\ps\onion\domain\entity\Book;
-use kuaukutsu\ps\onion\domain\entity\BookData;
-use kuaukutsu\ps\onion\domain\entity\BookFindByPropertyRequest;
-use kuaukutsu\ps\onion\domain\entity\BookImportRequest;
-use kuaukutsu\ps\onion\domain\entity\BookRequest;
+use kuaukutsu\ps\onion\domain\entity\book\BookData;
+use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
-use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerTracePreset;
-use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 use kuaukutsu\ps\onion\infrastructure\http\HttpClient;
 use kuaukutsu\ps\onion\infrastructure\http\HttpContext;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
+use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerTracePreset;
 
-/**
- * @psalm-internal kuaukutsu\ps\onion\application
- */
-final readonly class Repository
+final readonly class BookRepository
 {
     public function __construct(
-        private Cache $cache,
+        private BookCache $cache,
         private HttpClient $client,
         private UuidFactoryInterface $uuidFactory,
         private LoggerInterface $logger,
@@ -34,9 +28,9 @@ final readonly class Repository
     /**
      * @throws RequestException
      */
-    public function get(string $uuid): Book
+    public function get(string $uuid): BookDto
     {
-        $cacheKey = Cache::makeKey($uuid);
+        $cacheKey = BookCache::makeKey($uuid);
         $model = $this->cache->get($cacheKey)
             ?? $this->client->send(
                 new BookRequest($uuid),
@@ -58,10 +52,10 @@ final readonly class Repository
      * @throws RequestException
      * @throws LogicException
      */
-    public function import(string $title, string $author): Book
+    public function import(string $title, string $author): BookDto
     {
         $model = $this->findByTitle($title, $author);
-        if ($model instanceof Book) {
+        if ($model instanceof BookDto) {
             throw new LogicException("[$model->uuid] Book `$title` already exists.");
         }
 
@@ -81,11 +75,10 @@ final readonly class Repository
      * @param non-empty-string $title
      * @param non-empty-string $author
      * @throws LogicException
-     * @psalm-internal kuaukutsu\ps\onion\domain\service\book
      */
-    private function findByTitle(string $title, string $author): ?Book
+    private function findByTitle(string $title, string $author): ?BookDto
     {
-        $cacheKey = Cache::makeKey($author, $title);
+        $cacheKey = BookCache::makeKey($author, $title);
 
         try {
             $model = $this->cache->get($cacheKey)

@@ -13,11 +13,8 @@ use Ramsey\Uuid\UuidFactoryInterface;
 use Ramsey\Uuid\Validator\ValidatorInterface;
 use kuaukutsu\ps\onion\application\decorator\CacheDecorator;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
-use kuaukutsu\ps\onion\application\decorator\GuzzleDecorator;
-use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 
-use function DI\autowire;
 use function DI\create;
 use function DI\factory;
 
@@ -32,5 +29,4 @@ return [
     UuidFactoryInterface::class => create(UuidFactory::class),
     ValidatorInterface::class => create(Validator::class),
     CacheInterface::class => create(CacheDecorator::class),
-    ClientInterface::class => autowire(GuzzleDecorator::class),
 ];

@@ -2,31 +2,23 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\service\author;
+namespace kuaukutsu\ps\onion\domain\entity\author;
 
 use Ramsey\Uuid\Uuid as UuidFactory;
 
-final readonly class Uuid
+final readonly class AuthorUuid
 {
     /**
      * @var non-empty-string
      */
-    private string $uuid;
+    public string $value;
 
     /**
-     * @param non-empty-string|null $uuid
+     * @param non-empty-string|null $value
      */
-    public function __construct(?string $uuid = null)
+    public function __construct(?string $value = null)
     {
-        $this->uuid = $uuid ?? $this->generate();
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function toValue(): string
-    {
-        return $this->uuid;
+        $this->value = $value ?? $this->generate();
     }
 
     /**
@@ -34,7 +26,7 @@ final readonly class Uuid
      */
     public function toConditions(): array
     {
-        return ['uuid' => $this->toValue()];
+        return ['uuid' => $this->value];
     }
 
     /**

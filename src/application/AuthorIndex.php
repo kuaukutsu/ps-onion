@@ -6,12 +6,12 @@ namespace kuaukutsu\ps\onion\application;
 
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
-use kuaukutsu\ps\onion\domain\service\author\Repository;
+use kuaukutsu\ps\onion\infrastructure\repository\author\AuthorRepository;
 
 final readonly class AuthorIndex
 {
     public function __construct(
-        private Repository $repository,
+        private AuthorRepository $repository,
     ) {
     }
 

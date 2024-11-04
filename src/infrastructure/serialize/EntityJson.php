@@ -8,7 +8,7 @@ use Throwable;
 use InvalidArgumentException;
 
 /**
- * @psalm-internal kuaukutsu\ps\onion\domain
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure
  */
 final readonly class EntityJson
 {

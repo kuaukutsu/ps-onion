@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\presentation\cli;
 
-use InvalidArgumentException;
-use LogicException;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use LogicException;
+use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\Bookshelf;
-use kuaukutsu\ps\onion\domain\entity\Book;
+use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
 
 /**
@@ -33,7 +33,7 @@ try {
     exit(-1);
 }
 
-/** @psalm-check-type-exact $_test = Book */
+/** @psalm-check-type-exact $_test = BookDto */
 
 try {
     $test = $app->import('test', 'testov');
@@ -42,7 +42,7 @@ try {
     exit(-1);
 }
 
-/** @psalm-check-type-exact $test = Book */
+/** @psalm-check-type-exact $test = BookDto */
 
 echo $test->uuid . PHP_EOL;
 echo $test->title . PHP_EOL;

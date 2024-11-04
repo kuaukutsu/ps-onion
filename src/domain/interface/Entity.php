@@ -9,8 +9,4 @@ namespace kuaukutsu\ps\onion\domain\interface;
  */
 interface Entity
 {
-    /**
-     * @return array<string, scalar|array|null>
-     */
-    public function toArray(): array;
 }

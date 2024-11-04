@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\domain;
+namespace kuaukutsu\ps\onion\tests\infrastructure\repository;
 
 use Override;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
-use kuaukutsu\ps\onion\domain\interface\Entity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
- * @implements RequestEntity<EntityStub>
+ * @implements RequestEntity<EntityDtoStub>
  */
 final readonly class EntityRequestStub implements RequestEntity
 {
@@ -34,10 +34,11 @@ final readonly class EntityRequestStub implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): Entity
+    public function makeResponse(StreamDecode $stream): EntityDto
     {
-        return (new EntityMapper(EntityStub::class))
-            ->makeWithCamelCase(
+        return (new EntityMapper())
+            ->denormalize(
+                EntityDtoStub::class,
                 $stream->decode()
             );
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\domain;
+namespace kuaukutsu\ps\onion\tests\infrastructure\repository;
 
 use TypeError;
 use PHPUnit\Framework\TestCase;
@@ -12,8 +12,9 @@ final class EntityResponseTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $entityResponse = new EntityMapper(EntityStub::class);
-        $entity = $entityResponse->makeWithCamelCase(
+        $entityResponse = new EntityMapper();
+        $entity = $entityResponse->denormalize(
+            EntityDtoStub::class,
             [
                 'name' => 'John',
                 'object' => [
@@ -22,12 +23,13 @@ final class EntityResponseTest extends TestCase
             ]
         );
 
-        self::assertInstanceOf(EntityStub::class, $entity);
+        self::assertInstanceOf(EntityDtoStub::class, $entity);
         self::assertEquals('John', $entity->name);
         self::assertNotEmpty($entity->object);
         self::assertEquals('Nested', $entity->object->name);
 
-        $entity = $entityResponse->makeWithCamelCase(
+        $entity = $entityResponse->denormalize(
+            EntityDtoStub::class,
             [
                 'name' => 'Test',
             ]
@@ -41,8 +43,9 @@ final class EntityResponseTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $entityResponse = new EntityMapper(EntityStub::class);
-        $entityResponse->makeWithCamelCase(
+        $entityResponse = new EntityMapper();
+        $entityResponse->denormalize(
+            EntityDtoStub::class,
             [
             ]
         );
@@ -52,8 +55,9 @@ final class EntityResponseTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $entityResponse = new EntityMapper(EntityStub::class);
-        $entityResponse->makeWithCamelCase(
+        $entityResponse = new EntityMapper();
+        $entityResponse->denormalize(
+            EntityDtoStub::class,
             [
                 'name2' => 'John',
             ]

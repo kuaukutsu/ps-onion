@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use kuaukutsu\ps\onion\domain\exception\UnexpectedRequestException;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
 use kuaukutsu\ps\onion\domain\interface\ClientInterface;
-use kuaukutsu\ps\onion\domain\interface\Entity;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\domain\interface\Request;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
@@ -29,13 +29,13 @@ final readonly class HttpClient
     }
 
     /**
-     * @template TResponse of Entity
+     * @template TResponse of EntityDto
      * @param RequestEntity<TResponse> $requestEntity
      * @return TResponse
      * @throws RequestException
      * @noinspection PhpDocSignatureInspection
      */
-    public function send(RequestEntity $requestEntity, RequestContext $context): Entity
+    public function send(RequestEntity $requestEntity, RequestContext $context): EntityDto
     {
         $requestHandlers = [
             new HandlerContainer(class: JsonBase::class),
