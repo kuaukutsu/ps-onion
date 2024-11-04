@@ -7,29 +7,23 @@ namespace kuaukutsu\ps\onion\infrastructure\serialize;
 use TypeError;
 use TypeLang\Mapper\Exception\MapperExceptionInterface;
 use TypeLang\Mapper\Mapper;
-use kuaukutsu\ps\onion\domain\interface\Entity;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
 /**
- * @template TResponse of Entity
- * @psalm-internal kuaukutsu\ps\onion\domain
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure
  */
 final readonly class EntityMapper
 {
     /**
+     * @template TResponse of EntityDto
      * @param class-string<TResponse> $entityClass
-     */
-    public function __construct(private string $entityClass)
-    {
-    }
-
-    /**
      * @param array<string, mixed> $data
      * @param array<string, mixed> $default
      * @return TResponse
      * @throws TypeError Unknown named parameter
      * @noinspection PhpDocSignatureInspection
      */
-    public function makeWithCamelCase(array $data, array $default = []): Entity
+    public function denormalize(string $entityClass, array $data, array $default = []): EntityDto
     {
         if ($default !== []) {
             $data = [...$default, ...$data];
@@ -44,7 +38,7 @@ final readonly class EntityMapper
             /**
              * @var TResponse
              */
-            return (new Mapper())->denormalize($arguments, $this->entityClass);
+            return (new Mapper())->denormalize($arguments, $entityClass);
         } catch (MapperExceptionInterface $exception) {
             throw new TypeError($exception->getMessage(), 0, $exception);
         }

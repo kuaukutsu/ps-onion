@@ -8,7 +8,7 @@ use TypeError;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
 
 /**
- * @template TResponse of Entity
+ * @template TResponse of EntityDto
  */
 interface RequestEntity extends Request
 {
@@ -18,5 +18,5 @@ interface RequestEntity extends Request
      * @throws StreamDecodeException decode string to array
      * @noinspection PhpDocSignatureInspection
      */
-    public function makeResponse(StreamDecode $stream): Entity;
+    public function makeResponse(StreamDecode $stream): EntityDto;
 }

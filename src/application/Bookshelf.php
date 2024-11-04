@@ -7,9 +7,9 @@ namespace kuaukutsu\ps\onion\application;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
-use kuaukutsu\ps\onion\domain\entity\Book;
+use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
-use kuaukutsu\ps\onion\domain\service\book\Repository;
+use kuaukutsu\ps\onion\infrastructure\repository\book\BookRepository;
 
 /**
  * @api
@@ -17,7 +17,7 @@ use kuaukutsu\ps\onion\domain\service\book\Repository;
 final readonly class Bookshelf
 {
     public function __construct(
-        private Repository $bookRepository,
+        private BookRepository $bookRepository,
         private UuidValidator $uuidValidator,
     ) {
     }
@@ -26,7 +26,7 @@ final readonly class Bookshelf
      * @throws RequestException
      * @throws InvalidArgumentException
      */
-    public function get(string $uuid): Book
+    public function get(string $uuid): BookDto
     {
         $this->uuidValidator->exception($uuid);
         return $this->bookRepository->get($uuid);
@@ -36,7 +36,7 @@ final readonly class Bookshelf
      * @throws RequestException
      * @throws LogicException
      */
-    public function import(string $title, string $author): Book
+    public function import(string $title, string $author): BookDto
     {
         // Logic: validate args (allowed types)
         assert($title !== '', 'non-empty-string');

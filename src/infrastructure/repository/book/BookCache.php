@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\service\author;
+namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
-use kuaukutsu\ps\onion\domain\entity\Author;
+use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 
 /**
- * @psalm-internal kuaukutsu\ps\onion\domain\service\book
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
  */
-final readonly class Cache
+final readonly class BookCache
 {
     public function __construct(
         private CacheInterface $cache,
@@ -26,10 +26,10 @@ final readonly class Cache
      */
     public static function makeKey(string ...$keys): string
     {
-        return 'author:' . implode('-', $keys);
+        return 'book:' . implode('-', $keys);
     }
 
-    public function get(string $key): ?Author
+    public function get(string $key): ?BookDto
     {
         try {
             $model = $this->cache->get($key);
@@ -42,14 +42,14 @@ final readonly class Cache
             return null;
         }
 
-        if ($model instanceof Author) {
+        if ($model instanceof BookDto) {
             return $model;
         }
 
         return null;
     }
 
-    public function set(string $key, Author $book): void
+    public function set(string $key, BookDto $book): void
     {
         try {
             if ($this->cache->has($key) === false) {

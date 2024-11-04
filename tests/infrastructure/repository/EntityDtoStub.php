@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\domain;
+namespace kuaukutsu\ps\onion\tests\infrastructure\repository;
 
 use Override;
-use kuaukutsu\ps\onion\domain\interface\Entity;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
-final readonly class EntityStub implements Entity
+final readonly class EntityDtoStub implements EntityDto
 {
     public function __construct(
         public string $name,
-        public ?EntityStub $object = null,
+        public ?EntityDtoStub $object = null,
     ) {
     }
 

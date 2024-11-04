@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\entity;
+namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use InvalidArgumentException;
+use kuaukutsu\ps\onion\domain\entity\book\BookData;
+use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\RequestEntity;
 use kuaukutsu\ps\onion\domain\interface\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityJson;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
- * @implements RequestEntity<Book>
- * @psalm-internal kuaukutsu\ps\onion\domain
+ * @implements RequestEntity<BookDto>
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
  */
 final readonly class BookImportRequest implements RequestEntity
 {
@@ -46,10 +48,11 @@ final readonly class BookImportRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): Book
+    public function makeResponse(StreamDecode $stream): BookDto
     {
-        return (new EntityMapper(Book::class))
-            ->makeWithCamelCase(
+        return (new EntityMapper())
+            ->denormalize(
+                BookDto::class,
                 $stream->decode(),
             );
     }

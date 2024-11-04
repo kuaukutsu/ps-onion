@@ -9,9 +9,6 @@ use kuaukutsu\ps\onion\domain\interface\Entity;
 use kuaukutsu\ps\onion\infrastructure\db\DbConnectionContainer;
 use kuaukutsu\ps\onion\infrastructure\db\DbConnection;
 
-/**
- * @psalm-internal kuaukutsu\ps\onion\domain\service
- */
 final readonly class PgsqlConnection implements DbConnectionContainer
 {
     /**

@@ -8,7 +8,7 @@ use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteQuery;
 
 /**
- * @psalm-internal kuaukutsu\ps\onion\domain\service
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure
  */
 final readonly class QueryFactory
 {
@@ -17,6 +17,7 @@ final readonly class QueryFactory
     }
 
     /**
+     * @param non-empty-string $connectionIdentity
      * @throws DbException
      */
     public function make(string $connectionIdentity): DbQuery
