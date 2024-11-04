@@ -37,6 +37,8 @@ final readonly class BookRepository
                 new HttpContext(),
             );
 
+        /** @psalm-check-type-exact $model = BookDto */
+
         $this->logger->preset(
             new LoggerTracePreset('Book', ['book' => $model]),
             __METHOD__,
