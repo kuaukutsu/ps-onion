@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\infrastructure\repository;
 
-use Override;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
-use kuaukutsu\ps\onion\domain\interface\RequestEntity;
-use kuaukutsu\ps\onion\domain\interface\StreamDecode;
+use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
+use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
+use Override;
 
 /**
  * @implements RequestEntity<EntityDtoStub>

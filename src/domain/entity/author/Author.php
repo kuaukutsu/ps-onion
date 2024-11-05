@@ -24,7 +24,6 @@ final readonly class Author implements Entity
             $this->uuid,
             new AuthorPerson(
                 name: $name,
-                surname: $this->person->surname,
             ),
             new AuthorMetadata(
                 createdAt: $this->metadata->createdAt,

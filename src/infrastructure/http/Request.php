@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\interface;
+namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use Fig\Http\Message\RequestMethodInterface;
 
+/**
+ * @readonly
+ */
 interface Request extends RequestMethodInterface
 {
     public function getMethod(): string;
