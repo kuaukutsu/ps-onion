@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
+use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use Override;
 use LogicException;
 use Ramsey\Uuid\UuidFactoryInterface;
@@ -28,9 +29,9 @@ final readonly class Repository implements BookRepository
     }
 
     #[Override]
-    public function get(string $uuid): BookDto
+    public function get(BookUuid $uuid): BookDto
     {
-        $cacheKey = Cache::makeKey($uuid);
+        $cacheKey = Cache::makeKey($uuid->value);
 
         try {
             $model = $this->cache->get($cacheKey)
@@ -40,7 +41,7 @@ final readonly class Repository implements BookRepository
                 );
         } catch (RequestException $exception) {
             $this->logger->preset(
-                new LoggerExceptionPreset($exception, ['uuid' => $uuid]),
+                new LoggerExceptionPreset($exception, $uuid->toConditions()),
                 __METHOD__,
             );
 

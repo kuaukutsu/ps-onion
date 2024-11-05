@@ -6,6 +6,7 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
 use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
@@ -17,7 +18,7 @@ use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
  */
 final readonly class BookRequest implements RequestEntity
 {
-    public function __construct(private string $uuid)
+    public function __construct(private BookUuid $uuid)
     {
     }
 
@@ -30,7 +31,7 @@ final readonly class BookRequest implements RequestEntity
     #[Override]
     public function getUri(): string
     {
-        return 'https://webhook.site/' . $this->uuid;
+        return 'https://webhook.site/' . $this->uuid->value;
     }
 
     /**
@@ -49,8 +50,9 @@ final readonly class BookRequest implements RequestEntity
             BookDto::class,
             $stream->decode(),
             [
-                'uuid' => $this->uuid,
+                'uuid' => $this->uuid->value,
                 'title' => 'Name Default',
+                'description' => 'Description Default',
                 'author' => 'Author',
             ]
         );

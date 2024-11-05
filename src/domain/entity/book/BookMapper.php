@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\entity\book;
 
+use LogicException;
+
 final readonly class BookMapper
 {
     private function __construct()
     {
     }
 
+    /**
+     * @throws LogicException is input data not valid
+     */
     public static function toModel(BookDto $dto): Book
     {
         return new Book(

@@ -12,6 +12,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
+use kuaukutsu\ps\onion\infrastructure\logger\processor\ApplicationProcessor;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\SystemEnvironmentProcessor;
 
 final readonly class MonologFactory
@@ -36,6 +37,7 @@ final readonly class MonologFactory
             [
                 new WebProcessor(),
                 new MemoryPeakUsageProcessor(),
+                new ApplicationProcessor($this->application),
                 new SystemEnvironmentProcessor(),
             ],
         );

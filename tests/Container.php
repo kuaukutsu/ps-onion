@@ -9,11 +9,11 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\SimpleCache\CacheInterface;
 use GuzzleHttp\Psr7\HttpFactory;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
-use Psr\SimpleCache\CacheInterface;
 
 use function DI\create;
 use function DI\factory;
