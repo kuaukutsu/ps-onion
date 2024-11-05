@@ -67,6 +67,7 @@ final readonly class Repository implements BookRepository
                     new BookDto(
                         uuid: $this->uuidFactory->uuid4()->toString(),
                         title: $title,
+                        description: $title,
                         author: $author,
                     )
                 ),

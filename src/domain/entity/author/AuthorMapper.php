@@ -14,7 +14,7 @@ final readonly class AuthorMapper
     {
         return new Author(
             uuid: new AuthorUuid($dto->uuid),
-            person: new AuthorPerson($dto->name, 'surname'),
+            person: new AuthorPerson($dto->name),
             metadata: new AuthorMetadata($dto->createdAt, $dto->updatedAt)
         );
     }

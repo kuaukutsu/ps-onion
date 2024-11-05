@@ -8,8 +8,8 @@ use Override;
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
-use kuaukutsu\ps\onion\domain\interface\RequestEntity;
-use kuaukutsu\ps\onion\domain\interface\StreamDecode;
+use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
+use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**

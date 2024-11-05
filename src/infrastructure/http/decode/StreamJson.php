@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\infrastructure\http;
+namespace kuaukutsu\ps\onion\infrastructure\http\decode;
 
 use Override;
 use Throwable;
 use Psr\Http\Message\StreamInterface;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
-use kuaukutsu\ps\onion\domain\interface\StreamDecode;
+use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\http

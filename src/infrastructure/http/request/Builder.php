@@ -10,8 +10,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
-use kuaukutsu\ps\onion\domain\interface\Request;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
+use kuaukutsu\ps\onion\infrastructure\http\Request;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\http

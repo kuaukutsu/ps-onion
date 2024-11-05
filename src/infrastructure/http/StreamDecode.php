@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\interface;
+namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use Psr\Http\Message\StreamInterface;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
