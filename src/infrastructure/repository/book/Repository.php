@@ -8,13 +8,14 @@ use Override;
 use LogicException;
 use Ramsey\Uuid\UuidFactoryInterface;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\exception\ClientRequestException;
+use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
 use kuaukutsu\ps\onion\infrastructure\http\HttpClient;
 use kuaukutsu\ps\onion\infrastructure\http\HttpContext;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
-use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerTracePreset;
 
 final readonly class Repository implements BookRepository
 {
@@ -30,18 +31,23 @@ final readonly class Repository implements BookRepository
     public function get(string $uuid): BookDto
     {
         $cacheKey = Cache::makeKey($uuid);
-        $model = $this->cache->get($cacheKey)
-            ?? $this->client->send(
-                new BookRequest($uuid),
-                new HttpContext(),
+
+        try {
+            $model = $this->cache->get($cacheKey)
+                ?? $this->client->send(
+                    new BookRequest($uuid),
+                    new HttpContext(),
+                );
+        } catch (RequestException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset($exception, ['uuid' => $uuid]),
+                __METHOD__,
             );
 
-        /** @psalm-check-type-exact $model = BookDto */
+            throw new InfrastructureException($exception->getMessage(), 0, $exception);
+        }
 
-        $this->logger->preset(
-            new LoggerTracePreset('Book', ['book' => $model]),
-            __METHOD__,
-        );
+        /** @psalm-check-type-exact $model = BookDto */
 
         $this->cache->set($cacheKey, $model);
         return $model;
@@ -55,33 +61,17 @@ final readonly class Repository implements BookRepository
             throw new LogicException("[$model->uuid] Book `$title` already exists.");
         }
 
-        return $this->client->send(
-            new BookImportRequest(
-                new BookDto(
-                    uuid: $this->uuidFactory->uuid4()->toString(),
-                    title: $title,
-                    author: $author,
-                )
-            ),
-            new HttpContext(),
-        );
-    }
-
-    /**
-     * @param non-empty-string $title
-     * @param non-empty-string $author
-     * @throws LogicException
-     */
-    private function findByTitle(string $title, string $author): ?BookDto
-    {
-        $cacheKey = Cache::makeKey($author, $title);
-
         try {
-            $model = $this->cache->get($cacheKey)
-                ?? $this->client->send(
-                    new BookFindByPropertyRequest(author: $author, title: $title),
-                    new HttpContext(),
-                );
+            return $this->client->send(
+                new BookImportRequest(
+                    new BookDto(
+                        uuid: $this->uuidFactory->uuid4()->toString(),
+                        title: $title,
+                        author: $author,
+                    )
+                ),
+                new HttpContext(),
+            );
         } catch (RequestException $exception) {
             $this->logger->preset(
                 new LoggerExceptionPreset(
@@ -94,7 +84,52 @@ final readonly class Repository implements BookRepository
                 __METHOD__,
             );
 
+            throw new InfrastructureException($exception->getMessage(), 0, $exception);
+        }
+    }
+
+    /**
+     * @param non-empty-string $title
+     * @param non-empty-string $author
+     * @throws LogicException
+     * @throws InfrastructureException
+     */
+    private function findByTitle(string $title, string $author): ?BookDto
+    {
+        $cacheKey = Cache::makeKey($author, $title);
+
+        try {
+            $model = $this->cache->get($cacheKey)
+                ?? $this->client->send(
+                    new BookFindByPropertyRequest(author: $author, title: $title),
+                    new HttpContext(),
+                );
+        } catch (ClientRequestException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset(
+                    $exception,
+                    [
+                        'title' => $title,
+                        'author' => $author,
+                    ]
+                ),
+                __METHOD__,
+            );
+
             return null;
+        } catch (RequestException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset(
+                    $exception,
+                    [
+                        'title' => $title,
+                        'author' => $author,
+                    ]
+                ),
+                __METHOD__,
+            );
+
+            throw new InfrastructureException($exception->getMessage(), 0, $exception);
         }
 
         $this->cache->set($cacheKey, $model);

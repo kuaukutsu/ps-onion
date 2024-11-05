@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\presentation\cli\command;
 
 use Error;
+use Exception;
 use Override;
 use InvalidArgumentException;
-use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\LogicException;
@@ -53,7 +53,7 @@ final class BookViewCommand extends Command
         } catch (InvalidArgumentException $e) {
             $output->writeln($e->getMessage());
             return Command::INVALID;
-        } catch (ClientExceptionInterface | Error $e) {
+        } catch (Exception | Error $e) {
             $output->writeln($e->getMessage());
             return Command::FAILURE;
         }
