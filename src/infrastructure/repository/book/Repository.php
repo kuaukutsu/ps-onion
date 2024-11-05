@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
+use Override;
 use LogicException;
 use Ramsey\Uuid\UuidFactoryInterface;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
 use kuaukutsu\ps\onion\infrastructure\http\HttpClient;
@@ -14,22 +16,20 @@ use kuaukutsu\ps\onion\infrastructure\http\HttpContext;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerTracePreset;
 
-final readonly class BookRepository
+final readonly class Repository implements BookRepository
 {
     public function __construct(
-        private BookCache $cache,
+        private Cache $cache,
         private HttpClient $client,
         private UuidFactoryInterface $uuidFactory,
         private LoggerInterface $logger,
     ) {
     }
 
-    /**
-     * @throws RequestException
-     */
+    #[Override]
     public function get(string $uuid): BookDto
     {
-        $cacheKey = BookCache::makeKey($uuid);
+        $cacheKey = Cache::makeKey($uuid);
         $model = $this->cache->get($cacheKey)
             ?? $this->client->send(
                 new BookRequest($uuid),
@@ -47,12 +47,7 @@ final readonly class BookRepository
         return $model;
     }
 
-    /**
-     * @param non-empty-string $title
-     * @param non-empty-string $author
-     * @throws RequestException
-     * @throws LogicException
-     */
+    #[Override]
     public function import(string $title, string $author): BookDto
     {
         $model = $this->findByTitle($title, $author);
@@ -79,7 +74,7 @@ final readonly class BookRepository
      */
     private function findByTitle(string $title, string $author): ?BookDto
     {
-        $cacheKey = BookCache::makeKey($author, $title);
+        $cacheKey = Cache::makeKey($author, $title);
 
         try {
             $model = $this->cache->get($cacheKey)

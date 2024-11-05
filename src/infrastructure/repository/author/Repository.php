@@ -4,30 +4,25 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\author;
 
-use TypeError;
+use Override;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMapper;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
-use kuaukutsu\ps\onion\domain\exception\NotFoundException;
+use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 
-final readonly class AuthorRepository
+final readonly class Repository implements AuthorRepository
 {
     public function __construct(
-        private AuthorRepositoryQuery $query,
+        private RepositoryQuery $query,
         private LoggerInterface $logger,
     ) {
     }
 
-    /**
-     * @throws NotFoundException entity not found.
-     * @throws DbException connection failed.
-     * @throws DbStatementException query failed.
-     * @throws TypeError serialize data
-     */
+    #[Override]
     public function get(AuthorUuid $uuid): Author
     {
         try {
@@ -44,10 +39,7 @@ final readonly class AuthorRepository
         }
     }
 
-    /**
-     * @throws DbException connection failed.
-     * @throws DbStatementException query failed.
-     */
+    #[Override]
     public function findByName(string $name): array
     {
         try {
@@ -63,16 +55,13 @@ final readonly class AuthorRepository
 
         $list = [];
         foreach ($query as $author) {
-            $list[$author->uuid] = $author;
+            $list[$author->uuid] = AuthorMapper::toModel($author);
         }
 
         return $list;
     }
 
-    /**
-     * @throws DbException connection failed.
-     * @throws DbStatementException query failed.
-     */
+    #[Override]
     public function save(Author $author): Author
     {
         return $author;

@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\interface\RequestException;
-use kuaukutsu\ps\onion\infrastructure\repository\book\BookRepository;
+use kuaukutsu\ps\onion\domain\interface\BookRepository;
 
 /**
  * @api

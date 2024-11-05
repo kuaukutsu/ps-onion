@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\interface;
 
-interface Application
+interface ApplicationInterface
 {
     /**
      * @return non-empty-string

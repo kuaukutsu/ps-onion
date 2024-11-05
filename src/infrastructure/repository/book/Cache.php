@@ -13,7 +13,7 @@ use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
  */
-final readonly class BookCache
+final readonly class Cache
 {
     public function __construct(
         private CacheInterface $cache,

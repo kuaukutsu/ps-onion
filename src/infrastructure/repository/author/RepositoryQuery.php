@@ -19,7 +19,7 @@ use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
  */
-final readonly class AuthorRepositoryQuery
+final readonly class RepositoryQuery
 {
     public function __construct(private QueryFactory $queryFactory)
     {

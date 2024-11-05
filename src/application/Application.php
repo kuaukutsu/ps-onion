@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\application;
 
 use Override;
-use GuzzleHttp\Psr7\HttpFactory;
 use InvalidArgumentException;
 use DI\Container;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
+use GuzzleHttp\Psr7\HttpFactory;
 use Ramsey\Uuid\Rfc4122\Validator;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidFactoryInterface;
@@ -21,12 +21,16 @@ use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\application\decorator\GuzzleDecorator;
 use kuaukutsu\ps\onion\application\decorator\LoggerDecorator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
-use kuaukutsu\ps\onion\domain\interface\Application as DomainApplication;
+use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
+use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
+use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\infrastructure\db\ConnectionMap;
 use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteConnection;
+use kuaukutsu\ps\onion\infrastructure\repository\author\Repository as RepositoryAuthor;
+use kuaukutsu\ps\onion\infrastructure\repository\book\Repository as RepositoryBook;
 
 use function DI\create;
 use function DI\factory;
@@ -34,7 +38,7 @@ use function DI\factory;
 /**
  * @api
  */
-final readonly class Application implements DomainApplication
+final readonly class Application implements ApplicationInterface
 {
     private ContainerInterface $container;
 
@@ -54,7 +58,6 @@ final readonly class Application implements DomainApplication
                 UuidFactoryInterface::class => create(UuidFactory::class),
                 ValidatorInterface::class => create(Validator::class),
                 CacheInterface::class => create(CacheDecorator::class),
-                LoggerInterface::class => create(LoggerDecorator::class)->constructor($this),
             ]
         );
 
@@ -89,8 +92,20 @@ final readonly class Application implements DomainApplication
     private function setDefinitions(Container $container): void
     {
         $container->set(
+            ApplicationInterface::class,
+            $this,
+        );
+
+        $container->set(
             ContainerInterface::class,
             $this->container,
+        );
+
+        $container->set(
+            LoggerInterface::class,
+            factory(
+                fn(): LoggerInterface => new LoggerDecorator($this)
+            ),
         );
 
         $container->set(
@@ -111,6 +126,16 @@ final readonly class Application implements DomainApplication
                     "sqlite:{$this->getRuntime()}/sqlite/author.sq3"
                 )
             )
+        );
+
+        $container->set(
+            AuthorRepository::class,
+            create(RepositoryAuthor::class),
+        );
+
+        $container->set(
+            BookRepository::class,
+            create(RepositoryBook::class),
         );
     }
 }

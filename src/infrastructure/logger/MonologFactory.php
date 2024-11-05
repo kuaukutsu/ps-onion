@@ -11,12 +11,12 @@ use Monolog\Processor\WebProcessor;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use kuaukutsu\ps\onion\domain\interface\Application;
+use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\SystemEnvironmentProcessor;
 
 final readonly class MonologFactory
 {
-    public function __construct(private Application $application)
+    public function __construct(private ApplicationInterface $application)
     {
     }
 
