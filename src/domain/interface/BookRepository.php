@@ -6,6 +6,7 @@ namespace kuaukutsu\ps\onion\domain\interface;
 
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 
 interface BookRepository
@@ -13,7 +14,7 @@ interface BookRepository
     /**
      * @throws InfrastructureException
      */
-    public function get(string $uuid): BookDto;
+    public function get(BookUuid $uuid): BookDto;
 
     /**
      * @param non-empty-string $title

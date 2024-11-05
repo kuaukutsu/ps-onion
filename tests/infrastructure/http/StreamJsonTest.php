@@ -6,11 +6,11 @@ namespace kuaukutsu\ps\onion\tests\infrastructure\http;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use Psr\Http\Message\StreamFactoryInterface;
+use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\domain\exception\StreamDecodeException;
 use kuaukutsu\ps\onion\infrastructure\http\decode\StreamJson;
 use kuaukutsu\ps\onion\tests\Container;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\StreamFactoryInterface;
 
 final class StreamJsonTest extends TestCase
 {
@@ -49,7 +49,7 @@ JSON;
     {
         $streamCoder = new StreamJson(
             self::get(StreamFactoryInterface::class)
-                ->createStream(''),
+                ->createStream(),
         );
 
         $responseData = $streamCoder->decode();

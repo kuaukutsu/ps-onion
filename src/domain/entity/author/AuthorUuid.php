@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\entity\author;
 
+use Assert\Assert;
+use LogicException;
 use Ramsey\Uuid\Uuid as UuidFactory;
 
 final readonly class AuthorUuid
@@ -15,9 +17,14 @@ final readonly class AuthorUuid
 
     /**
      * @param non-empty-string|null $value
+     * @throws LogicException is not valid UUID
      */
     public function __construct(?string $value = null)
     {
+        if ($value !== null) {
+            Assert::that($value)->uuid();
+        }
+
         $this->value = $value ?? $this->generate();
     }
 

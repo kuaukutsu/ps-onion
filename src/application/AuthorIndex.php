@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
+use LogicException;
 use TypeError;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
@@ -26,6 +27,7 @@ final readonly class AuthorIndex
 
     /**
      * @param non-empty-string $uuid
+     * @throws LogicException is input data not valid
      * @throws NotFoundException entity not found.
      * @throws TypeError serialize data
      * @throws InvalidArgumentException validation data
@@ -34,6 +36,8 @@ final readonly class AuthorIndex
     public function get(string $uuid): Author
     {
         $this->uuidValidator->exception($uuid);
-        return $this->repository->get(new AuthorUuid($uuid));
+        return $this->repository->get(
+            new AuthorUuid($uuid)
+        );
     }
 }
