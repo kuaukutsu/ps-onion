@@ -2,15 +2,21 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\application\console;
+namespace kuaukutsu\ps\onion\application;
 
 use Override;
-use Exception;
+use GuzzleHttp\Psr7\HttpFactory;
 use InvalidArgumentException;
 use DI\Container;
-use Psr\Container\ContainerExceptionInterface;
-use Symfony\Component\Console\Application as SymfonyApplication;
-use Symfony\Component\Console\Command\Command;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\SimpleCache\CacheInterface;
+use Ramsey\Uuid\Rfc4122\Validator;
+use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\UuidFactoryInterface;
+use Ramsey\Uuid\Validator\ValidatorInterface;
+use kuaukutsu\ps\onion\application\decorator\CacheDecorator;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\application\decorator\GuzzleDecorator;
 use kuaukutsu\ps\onion\application\decorator\LoggerDecorator;
@@ -21,28 +27,38 @@ use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\infrastructure\db\ConnectionMap;
 use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteConnection;
-use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 
+use function DI\create;
 use function DI\factory;
 
 /**
- * Entrypoint: точка конфигурирования и запуск приложения.
- * Нарушение границ presentation, но в данном случае Application именно декоратор на SymfonyConsole.
+ * @api
  */
 final readonly class Application implements DomainApplication
 {
-    private LoggerInterface $logger;
-
     private ContainerInterface $container;
 
     /**
+     * @param non-empty-string $name
+     * @param non-empty-string $version
      * @throws InvalidArgumentException
      */
-    public function __construct(Container $container)
-    {
-        $this->logger = new LoggerDecorator($this);
-        $this->container = new ContainerDecorator($container);
+    public function __construct(
+        private string $name,
+        private string $version,
+    ) {
+        $container = new Container(
+            [
+                RequestFactoryInterface::class => create(HttpFactory::class),
+                StreamFactoryInterface::class => create(HttpFactory::class),
+                UuidFactoryInterface::class => create(UuidFactory::class),
+                ValidatorInterface::class => create(Validator::class),
+                CacheInterface::class => create(CacheDecorator::class),
+                LoggerInterface::class => create(LoggerDecorator::class)->constructor($this),
+            ]
+        );
 
+        $this->container = new ContainerDecorator($container);
         $this->setDefinitions($container);
         $this->setRepository($container);
     }
@@ -50,42 +66,24 @@ final readonly class Application implements DomainApplication
     #[Override]
     public function getName(): string
     {
-        return 'onion.cli';
+        return $this->name;
     }
 
     #[Override]
     public function getVersion(): string
     {
-        return '0.0.1';
+        return $this->version;
     }
 
     #[Override]
     public function getRuntime(): string
     {
-        return dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'runtime';
+        return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'runtime';
     }
 
-    public function run(): int
+    public function getContainer(): PsrContainerInterface
     {
-        try {
-            $commands = [
-                $this->container->make(AuthorInfoCommand::class),
-                $this->container->make(BookInfoCommand::class),
-            ];
-        } catch (ContainerExceptionInterface | InvalidArgumentException $e) {
-            $this->logger->preset(new LoggerExceptionPreset($e), __METHOD__);
-            return Command::FAILURE;
-        }
-
-        $application = new SymfonyApplication();
-        $application->addCommands($commands);
-
-        try {
-            return $application->run();
-        } catch (Exception $e) {
-            $this->logger->preset(new LoggerExceptionPreset($e), __METHOD__);
-            return Command::FAILURE;
-        }
+        return $this->container;
     }
 
     private function setDefinitions(Container $container): void
@@ -93,11 +91,6 @@ final readonly class Application implements DomainApplication
         $container->set(
             ContainerInterface::class,
             $this->container,
-        );
-
-        $container->set(
-            LoggerInterface::class,
-            $this->logger,
         );
 
         $container->set(

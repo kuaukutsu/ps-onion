@@ -76,9 +76,9 @@ run:
 run-author:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		php ./src/presentation/cli/main.php author:about '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'
+		php ./src/presentation/cli/main.php author:view '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'
 
 run-book:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		php ./src/presentation/cli/main.php book:about '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'
+		php ./src/presentation/cli/main.php book:view '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'

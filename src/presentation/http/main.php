@@ -4,21 +4,15 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\presentation\cli;
 
-use InvalidArgumentException;
-use DI\Container;
-use DI\Definition\Helper\DefinitionHelper;
-use kuaukutsu\ps\onion\application\web\Application;
+use Exception;
+use Symfony\Component\Console\Command\Command;
+use kuaukutsu\ps\onion\application\Application as OnionApplication;
 
-/**
- * @var array<string, DefinitionHelper> $definitions
- */
-$definitions = require dirname(__DIR__) . '/bootstrap.php';
+require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
 
 try {
-    $app = new Application(new Container($definitions));
-} catch (InvalidArgumentException $e) {
+    $_application = new OnionApplication('onion.web', '0.0.2');
+} catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;
-    exit(-1);
+    exit(Command::FAILURE);
 }
-
-$app->run();
