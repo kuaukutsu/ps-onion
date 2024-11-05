@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
-use Fig\Http\Message\RequestMethodInterface;
 use Override;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
