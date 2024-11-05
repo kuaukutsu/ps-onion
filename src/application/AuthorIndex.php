@@ -12,7 +12,7 @@ use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
-use kuaukutsu\ps\onion\infrastructure\repository\author\AuthorRepository;
+use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 
 /**
  * @api

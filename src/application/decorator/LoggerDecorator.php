@@ -8,7 +8,7 @@ use Override;
 use Stringable;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
-use kuaukutsu\ps\onion\domain\interface\Application;
+use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerPreset;
 use kuaukutsu\ps\onion\infrastructure\logger\MonologFactory;
@@ -24,7 +24,7 @@ final readonly class LoggerDecorator implements LoggerInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function __construct(Application $application)
+    public function __construct(ApplicationInterface $application)
     {
         $factory = new MonologFactory($application);
         $this->logger = new Logger(
