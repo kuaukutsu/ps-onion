@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\interface;
 
-interface Request
+use Fig\Http\Message\RequestMethodInterface;
+
+interface Request extends RequestMethodInterface
 {
     public function getMethod(): string;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
+use Fig\Http\Message\RequestMethodInterface;
 use Override;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
@@ -31,7 +32,7 @@ final readonly class BookImportRequest implements RequestEntity
     #[Override]
     public function getMethod(): string
     {
-        return 'POST';
+        return self::METHOD_POST;
     }
 
     #[Override]

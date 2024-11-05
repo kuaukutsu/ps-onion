@@ -24,7 +24,7 @@ final readonly class BookRequest implements RequestEntity
     #[Override]
     public function getMethod(): string
     {
-        return 'GET';
+        return self::METHOD_GET;
     }
 
     #[Override]
