@@ -9,8 +9,7 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
-use kuaukutsu\ps\onion\domain\exception\DbException;
-use kuaukutsu\ps\onion\domain\exception\DbStatementException;
+use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 
@@ -28,10 +27,9 @@ final readonly class AuthorIndex
     /**
      * @param non-empty-string $uuid
      * @throws NotFoundException entity not found.
-     * @throws DbException connection failed.
-     * @throws DbStatementException query failed.
      * @throws TypeError serialize data
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException validation data
+     * @throws InfrastructureException
      */
     public function get(string $uuid): Author
     {

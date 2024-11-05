@@ -32,6 +32,7 @@ use kuaukutsu\ps\onion\infrastructure\db\pdo\SqliteConnection;
 use kuaukutsu\ps\onion\infrastructure\repository\author\Repository as RepositoryAuthor;
 use kuaukutsu\ps\onion\infrastructure\repository\book\Repository as RepositoryBook;
 
+use function DI\autowire;
 use function DI\create;
 use function DI\factory;
 
@@ -130,12 +131,12 @@ final readonly class Application implements ApplicationInterface
 
         $container->set(
             AuthorRepository::class,
-            create(RepositoryAuthor::class),
+            autowire(RepositoryAuthor::class),
         );
 
         $container->set(
             BookRepository::class,
-            create(RepositoryBook::class),
+            autowire(RepositoryBook::class),
         );
     }
 }

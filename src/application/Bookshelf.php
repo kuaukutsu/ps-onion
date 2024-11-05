@@ -8,7 +8,7 @@ use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
-use kuaukutsu\ps\onion\domain\interface\RequestException;
+use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 
 /**
@@ -23,8 +23,8 @@ final readonly class Bookshelf
     }
 
     /**
-     * @throws RequestException
-     * @throws InvalidArgumentException
+     * @throws InfrastructureException
+     * @throws InvalidArgumentException validation data
      */
     public function get(string $uuid): BookDto
     {
@@ -33,7 +33,7 @@ final readonly class Bookshelf
     }
 
     /**
-     * @throws RequestException
+     * @throws InfrastructureException
      * @throws LogicException
      */
     public function import(string $title, string $author): BookDto

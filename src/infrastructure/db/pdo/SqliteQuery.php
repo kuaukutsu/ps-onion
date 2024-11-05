@@ -4,34 +4,74 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\db\pdo;
 
+use Error;
 use Override;
+use Generator;
+use RuntimeException;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\infrastructure\db\DbConnection;
 use kuaukutsu\ps\onion\infrastructure\db\DbQuery;
 use kuaukutsu\ps\onion\infrastructure\db\DbStatement;
+use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\db
  */
 final readonly class SqliteQuery implements DbQuery
 {
-    public function __construct(private DbConnection $connection)
-    {
+    /**
+     * @psalm-suppress PropertyNotSetInConstructor
+     */
+    private ?DbStatement $statement; // @phpstan-ignore-line
+
+    public function __construct(
+        private DbConnection $connection,
+    ) {
     }
 
     #[Override]
-    public function fetch(string $query, array $bindValues = []): array
+    public function prepare(string $query, array $bindValues = []): self
     {
-        return $this->statement($query, $bindValues)
-            ->fetchAssoc();
+        $self = clone $this;
+        $self->statement = $this->prepareStatement($query, $bindValues); // @phpstan-ignore-line
+        return $self;
     }
 
     #[Override]
-    public function fetchAll(string $query, array $bindValues = []): array
+    public function fetch(string $entityDto): ?EntityDto
     {
-        return $this->statement($query, $bindValues)
-            ->fetchAssocAll();
+        if (isset($this->statement) === false) {
+            throw new RuntimeException(
+                'Statement is empty. Need to call “prepare”.'
+            );
+        }
+
+        $data = $this->statement->fetchAssoc();
+        if ($data === []) {
+            return null;
+        }
+
+        return EntityMapper::denormalize($entityDto, $data);
+    }
+
+    #[Override]
+    public function fetchAll(string $entityDto): Generator
+    {
+        if (isset($this->statement) === false) {
+            throw new RuntimeException(
+                'Statement is empty. Need to call “prepare”.'
+            );
+        }
+
+        foreach ($this->statement->fetchAssocAll() as $item) {
+            try {
+                yield EntityMapper::denormalize($entityDto, $item);
+            } catch (Error) {
+                continue;
+            }
+        }
     }
 
     /**
@@ -40,7 +80,7 @@ final readonly class SqliteQuery implements DbQuery
      * @throws DbException connection failed.
      * @throws DbStatementException query failed.
      */
-    private function statement(string $query, array $bindValues): DbStatement
+    private function prepareStatement(string $query, array $bindValues): DbStatement
     {
         $stmt = $this->connection
             ->prepare($query);
