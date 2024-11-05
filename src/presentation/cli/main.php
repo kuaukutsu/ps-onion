@@ -4,21 +4,37 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\presentation\cli;
 
-use InvalidArgumentException;
-use DI\Container;
-use DI\Definition\Helper\DefinitionHelper;
-use kuaukutsu\ps\onion\application\console\Application;
+use Exception;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
+use kuaukutsu\ps\onion\application\Application as OnionApplication;
+use kuaukutsu\ps\onion\presentation\cli\command\AuthorViewCommand;
+use kuaukutsu\ps\onion\presentation\cli\command\BookViewCommand;
 
-/**
- * @var array<string, DefinitionHelper> $definitions
- */
-$definitions = require dirname(__DIR__) . '/bootstrap.php';
+require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
 
 try {
-    $app = new Application(new Container($definitions));
-} catch (InvalidArgumentException $e) {
+    $application = new OnionApplication('onion.cli', '0.0.2');
+} catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;
-    exit(-1);
+    exit(Command::FAILURE);
 }
 
-exit($app->run());
+$console = new Application();
+$console->setCommandLoader(
+    new ContainerCommandLoader(
+        $application->getContainer(),
+        [
+            'author:view' => AuthorViewCommand::class,
+            'book:view' => BookViewCommand::class,
+        ],
+    )
+);
+
+try {
+    exit($console->run());
+} catch (Exception $e) {
+    echo $e->getMessage() . PHP_EOL;
+    exit(Command::FAILURE);
+}
