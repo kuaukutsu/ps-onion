@@ -11,6 +11,7 @@ use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 use kuaukutsu\ps\onion\application\Application as OnionApplication;
 use kuaukutsu\ps\onion\presentation\cli\command\AuthorCreateCommand;
 use kuaukutsu\ps\onion\presentation\cli\command\AuthorViewCommand;
+use kuaukutsu\ps\onion\presentation\cli\command\BookImportCommand;
 use kuaukutsu\ps\onion\presentation\cli\command\BookViewCommand;
 
 require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
@@ -29,6 +30,7 @@ $console->setCommandLoader(
         [
             'author:create' => AuthorCreateCommand::class,
             'author:view' => AuthorViewCommand::class,
+            'book:import' => BookImportCommand::class,
             'book:view' => BookViewCommand::class,
         ],
     )

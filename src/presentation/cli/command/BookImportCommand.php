@@ -14,22 +14,22 @@ use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use kuaukutsu\ps\onion\application\AuthorIndex;
+use kuaukutsu\ps\onion\application\Bookshelf;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\presentation\cli
  */
 #[AsCommand(
-    name: 'author:create',
-    description: 'Push author in current index',
+    name: 'book:import',
+    description: 'Push book in shelf',
 )]
-final class AuthorCreateCommand extends Command
+final class BookImportCommand extends Command
 {
     /**
      * @throws LogicException
      */
     public function __construct(
-        private readonly AuthorIndex $index,
+        private readonly Bookshelf $index,
     ) {
         parent::__construct();
     }
@@ -40,14 +40,16 @@ final class AuthorCreateCommand extends Command
     #[Override]
     protected function configure(): void
     {
-        $this->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name author');
+        $this
+            ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Name book')
+            ->addOption('author', null, InputOption::VALUE_REQUIRED, 'Name author');
     }
 
     #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $author = $this->index->push(
+            $book = $this->index->import(
                 $this->getArgumentData($input),
             );
         } catch (InvalidArgumentException $e) {
@@ -58,23 +60,29 @@ final class AuthorCreateCommand extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln(sprintf('Authoe UUID: %s', $author->uuid->value));
+        $output->writeln(sprintf('Book UUID: %s', $book->uuid->value));
         return Command::SUCCESS;
     }
 
     /**
-     * @return array{"name": string}
+     * @return array{"title": string, "author": string}
      * @throws InvalidArgumentException если UUID не корректный
      */
     private function getArgumentData(InputInterface $input): array
     {
-        $name = $input->getOption('name');
-        if (is_string($name) === false) {
-            throw new InvalidArgumentException('Name argument must be a string.');
+        $title = $input->getOption('title');
+        if (is_string($title) === false) {
+            throw new InvalidArgumentException('Title argument must be string.');
+        }
+
+        $author = $input->getOption('author');
+        if (is_string($author) === false) {
+            throw new InvalidArgumentException('Author argument must be string.');
         }
 
         return [
-            'name' => $name,
+            'title' => $title,
+            'author' => $author,
         ];
     }
 }

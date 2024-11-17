@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
-use Assert\Assert;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
+use kuaukutsu\ps\onion\application\validator\BookValidator;
+use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
+use kuaukutsu\ps\onion\domain\service\BookImporter;
 
 /**
  * @api
@@ -19,7 +21,9 @@ use kuaukutsu\ps\onion\domain\interface\BookRepository;
 final readonly class Bookshelf
 {
     public function __construct(
+        private BookImporter $importer,
         private BookRepository $bookRepository,
+        private BookValidator $bookValidator,
         private UuidValidator $uuidValidator,
     ) {
     }
@@ -39,16 +43,17 @@ final readonly class Bookshelf
     }
 
     /**
-     * @param non-empty-string $title
-     * @param non-empty-string $author
+     * @throws LogicException is input data not valid
      * @throws InfrastructureException
-     * @throws LogicException
      */
-    public function import(string $title, string $author): BookDto
+    public function import(array $data): Book
     {
-        Assert::that($title)->notBlank();
-        Assert::that($author)->notBlank();
-
-        return $this->bookRepository->import($title, $author);
+        $prepareData = $this->bookValidator->prepare($data);
+        return $this->bookRepository->import(
+            $this->importer->createFromRawData(
+                $prepareData['title'],
+                $prepareData['author'],
+            )
+        );
     }
 }
