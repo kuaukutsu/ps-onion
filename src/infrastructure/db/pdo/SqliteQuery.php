@@ -74,6 +74,32 @@ final readonly class SqliteQuery implements DbQuery
         }
     }
 
+    #[Override]
+    public function execute(string $query, array $bindValues = []): bool
+    {
+        $stmt = $this->connection
+            ->prepare($query);
+
+        $this->bindValues($stmt, $bindValues);
+        if ($stmt->execute() === false) {
+            throw new DbStatementException($stmt->getLastError(), $query);
+        }
+
+        return true;
+    }
+
+    #[Override]
+    public function exists(): bool
+    {
+        if (isset($this->statement) === false) {
+            throw new RuntimeException(
+                'Statement is empty. Need to call “prepare”.'
+            );
+        }
+
+        return $this->statement->exists();
+    }
+
     /**
      * @param non-empty-string $query
      * @param array<string, scalar|array|null> $bindValues

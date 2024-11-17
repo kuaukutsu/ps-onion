@@ -9,6 +9,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 use kuaukutsu\ps\onion\application\Application as OnionApplication;
+use kuaukutsu\ps\onion\presentation\cli\command\AuthorCreateCommand;
 use kuaukutsu\ps\onion\presentation\cli\command\AuthorViewCommand;
 use kuaukutsu\ps\onion\presentation\cli\command\BookViewCommand;
 
@@ -26,6 +27,7 @@ $console->setCommandLoader(
     new ContainerCommandLoader(
         $application->getContainer(),
         [
+            'author:create' => AuthorCreateCommand::class,
             'author:view' => AuthorViewCommand::class,
             'book:view' => BookViewCommand::class,
         ],

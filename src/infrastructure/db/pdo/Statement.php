@@ -31,6 +31,12 @@ final readonly class Statement implements DbStatement
     }
 
     #[Override]
+    public function exists(): bool
+    {
+        return $this->statement->fetchColumn() !== false;
+    }
+
+    #[Override]
     public function fetchAssoc(): array
     {
         $data = $this->statement->fetch(PDO::FETCH_ASSOC);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\repository\author;
 
 use Override;
+use Generator;
 use RuntimeException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
@@ -34,19 +35,12 @@ final readonly class Repository implements AuthorRepository
 SELECT * FROM author WHERE uuid=:uuid
 SQL;
 
-        try {
-            $dto = $this->query
+        $dto = $this->handleQueryExeception(
+            fn(): ?AuthorDto => $this->query
                 ->make(Author::class)
                 ->prepare($query, $uuid->toConditions())
-                ->fetch(AuthorDto::class);
-        } catch (DbException | DbStatementException | RuntimeException $exception) {
-            $this->logger->preset(
-                new LoggerExceptionPreset($exception),
-                __METHOD__,
-            );
-
-            throw new InfrastructureException($exception->getMessage(), 0, $exception);
-        }
+                ->fetch(AuthorDto::class)
+        );
 
         if ($dto instanceof AuthorDto) {
             return AuthorMapper::toModel($dto);
@@ -64,19 +58,12 @@ SQL;
 SELECT * FROM author WHERE name=:name;
 SQL;
 
-        try {
-            $iterable = $this->query
+        $iterable = $this->handleQueryExeception(
+            fn(): Generator => $this->query
                 ->make(Author::class)
                 ->prepare($query, ['name' => $name])
-                ->fetchAll(AuthorDto::class);
-        } catch (DbException | DbStatementException | RuntimeException $exception) {
-            $this->logger->preset(
-                new LoggerExceptionPreset($exception),
-                __METHOD__,
-            );
-
-            throw new InfrastructureException($exception->getMessage(), 0, $exception);
-        }
+                ->fetchAll(AuthorDto::class)
+        );
 
         $list = [];
         foreach ($iterable as $author) {
@@ -86,9 +73,53 @@ SQL;
         return $list;
     }
 
+    public function exists(string $name): bool
+    {
+        $query = <<<SQL
+SELECT uuid FROM author WHERE name=:name;
+SQL;
+
+        return $this->handleQueryExeception(
+            fn(): bool => $this->query
+                ->make(Author::class)
+                ->prepare($query, ['name' => $name])
+                ->exists()
+        );
+    }
+
     #[Override]
     public function save(Author $author): Author
     {
+        $query = <<<SQL
+INSERT INTO author (uuid, name, created_at, updated_at) VALUES (:uuid, :name, :created_at, :updated_at);
+SQL;
+
+        $this->handleQueryExeception(
+            fn(): bool => $this->query
+                ->make(Author::class)
+                ->execute($query, AuthorMapper::toDto($author)->toArray())
+        );
+
         return $author;
+    }
+
+    /**
+     * @template TResult
+     * @param callable():TResult $fetch
+     * @return TResult
+     * @throws InfrastructureException
+     */
+    private function handleQueryExeception(callable $fetch)
+    {
+        try {
+            return $fetch();
+        } catch (DbException | DbStatementException | RuntimeException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset($exception),
+                __METHOD__,
+            );
+
+            throw new InfrastructureException($exception->getMessage(), 0, $exception);
+        }
     }
 }

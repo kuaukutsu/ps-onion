@@ -38,4 +38,17 @@ interface DbQuery
      * @throws RuntimeException if DbStatement is empty.
      */
     public function fetchAll(string $entityDto): Generator;
+
+    /**
+     * @param non-empty-string $query
+     * @param array<string, scalar|array|null> $bindValues
+     * @throws DbException connection failed.
+     * @throws DbStatementException query failed.
+     */
+    public function execute(string $query, array $bindValues = []): bool;
+
+    /**
+     * @throws RuntimeException if DbStatement is empty.
+     */
+    public function exists(): bool;
 }
