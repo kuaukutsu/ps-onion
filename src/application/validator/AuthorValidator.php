@@ -7,6 +7,9 @@ namespace kuaukutsu\ps\onion\application\validator;
 use LogicException;
 use Assert\Assert;
 
+/**
+ * @psalm-internal kuaukutsu\ps\onion\application
+ */
 final readonly class AuthorValidator
 {
     /**
