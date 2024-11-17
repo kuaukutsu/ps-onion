@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
-use LogicException;
 use TypeError;
+use LogicException;
 use InvalidArgumentException;
+use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
+use kuaukutsu\ps\onion\domain\service\AuthorCreator;
 
 /**
  * @api
@@ -20,8 +22,10 @@ use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 final readonly class AuthorIndex
 {
     public function __construct(
+        private AuthorCreator $creator,
         private AuthorRepository $repository,
         private UuidValidator $uuidValidator,
+        private AuthorValidator $authorValidator,
     ) {
     }
 
@@ -38,6 +42,24 @@ final readonly class AuthorIndex
         $this->uuidValidator->exception($uuid);
         return $this->repository->get(
             new AuthorUuid($uuid)
+        );
+    }
+
+    /**
+     * @throws LogicException is input data not valid
+     * @throws InfrastructureException
+     */
+    public function push(array $data): Author
+    {
+        $prepareData = $this->authorValidator->prepare($data);
+        if ($this->repository->exists($prepareData['name'])) {
+            throw new LogicException("Author '{$prepareData['name']}' already exists.");
+        }
+
+        return $this->repository->save(
+            $this->creator->createFromRawData(
+                $prepareData['name'],
+            )
         );
     }
 }

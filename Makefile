@@ -78,6 +78,11 @@ run-author:
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		php ./src/presentation/cli/main.php author:view '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'
 
+run-author-create:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		php ./src/presentation/cli/main.php author:create --name="test22"
+
 run-book:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \

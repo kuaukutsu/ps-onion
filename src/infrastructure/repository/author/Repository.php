@@ -86,9 +86,47 @@ SQL;
         return $list;
     }
 
+    public function exists(string $name): bool
+    {
+        $query = <<<SQL
+SELECT uuid FROM author WHERE name=:name;
+SQL;
+
+        try {
+            return $this->query
+                ->make(Author::class)
+                ->prepare($query, ['name' => $name])
+                ->exists();
+        } catch (DbException | DbStatementException | RuntimeException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset($exception),
+                __METHOD__,
+            );
+
+            throw new InfrastructureException($exception->getMessage(), 0, $exception);
+        }
+    }
+
     #[Override]
     public function save(Author $author): Author
     {
+        $query = <<<SQL
+INSERT INTO author (uuid, name, created_at, updated_at) VALUES (:uuid, :name, :created_at, :updated_at);
+SQL;
+
+        try {
+             $this->query
+                ->make(Author::class)
+                ->execute($query, AuthorMapper::toDto($author)->toArray());
+        } catch (DbException | DbStatementException | RuntimeException $exception) {
+            $this->logger->preset(
+                new LoggerExceptionPreset($exception),
+                __METHOD__,
+            );
+
+            throw new InfrastructureException($exception->getMessage(), 0, $exception);
+        }
+
         return $author;
     }
 }

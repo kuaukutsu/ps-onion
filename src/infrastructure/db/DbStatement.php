@@ -10,6 +10,8 @@ interface DbStatement
 
     public function execute(): bool;
 
+    public function exists(): bool;
+
     /**
      * @return array<string, scalar|null>
      */

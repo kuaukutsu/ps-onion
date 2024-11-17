@@ -26,6 +26,11 @@ final readonly class AuthorDto implements EntityDto
     #[Override]
     public function toArray(): array
     {
-        return [];
+        return [
+            'uuid' => $this->uuid,
+            'name' => $this->name,
+            'created_at' => $this->createdAt,
+            'updated_at' => $this->updatedAt,
+        ];
     }
 }

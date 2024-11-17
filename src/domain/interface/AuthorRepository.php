@@ -22,6 +22,13 @@ interface AuthorRepository
     public function get(AuthorUuid $uuid): Author;
 
     /**
+     * @param non-empty-string $name
+     * @throws InfrastructureException
+     */
+    public function exists(string $name): bool;
+
+    /**
+     * @param non-empty-string $name
      * @return array<string, Author>
      * @throws InfrastructureException
      */
