@@ -10,9 +10,6 @@ use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 
-/**
- * @psalm-internal kuaukutsu\ps\onion\application
- */
 final readonly class AuthorCreator
 {
     /**
@@ -24,9 +21,22 @@ final readonly class AuthorCreator
         return new Author(
             uuid: new AuthorUuid(),
             person: new AuthorPerson(
-                name: $name,
+                name: $this->prepareName($name),
             ),
             metadata: new AuthorMetadata(),
         );
+    }
+
+    /**
+     * Domain logic
+     * @param non-empty-string $name
+     * @return non-empty-string
+     */
+    private function prepareName(string $name): string
+    {
+        /**
+         * @var non-empty-string
+         */
+        return mb_ucfirst(mb_strtolower($name));
     }
 }

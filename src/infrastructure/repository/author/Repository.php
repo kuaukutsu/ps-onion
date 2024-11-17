@@ -73,6 +73,7 @@ SQL;
         return $list;
     }
 
+    #[Override]
     public function exists(string $name): bool
     {
         $query = <<<SQL
