@@ -81,7 +81,7 @@ run-author:
 run-author-create:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		php ./src/presentation/cli/main.php author:create --name="test22"
+		php ./src/presentation/cli/main.php author:create --name="test223"
 
 run-book:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
