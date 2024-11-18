@@ -55,7 +55,7 @@ SQL;
     public function find(Author $author): array
     {
         $query = <<<SQL
-SELECT * FROM author WHERE name=:name;
+SELECT * FROM author WHERE lower(name)=lower(:name);
 SQL;
 
         $iterable = $this->handleQueryExeception(
@@ -77,7 +77,7 @@ SQL;
     public function exists(Author $author): bool
     {
         $query = <<<SQL
-SELECT uuid FROM author WHERE name=:name;
+SELECT uuid FROM author WHERE lower(name)=lower(:name);
 SQL;
 
         return $this->handleQueryExeception(
