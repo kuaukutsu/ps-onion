@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
+use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use TypeError;
 use LogicException;
 use InvalidArgumentException;
@@ -51,15 +52,17 @@ final readonly class AuthorIndex
      */
     public function push(array $data): Author
     {
-        $prepareData = $this->authorValidator->prepare($data);
-        if ($this->repository->exists($prepareData['name'])) {
-            throw new LogicException("Author '{$prepareData['name']}' already exists.");
-        }
-
-        return $this->repository->save(
-            $this->creator->createFromRawData(
-                $prepareData['name'],
+        $data = $this->authorValidator->prepare($data);
+        $author = $this->creator->createFromInputData(
+            new AuthorInputDto(
+                name: $data['name'],
             )
         );
+
+        if ($this->repository->exists($author)) {
+            throw new LogicException("Author '{$author->person->name}' already exists.");
+        }
+
+        return $this->repository->save($author);
     }
 }

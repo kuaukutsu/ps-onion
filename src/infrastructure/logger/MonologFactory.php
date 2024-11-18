@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\logger;
 
 use InvalidArgumentException;
+use kuaukutsu\ps\onion\infrastructure\logger\processor\DebugInfoContextProcessor;
 use Psr\Log\LoggerInterface;
 use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\WebProcessor;
@@ -39,6 +40,7 @@ final readonly class MonologFactory
                 new MemoryPeakUsageProcessor(),
                 new ApplicationProcessor($this->application),
                 new SystemEnvironmentProcessor(),
+                new DebugInfoContextProcessor(),
             ],
         );
     }

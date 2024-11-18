@@ -38,4 +38,14 @@ final readonly class EntityRequestStub implements RequestEntity
     {
         return EntityMapper::denormalize(EntityDtoStub::class, $stream->decode());
     }
+
+    #[Override]
+    public function __debugInfo(): array
+    {
+        return [
+            'uri' => $this->getUri(),
+            'method' => $this->getMethod(),
+            'body' => $this->getBody(),
+        ];
+    }
 }

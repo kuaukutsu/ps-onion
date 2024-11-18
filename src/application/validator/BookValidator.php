@@ -13,7 +13,10 @@ use Assert\Assert;
 final readonly class BookValidator
 {
     /**
-     * @return array{"title": non-empty-string, "author": non-empty-string}
+     * @return array{
+     *     "title": non-empty-string,
+     *     "author": non-empty-string,
+     *     }
      * @throws LogicException
      */
     public function prepare(array $data): array

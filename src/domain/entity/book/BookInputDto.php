@@ -7,18 +7,14 @@ namespace kuaukutsu\ps\onion\domain\entity\book;
 use Override;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
-final readonly class BookDto implements EntityDto
+final readonly class BookInputDto implements EntityDto
 {
     /**
-     * @param non-empty-string $uuid
      * @param non-empty-string $title
-     * @param non-empty-string $author
      * @param non-empty-string|null $description
      */
     public function __construct(
-        public string $uuid,
         public string $title,
-        public string $author,
         public ?string $description = null,
     ) {
     }
@@ -27,9 +23,7 @@ final readonly class BookDto implements EntityDto
     public function toArray(): array
     {
         return [
-            'uuid' => $this->uuid,
             'title' => $this->title,
-            'author' => $this->author,
             'description' => $this->description,
         ];
     }

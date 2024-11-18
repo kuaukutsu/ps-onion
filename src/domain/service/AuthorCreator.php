@@ -6,6 +6,7 @@ namespace kuaukutsu\ps\onion\domain\service;
 
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
@@ -13,15 +14,14 @@ use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 final readonly class AuthorCreator
 {
     /**
-     * @param non-empty-string $name
-     * @throws LogicException
+     * @throws LogicException is input data not valid
      */
-    public function createFromRawData(string $name): Author
+    public function createFromInputData(AuthorInputDto $input): Author
     {
         return new Author(
             uuid: new AuthorUuid(),
             person: new AuthorPerson(
-                name: $this->prepareName($name),
+                name: $this->prepareName($input->name),
             ),
             metadata: new AuthorMetadata(),
         );
@@ -37,6 +37,6 @@ final readonly class AuthorCreator
         /**
          * @var non-empty-string
          */
-        return mb_ucfirst(mb_strtolower($name));
+        return mb_convert_case($name, MB_CASE_TITLE, "UTF-8");
     }
 }

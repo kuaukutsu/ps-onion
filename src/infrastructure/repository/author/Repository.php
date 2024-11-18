@@ -52,7 +52,7 @@ SQL;
     }
 
     #[Override]
-    public function findByName(string $name): array
+    public function find(Author $author): array
     {
         $query = <<<SQL
 SELECT * FROM author WHERE name=:name;
@@ -61,20 +61,20 @@ SQL;
         $iterable = $this->handleQueryExeception(
             fn(): Generator => $this->query
                 ->make(Author::class)
-                ->prepare($query, ['name' => $name])
+                ->prepare($query, ['name' => $author->person->name])
                 ->fetchAll(AuthorDto::class)
         );
 
         $list = [];
-        foreach ($iterable as $author) {
-            $list[$author->uuid] = AuthorMapper::toModel($author);
+        foreach ($iterable as $record) {
+            $list[$record->uuid] = AuthorMapper::toModel($record);
         }
 
         return $list;
     }
 
     #[Override]
-    public function exists(string $name): bool
+    public function exists(Author $author): bool
     {
         $query = <<<SQL
 SELECT uuid FROM author WHERE name=:name;
@@ -83,7 +83,7 @@ SQL;
         return $this->handleQueryExeception(
             fn(): bool => $this->query
                 ->make(Author::class)
-                ->prepare($query, ['name' => $name])
+                ->prepare($query, ['name' => $author->person->name])
                 ->exists()
         );
     }
