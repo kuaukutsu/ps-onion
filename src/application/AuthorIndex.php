@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
-use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use TypeError;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;

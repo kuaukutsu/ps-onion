@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\infrastructure\logger;
 
 use InvalidArgumentException;
-use kuaukutsu\ps\onion\infrastructure\logger\processor\DebugInfoContextProcessor;
 use Psr\Log\LoggerInterface;
 use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\WebProcessor;
@@ -14,6 +13,7 @@ use Monolog\Level;
 use Monolog\Logger;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\ApplicationProcessor;
+use kuaukutsu\ps\onion\infrastructure\logger\processor\DebugInfoContextProcessor;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\SystemEnvironmentProcessor;
 
 final readonly class MonologFactory
@@ -47,8 +47,10 @@ final readonly class MonologFactory
 
     private function getLogPath(): string
     {
-        return $this->application->getRuntime() . DIRECTORY_SEPARATOR
-            . 'logs' . DIRECTORY_SEPARATOR
+        return $this->application->getRuntime()
+            . DIRECTORY_SEPARATOR
+            . 'logs'
+            . DIRECTORY_SEPARATOR
             . $this->application->getName() . '.log';
     }
 }
