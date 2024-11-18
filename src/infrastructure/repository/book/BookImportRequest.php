@@ -51,4 +51,14 @@ final readonly class BookImportRequest implements RequestEntity
     {
         return EntityMapper::denormalize(BookDto::class, $stream->decode());
     }
+
+    #[Override]
+    public function __debugInfo(): array
+    {
+        return [
+            'uri' => $this->getUri(),
+            'method' => $this->getMethod(),
+            'body' => $this->getBody(),
+        ];
+    }
 }

@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
@@ -51,15 +52,17 @@ final readonly class AuthorIndex
      */
     public function push(array $data): Author
     {
-        $prepareData = $this->authorValidator->prepare($data);
-        if ($this->repository->exists($prepareData['name'])) {
-            throw new LogicException("Author '{$prepareData['name']}' already exists.");
-        }
-
-        return $this->repository->save(
-            $this->creator->createFromRawData(
-                $prepareData['name'],
+        $data = $this->authorValidator->prepare($data);
+        $author = $this->creator->createFromInputData(
+            new AuthorInputDto(
+                name: $data['name'],
             )
         );
+
+        if ($this->repository->exists($author)) {
+            throw new LogicException("Author '{$author->person->name}' already exists.");
+        }
+
+        return $this->repository->save($author);
     }
 }

@@ -29,8 +29,8 @@ final readonly class BookMapper
         return new BookDto(
             uuid: $book->uuid->value,
             title: $book->title->name,
-            description: $book->title->description,
             author: $book->author->name,
+            description: $book->title->description,
         );
     }
 }

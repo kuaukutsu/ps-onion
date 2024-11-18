@@ -13,6 +13,7 @@ use Monolog\Level;
 use Monolog\Logger;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\ApplicationProcessor;
+use kuaukutsu\ps\onion\infrastructure\logger\processor\DebugInfoContextProcessor;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\SystemEnvironmentProcessor;
 
 final readonly class MonologFactory
@@ -39,14 +40,17 @@ final readonly class MonologFactory
                 new MemoryPeakUsageProcessor(),
                 new ApplicationProcessor($this->application),
                 new SystemEnvironmentProcessor(),
+                new DebugInfoContextProcessor(),
             ],
         );
     }
 
     private function getLogPath(): string
     {
-        return $this->application->getRuntime() . DIRECTORY_SEPARATOR
-            . 'logs' . DIRECTORY_SEPARATOR
+        return $this->application->getRuntime()
+            . DIRECTORY_SEPARATOR
+            . 'logs'
+            . DIRECTORY_SEPARATOR
             . $this->application->getName() . '.log';
     }
 }

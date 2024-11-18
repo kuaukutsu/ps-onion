@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application;
 
-use Assert\Assert;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
+use kuaukutsu\ps\onion\application\validator\BookValidator;
+use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
+use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\entity\book\BookInputDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
+use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
+use kuaukutsu\ps\onion\domain\service\AuthorCreator;
+use kuaukutsu\ps\onion\domain\service\BookImporter;
 
 /**
  * @api
@@ -19,7 +26,11 @@ use kuaukutsu\ps\onion\domain\interface\BookRepository;
 final readonly class Bookshelf
 {
     public function __construct(
+        private AuthorCreator $authorCreator,
+        private AuthorRepository $authorRepository,
+        private BookImporter $importer,
         private BookRepository $bookRepository,
+        private BookValidator $bookValidator,
         private UuidValidator $uuidValidator,
     ) {
     }
@@ -39,16 +50,38 @@ final readonly class Bookshelf
     }
 
     /**
-     * @param non-empty-string $title
-     * @param non-empty-string $author
+     * @throws LogicException is input data not valid
      * @throws InfrastructureException
-     * @throws LogicException
      */
-    public function import(string $title, string $author): BookDto
+    public function import(array $data): Book
     {
-        Assert::that($title)->notBlank();
-        Assert::that($author)->notBlank();
+        $data = $this->bookValidator->prepare($data);
+        $inputDto = new BookInputDto(title: $data['title']);
+        // book exists?
 
-        return $this->bookRepository->import($title, $author);
+        return $this->bookRepository->import(
+            $this->importer->createFromInputData(
+                $inputDto,
+                $this->makeAuthor(
+                    new AuthorInputDto(name: $data['author'])
+                )
+            )
+        );
+    }
+
+    /**
+     * @throws LogicException is input data not valid
+     * @throws InfrastructureException
+     */
+    private function makeAuthor(AuthorInputDto $inputDto): Author
+    {
+        $author = $this->authorCreator->createFromInputData($inputDto);
+        $listAuthor = $this->authorRepository->find($author);
+        if ($listAuthor === []) {
+            return $this->authorRepository->save($author);
+        }
+
+        // @note: Логика выбора нужного автора из списка если поиск вернул больше одного.
+        return current($listAuthor);
     }
 }

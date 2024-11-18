@@ -64,19 +64,23 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
         return EntityMapper::denormalize(BookDto::class, $stream->decode());
     }
 
+    #[Override]
+    public function __debugInfo(): array
+    {
+        return [
+            'uri' => $this->getUri(),
+            'method' => $this->getMethod(),
+            'body' => '',
+        ];
+    }
+
     /**
      * @param array<non-empty-string, non-empty-string|null> $args
      * @throws LogicException
      */
     private function prepareArgsToQueryString(array $args): string
     {
-        $conditions = [];
-        foreach ($args as $key => $value) {
-            if ($value !== null) {
-                $conditions[$key] = $value;
-            }
-        }
-
+        $conditions = array_filter($args, static fn($value): bool => $value !== null);
         if ($conditions === []) {
             throw new LogicException('Property must not be empty.');
         }

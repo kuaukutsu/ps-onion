@@ -81,9 +81,14 @@ run-author:
 run-author-create:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		php ./src/presentation/cli/main.php author:create --name="test2234"
+		php ./src/presentation/cli/main.php author:create --name="Vaughn vernon"
 
 run-book:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		php ./src/presentation/cli/main.php book:view '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'
+
+run-book-import:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		php ./src/presentation/cli/main.php book:import --title="DDD" --author="Vaughn Vernon"

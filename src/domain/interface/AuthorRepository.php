@@ -22,17 +22,15 @@ interface AuthorRepository
     public function get(AuthorUuid $uuid): Author;
 
     /**
-     * @param non-empty-string $name
      * @throws InfrastructureException
      */
-    public function exists(string $name): bool;
+    public function exists(Author $author): bool;
 
     /**
-     * @param non-empty-string $name
      * @return array<string, Author>
      * @throws InfrastructureException
      */
-    public function findByName(string $name): array;
+    public function find(Author $author): array;
 
     /**
      * @throws InfrastructureException

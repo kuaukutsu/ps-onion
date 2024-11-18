@@ -57,4 +57,14 @@ final readonly class BookRequest implements RequestEntity
             ]
         );
     }
+
+    #[Override]
+    public function __debugInfo(): array
+    {
+        return [
+            'uri' => $this->getUri(),
+            'method' => $this->getMethod(),
+            'body' => '',
+        ];
+    }
 }

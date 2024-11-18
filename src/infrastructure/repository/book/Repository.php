@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
-use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use Override;
 use LogicException;
-use Ramsey\Uuid\UuidFactoryInterface;
+use kuaukutsu\ps\onion\domain\entity\book\Book;
+use kuaukutsu\ps\onion\domain\entity\book\BookMapper;
+use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\exception\ClientRequestException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
@@ -23,7 +24,6 @@ final readonly class Repository implements BookRepository
     public function __construct(
         private Cache $cache,
         private HttpClient $client,
-        private UuidFactoryInterface $uuidFactory,
         private LoggerInterface $logger,
     ) {
     }
@@ -55,39 +55,24 @@ final readonly class Repository implements BookRepository
     }
 
     #[Override]
-    public function import(string $title, string $author): BookDto
+    public function import(Book $book): Book
     {
-        $model = $this->findByTitle($title, $author);
-        if ($model instanceof BookDto) {
-            throw new LogicException("[$model->uuid] Book `$title` already exists.");
-        }
+        $request = new BookImportRequest(
+            BookMapper::toDto($book)
+        );
 
         try {
-            return $this->client->send(
-                new BookImportRequest(
-                    new BookDto(
-                        uuid: $this->uuidFactory->uuid4()->toString(),
-                        title: $title,
-                        description: $title,
-                        author: $author,
-                    )
-                ),
-                new HttpContext(),
-            );
+            $this->client->send($request, new HttpContext());
         } catch (RequestException $exception) {
             $this->logger->preset(
-                new LoggerExceptionPreset(
-                    $exception,
-                    [
-                        'title' => $title,
-                        'author' => $author,
-                    ]
-                ),
+                new LoggerExceptionPreset($exception, ['request' => $request]),
                 __METHOD__,
             );
 
             throw new InfrastructureException($exception->getMessage(), 0, $exception);
         }
+
+        return $book;
     }
 
     /**
@@ -96,7 +81,7 @@ final readonly class Repository implements BookRepository
      * @throws LogicException
      * @throws InfrastructureException
      */
-    private function findByTitle(string $title, string $author): ?BookDto
+    public function findByTitle(string $title, string $author): ?BookDto
     {
         $cacheKey = Cache::makeKey($author, $title);
 
