@@ -14,6 +14,8 @@ use GuzzleHttp\Psr7\HttpFactory;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
+use Ramsey\Uuid\Rfc4122\Validator;
+use Ramsey\Uuid\Validator\ValidatorInterface;
 
 use function DI\create;
 use function DI\factory;
@@ -58,6 +60,7 @@ trait Container
                 ),
                 RequestFactoryInterface::class => create(HttpFactory::class),
                 StreamFactoryInterface::class => create(HttpFactory::class),
+                ValidatorInterface::class => create(Validator::class),
                 CacheInterface::class => create(FileCache::class),
             ]
         );

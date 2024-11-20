@@ -2,7 +2,7 @@
   "name": "kuaukutsu/ps-onion",
   "description": "Project Structure: onion",
   "license": "MIT",
-  "type": "library",
+  "type": "project",
   "version": "0.0.1",
   "authors": [
     {
