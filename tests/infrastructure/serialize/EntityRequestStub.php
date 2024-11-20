@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\tests\infrastructure\repository;
+namespace kuaukutsu\ps\onion\tests\infrastructure\serialize;
 
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
