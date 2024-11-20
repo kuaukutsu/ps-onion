@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\application;
 
+use Override;
 use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -84,6 +85,7 @@ final class AuthorPushTest extends TestCase
         $app->push(['name' => 'exception']);
     }
 
+    #[Override]
     protected function setUp(): void
     {
         self::setDefinition(
