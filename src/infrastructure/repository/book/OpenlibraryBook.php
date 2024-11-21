@@ -6,8 +6,8 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use TypeError;
-use Ramsey\Uuid\UuidInterface;
-use Ramsey\Uuid\Uuid as UuidFactory;
+use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
+use kuaukutsu\ps\onion\domain\service\BookUuidGenerator;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
 final readonly class OpenlibraryBook implements EntityDto
@@ -25,9 +25,9 @@ final readonly class OpenlibraryBook implements EntityDto
     ) {
     }
 
-    public function getUuid(): UuidInterface
+    public function getUuid(): BookUuid
     {
-        return UuidFactory::uuid8(
+        return BookUuidGenerator::generateByIsbn(
             hash('xxh3', implode(':', $this->isbn))
         );
     }

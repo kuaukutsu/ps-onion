@@ -74,7 +74,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
             current($openlibrarySchema->docs),
         );
         return new BookDto(
-            uuid: $openlibraryBook->getUuid()->toString(),
+            uuid: $openlibraryBook->getUuid()->value,
             title: $openlibraryBook->title,
             author: $openlibraryBook->getAuthor(),
         );

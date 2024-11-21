@@ -19,4 +19,11 @@ final readonly class BookUuidGenerator
             Uuid::uuid4()->toString()
         );
     }
+
+    public static function generateByIsbn(string $isbn): BookUuid
+    {
+        return new BookUuid(
+            Uuid::uuid8($isbn)->toString()
+        );
+    }
 }
