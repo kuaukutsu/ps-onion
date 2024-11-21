@@ -46,7 +46,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     #[Override]
     public function getUri(): string
     {
-        return 'https://webhook.site/8cabc407-a3f0-41b3-8f53-b5f1edcff4f0?' . $this->query;
+        return 'https://openlibrary.org/search.json?' . $this->query;
     }
 
     /**
@@ -59,9 +59,25 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): BookDto
+    public function makeResponse(StreamDecode $stream): ?BookDto
     {
-        return EntityMapper::denormalize(BookDto::class, $stream->decode());
+        $openlibrarySchema = EntityMapper::denormalize(
+            OpenlibrarySchema::class,
+            $stream->decode(),
+        );
+        if ($openlibrarySchema->docs === []) {
+            return null;
+        }
+
+        $openlibraryBook = EntityMapper::denormalize(
+            OpenlibraryBook::class,
+            current($openlibrarySchema->docs),
+        );
+        return new BookDto(
+            uuid: $openlibraryBook->getUuid()->toString(),
+            title: $openlibraryBook->title,
+            author: $openlibraryBook->getAuthor(),
+        );
     }
 
     #[Override]

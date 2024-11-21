@@ -6,14 +6,14 @@ namespace kuaukutsu\ps\onion\application;
 
 use LogicException;
 use InvalidArgumentException;
-use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\application\validator\BookValidator;
+use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookInputDto;
-use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
+use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
+use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
@@ -31,21 +31,42 @@ final readonly class Bookshelf
         private BookImporter $importer,
         private BookRepository $bookRepository,
         private BookValidator $bookValidator,
-        private UuidValidator $uuidValidator,
+        private IsbnValidator $isbnValidator,
     ) {
     }
 
     /**
-     * @param non-empty-string $uuid
+     * @param non-empty-string $isbn
      * @throws LogicException is input data not valid
+     * @throws NotFoundException
      * @throws InfrastructureException
      * @throws InvalidArgumentException validation data
      */
-    public function get(string $uuid): BookDto
+    public function get(string $isbn): Book
     {
-        $this->uuidValidator->exception($uuid);
+        $this->isbnValidator->exception($isbn);
         return $this->bookRepository->get(
-            new BookUuid($uuid)
+            new BookIsbn($isbn)
+        );
+    }
+
+    /**
+     * @throws LogicException is input data not valid
+     * @throws NotFoundException
+     * @throws InfrastructureException
+     */
+    public function find(array $data): Book
+    {
+        $data = $this->bookValidator->prepare($data);
+        $inputDto = new BookInputDto(title: $data['title']);
+
+        return $this->bookRepository->find(
+            $this->importer->createFromInputData(
+                $inputDto,
+                $this->makeAuthor(
+                    new AuthorInputDto(name: $data['author'])
+                )
+            )
         );
     }
 

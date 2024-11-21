@@ -11,8 +11,8 @@ use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\LogicException;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use kuaukutsu\ps\onion\application\Bookshelf;
 
@@ -20,10 +20,10 @@ use kuaukutsu\ps\onion\application\Bookshelf;
  * @psalm-internal kuaukutsu\ps\onion\presentation\cli
  */
 #[AsCommand(
-    name: 'book:view',
-    description: 'Book view',
+    name: 'book:find',
+    description: 'Book search',
 )]
-final class BookViewCommand extends Command
+final class BookFindCommand extends Command
 {
     /**
      * @throws LogicException
@@ -40,15 +40,17 @@ final class BookViewCommand extends Command
     #[Override]
     protected function configure(): void
     {
-        $this->addArgument('isbn', InputArgument::REQUIRED, 'ISBN book');
+        $this
+            ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Name book')
+            ->addOption('author', null, InputOption::VALUE_REQUIRED, 'Name author');
     }
 
     #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $book = $this->bookshelf->get(
-                $this->getArgumentIsbn($input),
+            $book = $this->bookshelf->find(
+                $this->getArgumentData($input),
             );
         } catch (InvalidArgumentException $e) {
             $output->writeln($e->getMessage());
@@ -58,24 +60,29 @@ final class BookViewCommand extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln(sprintf('Book Title: %s', $book->title->name));
+        $output->writeln(sprintf('Book UUID: %s', $book->uuid->value));
         return Command::SUCCESS;
     }
 
     /**
-     * @return non-empty-string
+     * @return array{"title": string, "author": string}
      * @throws InvalidArgumentException если UUID не корректный
      */
-    private function getArgumentIsbn(InputInterface $input): string
+    private function getArgumentData(InputInterface $input): array
     {
-        $isbn = $input->getArgument('isbn');
-        if (is_string($isbn) === false) {
-            throw new InvalidArgumentException('ISBN argument must be a non empty string.');
+        $title = $input->getOption('title');
+        if (is_string($title) === false) {
+            throw new InvalidArgumentException('Title argument must be string.');
         }
 
-        /**
-         * @var non-empty-string
-         */
-        return $isbn;
+        $author = $input->getOption('author');
+        if (is_string($author) === false) {
+            throw new InvalidArgumentException('Author argument must be string.');
+        }
+
+        return [
+            'title' => $title,
+            'author' => $author,
+        ];
     }
 }

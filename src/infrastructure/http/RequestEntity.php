@@ -14,10 +14,10 @@ use kuaukutsu\ps\onion\domain\interface\EntityDto as TResponse;
 interface RequestEntity extends Request
 {
     /**
-     * @return TResponse
+     * @return TResponse|null
      * @throws TypeError hydrate data
      * @throws StreamDecodeException decode string to array
      * @noinspection PhpDocSignatureInspection
      */
-    public function makeResponse(StreamDecode $stream): TResponse;
+    public function makeResponse(StreamDecode $stream): ?TResponse;
 }

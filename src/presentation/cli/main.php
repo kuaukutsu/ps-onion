@@ -11,6 +11,7 @@ use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 use kuaukutsu\ps\onion\application\Application as OnionApplication;
 use kuaukutsu\ps\onion\presentation\cli\command\AuthorCreateCommand;
 use kuaukutsu\ps\onion\presentation\cli\command\AuthorViewCommand;
+use kuaukutsu\ps\onion\presentation\cli\command\BookFindCommand;
 use kuaukutsu\ps\onion\presentation\cli\command\BookImportCommand;
 use kuaukutsu\ps\onion\presentation\cli\command\BookViewCommand;
 
@@ -32,6 +33,7 @@ $console->setCommandLoader(
             'author:view' => AuthorViewCommand::class,
             'book:import' => BookImportCommand::class,
             'book:view' => BookViewCommand::class,
+            'book:find' => BookFindCommand::class,
         ],
     )
 );

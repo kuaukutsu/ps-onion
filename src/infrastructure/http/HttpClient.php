@@ -31,11 +31,11 @@ final readonly class HttpClient
     /**
      * @template TResponse of EntityDto
      * @param RequestEntity<TResponse> $requestEntity
-     * @return TResponse
+     * @return TResponse|null
      * @throws RequestException
      * @noinspection PhpDocSignatureInspection
      */
-    public function send(RequestEntity $requestEntity, RequestContext $context): EntityDto
+    public function send(RequestEntity $requestEntity, RequestContext $context): ?EntityDto
     {
         $requestHandlers = [
             new HandlerContainer(class: JsonBase::class),

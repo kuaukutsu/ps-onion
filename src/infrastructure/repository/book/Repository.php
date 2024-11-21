@@ -7,10 +7,11 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 use Override;
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
+use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\entity\book\BookMapper;
-use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\exception\ClientRequestException;
+use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
@@ -29,29 +30,33 @@ final readonly class Repository implements BookRepository
     }
 
     #[Override]
-    public function get(BookUuid $uuid): BookDto
+    public function get(BookIsbn $isbn): Book
     {
-        $cacheKey = Cache::makeKey($uuid->value);
+        $cacheKey = Cache::makeKey($isbn->getValue());
 
         try {
             $model = $this->cache->get($cacheKey)
                 ?? $this->client->send(
-                    new BookRequest($uuid),
-                    new HttpContext(),
+                    new BookRequest($isbn),
+                    new HttpContext(timeout: 10.),
                 );
         } catch (RequestException $exception) {
             $this->logger->preset(
-                new LoggerExceptionPreset($exception, $uuid->toConditions()),
+                new LoggerExceptionPreset($exception, $isbn->toConditions()),
                 __METHOD__,
             );
 
             throw new InfrastructureException($exception->getMessage(), 0, $exception);
         }
 
+        if ($model === null) {
+            throw new NotFoundException("[{$isbn->getValue()}] Book not found.");
+        }
+
         /** @psalm-check-type-exact $model = BookDto */
 
         $this->cache->set($cacheKey, $model);
-        return $model;
+        return BookMapper::toModel($model);
     }
 
     #[Override]
@@ -75,13 +80,25 @@ final readonly class Repository implements BookRepository
         return $book;
     }
 
+    #[Override]
+    public function find(Book $book): Book
+    {
+        $dto = $this->findByTitle($book->title->name, $book->author->name);
+        if ($dto === null) {
+            throw new NotFoundException("Book '{$book->title->name}' not found.");
+        }
+
+        return BookMapper::toModel($dto);
+    }
+
     /**
      * @param non-empty-string $title
      * @param non-empty-string $author
      * @throws LogicException
+     * @throws LogicException
      * @throws InfrastructureException
      */
-    public function findByTitle(string $title, string $author): ?BookDto
+    private function findByTitle(string $title, string $author): ?BookDto
     {
         $cacheKey = Cache::makeKey($author, $title);
 
@@ -117,6 +134,10 @@ final readonly class Repository implements BookRepository
             );
 
             throw new InfrastructureException($exception->getMessage(), 0, $exception);
+        }
+
+        if ($model === null) {
+            return null;
         }
 
         $this->cache->set($cacheKey, $model);

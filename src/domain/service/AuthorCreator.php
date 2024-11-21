@@ -9,7 +9,6 @@ use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 
 final readonly class AuthorCreator
 {
@@ -19,7 +18,7 @@ final readonly class AuthorCreator
     public function createFromInputData(AuthorInputDto $input): Author
     {
         return new Author(
-            uuid: new AuthorUuid(),
+            uuid: AuthorUuidGenerator::generate(),
             person: new AuthorPerson(
                 name: $this->prepareName($input->name),
             ),
