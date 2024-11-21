@@ -7,8 +7,8 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 use Override;
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
+use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\entity\book\BookMapper;
-use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\exception\ClientRequestException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
@@ -30,19 +30,19 @@ final readonly class Repository implements BookRepository
     }
 
     #[Override]
-    public function get(BookUuid $uuid): Book
+    public function get(BookIsbn $isbn): Book
     {
-        $cacheKey = Cache::makeKey($uuid->value);
+        $cacheKey = Cache::makeKey($isbn->getValue());
 
         try {
             $model = $this->cache->get($cacheKey)
                 ?? $this->client->send(
-                    new BookRequest($uuid),
-                    new HttpContext(),
+                    new BookRequest($isbn),
+                    new HttpContext(timeout: 10.),
                 );
         } catch (RequestException $exception) {
             $this->logger->preset(
-                new LoggerExceptionPreset($exception, $uuid->toConditions()),
+                new LoggerExceptionPreset($exception, $isbn->toConditions()),
                 __METHOD__,
             );
 
@@ -50,7 +50,7 @@ final readonly class Repository implements BookRepository
         }
 
         if ($model === null) {
-            throw new NotFoundException("[$uuid->value] Book not found.");
+            throw new NotFoundException("[{$isbn->getValue()}] Book not found.");
         }
 
         /** @psalm-check-type-exact $model = BookDto */

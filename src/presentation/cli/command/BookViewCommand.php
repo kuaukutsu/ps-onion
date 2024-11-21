@@ -40,7 +40,7 @@ final class BookViewCommand extends Command
     #[Override]
     protected function configure(): void
     {
-        $this->addArgument('uuid', InputArgument::REQUIRED, 'UUID book');
+        $this->addArgument('isbn', InputArgument::REQUIRED, 'ISBN book');
     }
 
     #[Override]
@@ -48,7 +48,7 @@ final class BookViewCommand extends Command
     {
         try {
             $book = $this->bookshelf->get(
-                $this->getArgumentUuid($input),
+                $this->getArgumentIsbn($input),
             );
         } catch (InvalidArgumentException $e) {
             $output->writeln($e->getMessage());
@@ -66,16 +66,16 @@ final class BookViewCommand extends Command
      * @return non-empty-string
      * @throws InvalidArgumentException если UUID не корректный
      */
-    private function getArgumentUuid(InputInterface $input): string
+    private function getArgumentIsbn(InputInterface $input): string
     {
-        $uuid = $input->getArgument('uuid');
-        if (is_string($uuid) === false) {
-            throw new InvalidArgumentException('UUID argument must be a non empty string.');
+        $isbn = $input->getArgument('isbn');
+        if (is_string($isbn) === false) {
+            throw new InvalidArgumentException('ISBN argument must be a non empty string.');
         }
 
         /**
          * @var non-empty-string
          */
-        return $uuid;
+        return $isbn;
     }
 }

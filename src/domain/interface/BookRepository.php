@@ -6,7 +6,7 @@ namespace kuaukutsu\ps\onion\domain\interface;
 
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
-use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
+use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 
@@ -17,7 +17,7 @@ interface BookRepository
      * @throws InfrastructureException
      * @throws LogicException
      */
-    public function get(BookUuid $uuid): Book;
+    public function get(BookIsbn $isbn): Book;
 
     /**
      * @throws NotFoundException

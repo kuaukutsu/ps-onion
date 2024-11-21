@@ -27,7 +27,9 @@ final readonly class OpenlibraryBook implements EntityDto
 
     public function getUuid(): UuidInterface
     {
-        return UuidFactory::uuid8(hash('xxh3', implode(':', $this->isbn)));
+        return UuidFactory::uuid8(
+            hash('xxh3', implode(':', $this->isbn))
+        );
     }
 
     /**

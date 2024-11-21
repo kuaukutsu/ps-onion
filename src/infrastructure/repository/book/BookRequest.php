@@ -6,7 +6,7 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
-use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
+use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
 use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
@@ -18,7 +18,7 @@ use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
  */
 final readonly class BookRequest implements RequestEntity
 {
-    public function __construct(private BookUuid $uuid)
+    public function __construct(private BookIsbn $isbn)
     {
     }
 
@@ -31,7 +31,8 @@ final readonly class BookRequest implements RequestEntity
     #[Override]
     public function getUri(): string
     {
-        return 'https://webhook.site/' . $this->uuid->value;
+        return 'https://openlibrary.org/search.json?'
+            . http_build_query($this->isbn->toConditions());
     }
 
     /**
@@ -44,17 +45,24 @@ final readonly class BookRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): BookDto
+    public function makeResponse(StreamDecode $stream): ?BookDto
     {
-        return EntityMapper::denormalize(
-            BookDto::class,
+        $openlibrarySchema = EntityMapper::denormalize(
+            OpenlibrarySchema::class,
             $stream->decode(),
-            [
-                'uuid' => $this->uuid->value,
-                'title' => 'Name Default',
-                'description' => 'Description Default',
-                'author' => 'Author',
-            ]
+        );
+        if ($openlibrarySchema->docs === []) {
+            return null;
+        }
+
+        $openlibraryBook = EntityMapper::denormalize(
+            OpenlibraryBook::class,
+            current($openlibrarySchema->docs),
+        );
+        return new BookDto(
+            uuid: $openlibraryBook->getUuid()->toString(),
+            title: $openlibraryBook->title,
+            author: $openlibraryBook->getAuthor(),
         );
     }
 
