@@ -7,6 +7,7 @@ namespace kuaukutsu\ps\onion\application;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\BookValidator;
+use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
@@ -30,6 +31,7 @@ final readonly class Bookshelf
         private BookImporter $importer,
         private BookRepository $bookRepository,
         private BookValidator $bookValidator,
+        private IsbnValidator $isbnValidator,
     ) {
     }
 
@@ -42,6 +44,7 @@ final readonly class Bookshelf
      */
     public function get(string $isbn): Book
     {
+        $this->isbnValidator->exception($isbn);
         return $this->bookRepository->get(
             new BookIsbn($isbn)
         );
