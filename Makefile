@@ -86,9 +86,14 @@ run-author-create:
 run-book:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		php ./src/presentation/cli/main.php book:view '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'
+		php ./src/presentation/cli/main.php book:view '30363638-6338-8863-b831-333265346631'
+
+run-book-find:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		php ./src/presentation/cli/main.php book:find --title="Domain-Driven Design Distilled" --author="Vaughn Vernon"
 
 run-book-import:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		php ./src/presentation/cli/main.php book:import --title="DDD" --author="Vaughn Vernon"
+		php ./src/presentation/cli/main.php book:import --title="Domain-Driven Design Distilled" --author="Vaughn Vernon"

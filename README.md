@@ -44,7 +44,11 @@ Container:
 ### Run example
 
 ```shell
-make run
+make run-author
+```
+
+```shell
+make run-author-create
 ```
 
 ### Static analysis
