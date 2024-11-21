@@ -10,7 +10,6 @@ use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookInputDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
-use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 
 final readonly class BookImporter
 {
@@ -20,7 +19,7 @@ final readonly class BookImporter
     public function createFromInputData(BookInputDto $input, Author $author): Book
     {
         return new Book(
-            uuid: new BookUuid(),
+            uuid: BookUuidGenerator::generate(),
             title: new BookTitle(name: $input->title, description: $input->description),
             author: new BookAuthor(name: $author->person->name),
         );

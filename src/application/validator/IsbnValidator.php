@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\application\validator;
 
 use Assert\Assert;
+use LogicException;
 use InvalidArgumentException;
 
 /**
@@ -29,9 +30,13 @@ final readonly class IsbnValidator
      */
     public function validate(string $isbn): bool
     {
-        Assert::that($isbn)
-            ->numeric()
-            ->notEmpty();
+        try {
+            Assert::that($isbn)
+                ->numeric()
+                ->notEmpty();
+        } catch (LogicException) {
+            return false;
+        }
 
         return true;
     }
