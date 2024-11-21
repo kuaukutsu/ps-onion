@@ -82,16 +82,16 @@ final readonly class Bookshelf
     public function import(array $data): Book
     {
         $prepareData = $this->bookValidator->prepare($data);
-        $inputDto = new BookInputDto(title: $prepareData['title']);
-        $author = $this->makeAuthor(
-            new AuthorInputDto(name: $prepareData['author'])
+
+        $book = $this->importer->createFromInputData(
+            new BookInputDto(title: $prepareData['title']),
+            $this->makeAuthor(
+                new AuthorInputDto(name: $prepareData['author'])
+            )
         );
 
-        return $this->bookRepository->find(
-            $this->importer->createFromInputData($inputDto, $author)
-        ) ?? $this->bookRepository->import(
-            $this->importer->createFromInputData($inputDto, $author)
-        );
+        return $this->bookRepository->find($book)
+            ?? $this->bookRepository->import($book);
     }
 
     /**
