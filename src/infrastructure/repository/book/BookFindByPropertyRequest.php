@@ -15,6 +15,7 @@ use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 /**
  * @implements RequestEntity<BookDto>
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
+ * @link https://openlibrary.org/dev/docs/api/search
  */
 final readonly class BookFindByPropertyRequest implements RequestEntity
 {
@@ -100,6 +101,13 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
         if ($conditions === []) {
             throw new LogicException('Property must not be empty.');
         }
+
+        $conditions['fields'] = [
+            'title',
+            'first_publish_year',
+            'author_name',
+            'isbn',
+        ];
 
         return http_build_query($conditions);
     }

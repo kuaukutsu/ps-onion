@@ -15,6 +15,7 @@ use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 /**
  * @implements RequestEntity<BookDto>
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
+ * @link https://openlibrary.org/dev/docs/api/search
  */
 final readonly class BookRequest implements RequestEntity
 {
@@ -32,7 +33,17 @@ final readonly class BookRequest implements RequestEntity
     public function getUri(): string
     {
         return 'https://openlibrary.org/search.json?'
-            . http_build_query($this->isbn->toConditions());
+            . http_build_query(
+                [
+                    ...$this->isbn->toConditions(),
+                    'fields' => [
+                        'title',
+                        'first_publish_year',
+                        'author_name',
+                        'isbn',
+                    ],
+                ]
+            );
     }
 
     /**
