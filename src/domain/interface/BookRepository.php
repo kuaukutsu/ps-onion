@@ -24,7 +24,7 @@ interface BookRepository
      * @throws InfrastructureException
      * @throws LogicException
      */
-    public function find(Book $book): Book;
+    public function find(Book $book): ?Book;
 
     /**
      * @throws InfrastructureException

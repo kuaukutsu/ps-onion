@@ -57,17 +57,22 @@ final readonly class Bookshelf
      */
     public function find(array $data): Book
     {
-        $data = $this->bookValidator->prepare($data);
-        $inputDto = new BookInputDto(title: $data['title']);
+        $prepareData = $this->bookValidator->prepare($data);
 
-        return $this->bookRepository->find(
+        $book = $this->bookRepository->find(
             $this->importer->createFromInputData(
-                $inputDto,
+                new BookInputDto(title: $prepareData['title']),
                 $this->makeAuthor(
-                    new AuthorInputDto(name: $data['author'])
+                    new AuthorInputDto(name: $prepareData['author'])
                 )
             )
         );
+
+        if ($book instanceof Book) {
+            return $book;
+        }
+
+        throw new NotFoundException("Book '{$prepareData['title']}' not found.");
     }
 
     /**
@@ -76,17 +81,16 @@ final readonly class Bookshelf
      */
     public function import(array $data): Book
     {
-        $data = $this->bookValidator->prepare($data);
-        $inputDto = new BookInputDto(title: $data['title']);
-        // book exists?
+        $prepareData = $this->bookValidator->prepare($data);
+        $inputDto = new BookInputDto(title: $prepareData['title']);
+        $author = $this->makeAuthor(
+            new AuthorInputDto(name: $prepareData['author'])
+        );
 
-        return $this->bookRepository->import(
-            $this->importer->createFromInputData(
-                $inputDto,
-                $this->makeAuthor(
-                    new AuthorInputDto(name: $data['author'])
-                )
-            )
+        return $this->bookRepository->find(
+            $this->importer->createFromInputData($inputDto, $author)
+        ) ?? $this->bookRepository->import(
+            $this->importer->createFromInputData($inputDto, $author)
         );
     }
 

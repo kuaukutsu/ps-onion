@@ -81,11 +81,11 @@ final readonly class Repository implements BookRepository
     }
 
     #[Override]
-    public function find(Book $book): Book
+    public function find(Book $book): ?Book
     {
         $dto = $this->findByTitle($book->title->name, $book->author->name);
         if ($dto === null) {
-            throw new NotFoundException("Book '{$book->title->name}' not found.");
+            return null;
         }
 
         return BookMapper::toModel($dto);
