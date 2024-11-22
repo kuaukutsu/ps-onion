@@ -76,6 +76,11 @@ run:
 run-author:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		php ./src/presentation/cli/main.php author:view '422b5368-fab4-491b-b252-13b5bb2ec900'
+
+run-author-failure:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		php ./src/presentation/cli/main.php author:view '8cabc407-a3f0-41b3-8f53-b5f1edcff4f0'
 
 run-author-create:
