@@ -9,7 +9,8 @@ use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
-use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorMapper;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
@@ -38,11 +39,13 @@ final readonly class AuthorIndex
      * @throws InvalidArgumentException validation data
      * @throws InfrastructureException
      */
-    public function get(string $uuid): Author
+    public function get(string $uuid): AuthorDto
     {
         $this->uuidValidator->exception($uuid);
-        return $this->repository->get(
-            new AuthorUuid($uuid)
+        return AuthorMapper::toDto(
+            $this->repository->get(
+                new AuthorUuid($uuid)
+            )
         );
     }
 
@@ -50,7 +53,7 @@ final readonly class AuthorIndex
      * @throws LogicException is input data not valid
      * @throws InfrastructureException
      */
-    public function push(array $data): Author
+    public function push(array $data): AuthorDto
     {
         $data = $this->authorValidator->prepare($data);
         $author = $this->creator->createFromInputData(
@@ -63,6 +66,8 @@ final readonly class AuthorIndex
             throw new LogicException("Author '{$author->person->name}' already exists.");
         }
 
-        return $this->repository->save($author);
+        return AuthorMapper::toDto(
+            $this->repository->save($author)
+        );
     }
 }
