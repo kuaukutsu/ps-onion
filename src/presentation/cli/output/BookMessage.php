@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace kuaukutsu\ps\onion\presentation\cli\output;
+
+use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+
+final readonly class BookMessage implements OutputMessage
+{
+    public function __construct(
+        private string $uuid,
+        private string $title,
+        private string $authorName,
+    ) {
+    }
+
+    public static function fromBook(BookDto $book): BookMessage
+    {
+        return new self(
+            uuid: $book->uuid,
+            title: $book->title,
+            authorName: $book->author,
+        );
+    }
+
+    public function output(): array
+    {
+        return [
+            'UUID: ' . $this->uuid,
+            'Title: ' . $this->title,
+            'Author: ' . $this->authorName,
+        ];
+    }
+}
