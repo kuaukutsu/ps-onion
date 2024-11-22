@@ -11,6 +11,8 @@ use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
+use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\entity\book\BookMapper;
 use kuaukutsu\ps\onion\domain\entity\book\BookInputDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
@@ -42,11 +44,13 @@ final readonly class Bookshelf
      * @throws InfrastructureException
      * @throws InvalidArgumentException validation data
      */
-    public function get(string $isbn): Book
+    public function get(string $isbn): BookDto
     {
         $this->isbnValidator->exception($isbn);
-        return $this->bookRepository->get(
-            new BookIsbn($isbn)
+        return BookMapper::toDto(
+            $this->bookRepository->get(
+                new BookIsbn($isbn)
+            )
         );
     }
 
@@ -55,7 +59,7 @@ final readonly class Bookshelf
      * @throws NotFoundException
      * @throws InfrastructureException
      */
-    public function find(array $data): Book
+    public function find(array $data): BookDto
     {
         $prepareData = $this->bookValidator->prepare($data);
 
@@ -69,7 +73,7 @@ final readonly class Bookshelf
         );
 
         if ($book instanceof Book) {
-            return $book;
+            return BookMapper::toDto($book);
         }
 
         throw new NotFoundException("Book '{$prepareData['title']}' not found.");
@@ -79,7 +83,7 @@ final readonly class Bookshelf
      * @throws LogicException is input data not valid
      * @throws InfrastructureException
      */
-    public function import(array $data): Book
+    public function import(array $data): BookDto
     {
         $prepareData = $this->bookValidator->prepare($data);
 
@@ -90,8 +94,10 @@ final readonly class Bookshelf
             )
         );
 
-        return $this->bookRepository->find($book)
-            ?? $this->bookRepository->import($book);
+        return BookMapper::toDto(
+            $this->bookRepository->find($book)
+            ?? $this->bookRepository->import($book)
+        );
     }
 
     /**

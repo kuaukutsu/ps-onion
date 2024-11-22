@@ -33,7 +33,7 @@ final class AuthorPushTest extends TestCase
         $app = self::get(AuthorIndex::class);
         $domain = $app->push(['name' => 'test']);
 
-        self::assertEquals('Test', $domain->person->name);
+        self::assertEquals('Test', $domain->name);
     }
 
     /**

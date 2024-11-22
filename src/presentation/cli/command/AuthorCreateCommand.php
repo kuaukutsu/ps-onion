@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use kuaukutsu\ps\onion\application\AuthorIndex;
+use kuaukutsu\ps\onion\presentation\cli\output\AuthorMessage;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\presentation\cli
@@ -58,7 +59,9 @@ final class AuthorCreateCommand extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln(sprintf('Authoe UUID: %s', $author->uuid->value));
+        $output->writeln(
+            AuthorMessage::fromBook($author)->output()
+        );
         return Command::SUCCESS;
     }
 

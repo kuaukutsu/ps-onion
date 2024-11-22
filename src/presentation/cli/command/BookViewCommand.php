@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use kuaukutsu\ps\onion\application\Bookshelf;
+use kuaukutsu\ps\onion\presentation\cli\output\BookMessage;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\presentation\cli
@@ -58,7 +59,9 @@ final class BookViewCommand extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln(sprintf('Book Title: %s', $book->title->name));
+        $output->writeln(
+            BookMessage::fromBook($book)->output()
+        );
         return Command::SUCCESS;
     }
 
