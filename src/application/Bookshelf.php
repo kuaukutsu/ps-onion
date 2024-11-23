@@ -108,7 +108,7 @@ final readonly class Bookshelf
     private function makeAuthor(AuthorInputDto $inputDto): Author
     {
         $author = $this->authorCreator->createFromInputData($inputDto);
-        $listAuthor = $this->authorRepository->find($author);
+        $listAuthor = $this->authorRepository->find($author->person);
         if ($listAuthor === []) {
             return $this->authorRepository->save($author);
         }

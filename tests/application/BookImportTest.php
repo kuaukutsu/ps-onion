@@ -123,7 +123,7 @@ final class BookImportTest extends TestCase
                         return $author->person->name === 'Tester';
                     }
 
-                    public function find(Author $author): array
+                    public function find(AuthorPerson $person): array
                     {
                         return [];
                     }

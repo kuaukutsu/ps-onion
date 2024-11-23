@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\author;
 
+use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use Override;
 use Generator;
 use RuntimeException;
@@ -52,7 +53,7 @@ SQL;
     }
 
     #[Override]
-    public function find(Author $author): array
+    public function find(AuthorPerson $person): array
     {
         $query = <<<SQL
 SELECT * FROM author WHERE lower(name)=lower(:name);
@@ -61,7 +62,7 @@ SQL;
         $iterable = $this->handleQueryExeception(
             fn(): Generator => $this->query
                 ->make(Author::class)
-                ->prepare($query, ['name' => $author->person->name])
+                ->prepare($query, ['name' => $person->name])
                 ->fetchAll(AuthorDto::class)
         );
 
