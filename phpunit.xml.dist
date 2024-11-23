@@ -2,7 +2,9 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" colors="true"
          stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd"
          cacheDirectory=".phpunit.cache"
-         displayDetailsOnTestsThatTriggerWarnings="true">
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         executionOrder="random"
+         resolveDependencies="true">
     <coverage/>
     <testsuites>
         <testsuite name="PS Onion">

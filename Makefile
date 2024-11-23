@@ -58,6 +58,16 @@ rector:
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/rector
 
+phpunit-coverage:
+	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
+		jakzal/phpqa:php${PHP_VERSION} \
+		php -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text
+
+infection:
+	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
+		jakzal/phpqa:php${PHP_VERSION} \
+		/tools/infection run --initial-tests-php-options='-dpcov.enabled=1'
+
 check:
 	-make phpcs
 	-make psalm

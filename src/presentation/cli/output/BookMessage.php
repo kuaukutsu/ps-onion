@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\presentation\cli\output;
 
+use Override;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 
 final readonly class BookMessage implements OutputMessage
@@ -24,6 +25,7 @@ final readonly class BookMessage implements OutputMessage
         );
     }
 
+    #[Override]
     public function output(): array
     {
         return [

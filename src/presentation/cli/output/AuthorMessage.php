@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\presentation\cli\output;
 
+use Override;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 
 final readonly class AuthorMessage implements OutputMessage
@@ -22,6 +23,7 @@ final readonly class AuthorMessage implements OutputMessage
         );
     }
 
+    #[Override]
     public function output(): array
     {
         return [
