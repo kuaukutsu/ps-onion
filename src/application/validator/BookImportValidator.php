@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\application\validator;
 
 use LogicException;
-use Assert\Assert;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\application
  */
-final readonly class BookValidator
+final readonly class BookImportValidator
 {
+    public function __construct(
+        private AuthorNameValidator $authorValidator,
+        private BookTitleValidator $bookTitleValidator,
+    ) {
+    }
+
     /**
      * @return array{
      *     "title": non-empty-string,
@@ -29,13 +34,14 @@ final readonly class BookValidator
             throw new LogicException('Author is required.');
         }
 
-        Assert::lazy()
-            ->that($data['title'])->string()->notEmpty()
-            ->that($data['author'])->string()->notEmpty()
-            ->verifyNow();
+        $this->bookTitleValidator->validate($data['title']);
+        $this->authorValidator->validate($data['author']);
 
         /**
-         * @var array{"title": non-empty-string, "author": non-empty-string}
+         * @var array{
+         *     "title": non-empty-string,
+         *     "author": non-empty-string,
+         * }
          */
         return [
             'title' => $data['title'],

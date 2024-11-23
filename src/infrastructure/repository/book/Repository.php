@@ -7,6 +7,8 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 use Override;
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
+use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
+use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\entity\book\BookMapper;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
@@ -81,9 +83,9 @@ final readonly class Repository implements BookRepository
     }
 
     #[Override]
-    public function find(Book $book): ?Book
+    public function find(BookTitle $title, ?BookAuthor $author = null): ?Book
     {
-        $dto = $this->findByTitle($book->title->name, $book->author->name);
+        $dto = $this->findByTitle($title->name, $author?->name);
         if ($dto === null) {
             return null;
         }
@@ -93,19 +95,21 @@ final readonly class Repository implements BookRepository
 
     /**
      * @param non-empty-string $title
-     * @param non-empty-string $author
+     * @param non-empty-string|null $author
      * @throws LogicException
      * @throws LogicException
      * @throws InfrastructureException
      */
-    private function findByTitle(string $title, string $author): ?BookDto
+    private function findByTitle(string $title, ?string $author): ?BookDto
     {
-        $cacheKey = Cache::makeKey($author, $title);
+        $cacheKey = $author === null
+            ? Cache::makeKey($title)
+            : Cache::makeKey($title, $author);
 
         try {
             $model = $this->cache->get($cacheKey)
                 ?? $this->client->send(
-                    new BookFindByPropertyRequest(author: $author, title: $title),
+                    new BookFindByPropertyRequest(title: $title, author: $author),
                     new HttpContext(),
                 );
         } catch (ClientRequestException $exception) {

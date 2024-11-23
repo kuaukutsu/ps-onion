@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\application\validator;
 
 use LogicException;
-use Assert\Assert;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\application
  */
 final readonly class AuthorValidator
 {
+    public function __construct(private AuthorNameValidator $authorNameValidator)
+    {
+    }
+
     /**
      * @return array{"name": non-empty-string}
      * @throws LogicException
@@ -22,9 +25,7 @@ final readonly class AuthorValidator
             throw new LogicException('Name is required.');
         }
 
-        Assert::lazy()
-            ->that($data['name'])->string()->notEmpty()
-            ->verifyNow();
+        $this->authorNameValidator->validate($data['name']);
 
         /**
          * @var array{"name": non-empty-string}
