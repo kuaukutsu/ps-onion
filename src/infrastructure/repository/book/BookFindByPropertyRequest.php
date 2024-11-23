@@ -22,18 +22,18 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     private string $query;
 
     /**
+     * @param non-empty-string $title
      * @param non-empty-string|null $author
-     * @param non-empty-string|null $title
      * @throws LogicException
      */
     public function __construct(
+        string $title,
         ?string $author = null,
-        ?string $title = null,
     ) {
         $this->query = $this->prepareArgsToQueryString(
             [
-                'author' => $author,
                 'title' => $title,
+                'author' => $author,
             ]
         );
     }

@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\tests\Container;
 use kuaukutsu\ps\onion\application\Bookshelf;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
@@ -26,7 +26,7 @@ use kuaukutsu\ps\onion\domain\service\BookUuidGenerator;
 
 use function DI\factory;
 
-final class BookImportTest extends TestCase
+final class BookViewTest extends TestCase
 {
     use Container;
 
@@ -34,10 +34,58 @@ final class BookImportTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testBookImportSuccess(): void
+    public function testBookGetSuccess(): void
     {
         $app = self::get(Bookshelf::class);
-        $domain = $app->import(['title' => 'book.test', 'author' => 'book.author']);
+        $domain = $app->get('0123456789');
+
+        self::assertEquals('book.title', $domain->title);
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testBookGetValidateValueError(): void
+    {
+        $this->expectException(LogicException::class);
+
+        $app = self::get(Bookshelf::class);
+        $app->get(' ');
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testBookGetValidateTypeError(): void
+    {
+        $this->expectException(LogicException::class);
+
+        $app = self::get(Bookshelf::class);
+        $app->get('www');
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testBookGetNotFoundError(): void
+    {
+        $this->expectException(\kuaukutsu\ps\onion\domain\exception\NotFoundException::class);
+
+        $app = self::get(Bookshelf::class);
+        $app->get('0123456');
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testBookFindSuccess(): void
+    {
+        $app = self::get(Bookshelf::class);
+        $domain = $app->find(['title' => 'book.test', 'author' => 'book.author']);
 
         self::assertEquals('book.test', $domain->title);
     }
@@ -46,55 +94,43 @@ final class BookImportTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testBookImportValidateValueError(): void
+    public function testBookFindNotFoundError(): void
+    {
+        $this->expectException(\kuaukutsu\ps\onion\domain\exception\NotFoundException::class);
+
+        $app = self::get(Bookshelf::class);
+        $app->find(['title' => 'exception', 'author' => 'book.author']);
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testBookFindValidateValueError(): void
     {
         $this->expectException(LogicException::class);
 
         $app = self::get(Bookshelf::class);
-        $app->import(['title' => '']);
+        $app->find([]);
     }
 
     /**
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testBookImportAuthorRequiredError(): void
+    public function testBookFindValidateTypeError(): void
     {
         $this->expectException(LogicException::class);
 
         $app = self::get(Bookshelf::class);
-        $app->import(['title' => 'book.test']);
+        $app->find(['title' => 'book.test']);
     }
 
     /**
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testBookImportValidateStructureError(): void
-    {
-        $this->expectException(LogicException::class);
-
-        $app = self::get(Bookshelf::class);
-        $app->import([]);
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function testBookImportSaveError(): void
-    {
-        $this->expectException(InfrastructureException::class);
-
-        $app = self::get(Bookshelf::class);
-        $app->import(['title' => 'exception', 'author' => 'book.author']);
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function testBookImportAuthorSaveError(): void
+    public function testBookFindAuthorSaveError(): void
     {
         $this->expectException(InfrastructureException::class);
 
@@ -146,6 +182,10 @@ final class BookImportTest extends TestCase
                 fn(): BookRepository => new class implements BookRepository {
                     public function get(BookIsbn $isbn): Book
                     {
+                        if ($isbn->getValue() === '0123456') {
+                            throw new \kuaukutsu\ps\onion\domain\exception\NotFoundException();
+                        }
+
                         return new Book(
                             uuid: BookUuidGenerator::generateByIsbn($isbn->getValue()),
                             title: new BookTitle('book.title'),
