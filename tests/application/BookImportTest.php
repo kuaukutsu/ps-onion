@@ -9,6 +9,8 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\application\Bookshelf;
+use kuaukutsu\ps\onion\application\input\AuthorInput;
+use kuaukutsu\ps\onion\application\input\BookInput;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 
 final class BookImportTest extends TestCase
@@ -22,7 +24,12 @@ final class BookImportTest extends TestCase
     public function testBookImportSuccess(): void
     {
         $app = self::get(Bookshelf::class);
-        $domain = $app->import(['title' => 'book.test', 'author' => 'book.author']);
+        $domain = $app->import(
+            new BookInput(
+                title: 'book.test',
+                author: new AuthorInput(name: 'book.author'),
+            )
+        );
 
         self::assertEquals('book.test', $domain->title);
     }
@@ -36,7 +43,12 @@ final class BookImportTest extends TestCase
         $this->expectException(LogicException::class);
 
         $app = self::get(Bookshelf::class);
-        $app->import(['title' => '']);
+        $app->import(
+            new BookInput(
+                title: ' ',
+                author: new AuthorInput(name: 'book.author'),
+            )
+        );
     }
 
     /**
@@ -48,19 +60,11 @@ final class BookImportTest extends TestCase
         $this->expectException(LogicException::class);
 
         $app = self::get(Bookshelf::class);
-        $app->import(['title' => 'book.test']);
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function testBookImportValidateStructureError(): void
-    {
-        $this->expectException(LogicException::class);
-
-        $app = self::get(Bookshelf::class);
-        $app->import([]);
+        $app->import(
+            new BookInput(
+                title: 'book.test',
+            )
+        );
     }
 
     /**
@@ -72,7 +76,12 @@ final class BookImportTest extends TestCase
         $this->expectException(InfrastructureException::class);
 
         $app = self::get(Bookshelf::class);
-        $app->import(['title' => 'exception', 'author' => 'book.author']);
+        $app->import(
+            new BookInput(
+                title: 'exception',
+                author: new AuthorInput(name: 'book.author'),
+            )
+        );
     }
 
     /**
@@ -84,6 +93,9 @@ final class BookImportTest extends TestCase
         $this->expectException(InfrastructureException::class);
 
         $app = self::get(Bookshelf::class);
-        $app->import(['title' => 'book.test', 'author' => 'exception']);
+        $app->import(new BookInput(
+            title: 'book.test',
+            author: new AuthorInput(name: 'exception'),
+        ));
     }
 }
