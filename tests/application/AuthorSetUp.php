@@ -11,6 +11,7 @@ use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
+use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\service\AuthorCreator;
@@ -39,9 +40,13 @@ trait AuthorSetUp
 
                     public function get(AuthorUuid $uuid): Author
                     {
+                        if ($uuid->value === '30363638-6338-8863-b831-333265346631') {
+                            throw new NotFoundException("[$uuid->value] Author not found.");
+                        }
+
                         return new Author(
                             $uuid,
-                            new AuthorPerson(name: 'tester'),
+                            new AuthorPerson(name: 'Tester'),
                             new AuthorMetadata(),
                         );
                     }

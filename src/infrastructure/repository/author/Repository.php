@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository\author;
 
-use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use Override;
 use Generator;
 use RuntimeException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMapper;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
