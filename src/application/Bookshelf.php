@@ -65,12 +65,7 @@ final readonly class Bookshelf
     public function find(BookInput $input): BookDto
     {
         $find = $this->bookImportValidator->prepare($input);
-
-        $author = null;
-        if ($find->author !== null) {
-            $author = $this->findAuthor($find->author);
-        }
-
+        $author = $this->findAuthor($find->author);
         $book = $author instanceof Author
             ? $this->bookRepository->find($find->title, $find->author)
             : $this->bookRepository->find($find->title);
@@ -125,8 +120,12 @@ final readonly class Bookshelf
     /**
      * @throws InfrastructureException
      */
-    private function findAuthor(BookAuthor $bookAuthor): ?Author
+    private function findAuthor(?BookAuthor $bookAuthor): ?Author
     {
+        if ($bookAuthor === null) {
+            return null;
+        }
+
         return $this->authorSearch->find(
             $this->authorRepository->find(
                 new AuthorPerson(
