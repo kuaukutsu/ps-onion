@@ -21,7 +21,7 @@ use kuaukutsu\ps\onion\application\decorator\LoggerDecorator;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
-use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
+use kuaukutsu\ps\onion\infrastructure\cache\NullCache;
 
 use function DI\create;
 use function DI\factory;
@@ -67,7 +67,7 @@ trait Container
                 RequestFactoryInterface::class => create(HttpFactory::class),
                 StreamFactoryInterface::class => create(HttpFactory::class),
                 ValidatorInterface::class => create(Validator::class),
-                CacheInterface::class => create(FileCache::class),
+                CacheInterface::class => create(NullCache::class),
                 PsrLoggerInterface::class => create(NullLogger::class),
                 LoggerInterface::class => factory(
                     fn(): LoggerInterface => new LoggerDecorator(

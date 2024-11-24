@@ -8,10 +8,10 @@ use Override;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
-use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use kuaukutsu\ps\onion\tests\Container;
 use kuaukutsu\ps\onion\tests\infrastructure\http\RequestContextStub;
+use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
 
 final class FileCacheTest extends TestCase
 {
@@ -24,7 +24,7 @@ final class FileCacheTest extends TestCase
     #[Override]
     public static function tearDownAfterClass(): void
     {
-        $cache = self::get(CacheInterface::class);
+        $cache = self::get(FileCache::class);
         $cache->clear();
     }
 
@@ -35,7 +35,7 @@ final class FileCacheTest extends TestCase
      */
     public function testStringSuccess(): void
     {
-        $cache = self::get(CacheInterface::class);
+        $cache = self::get(FileCache::class);
 
         $key = 'str';
         $value = 'string-test';
@@ -56,7 +56,7 @@ final class FileCacheTest extends TestCase
      */
     public function testArraySuccess(): void
     {
-        $cache = self::get(CacheInterface::class);
+        $cache = self::get(FileCache::class);
 
         $key = 'arr';
         $value = ['a' => 1, 'b' => 2];
@@ -77,7 +77,7 @@ final class FileCacheTest extends TestCase
      */
     public function testObjectSuccess(): void
     {
-        $cache = self::get(CacheInterface::class);
+        $cache = self::get(FileCache::class);
 
         $key = 'object';
         $value = new RequestContextStub('test');
@@ -101,7 +101,7 @@ final class FileCacheTest extends TestCase
      */
     public function testClear(): void
     {
-        $cache = self::get(CacheInterface::class);
+        $cache = self::get(FileCache::class);
 
         $value = 'test';
 
