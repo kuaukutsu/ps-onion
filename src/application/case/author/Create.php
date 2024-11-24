@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application\case\author;
 
-use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use LogicException;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMapper;
+use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\service\AuthorCreator;
