@@ -93,6 +93,7 @@ final class AuthorRepositoryTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
+    #[Override]
     protected function setUp(): void
     {
         $sql = <<<SQL
@@ -114,6 +115,7 @@ SQL;
      * @throws DependencyException
      * @throws NotFoundException
      */
+    #[Override]
     protected function tearDown(): void
     {
         $sql = <<<SQL
