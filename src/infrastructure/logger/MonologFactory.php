@@ -47,10 +47,8 @@ final readonly class MonologFactory
 
     private function getLogPath(): string
     {
-        return $this->application->getRuntime()
-            . DIRECTORY_SEPARATOR
-            . 'logs'
-            . DIRECTORY_SEPARATOR
+        return $this->application->getRuntime() . DIRECTORY_SEPARATOR
+            . 'logs' . DIRECTORY_SEPARATOR
             . $this->application->getName() . '.log';
     }
 }
