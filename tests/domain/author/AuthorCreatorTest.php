@@ -8,7 +8,7 @@ use DI\NotFoundException;
 use DI\DependencyException;
 use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\tests\Container;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\service\AuthorCreator;
 
 final class AuthorCreatorTest extends TestCase
@@ -23,7 +23,7 @@ final class AuthorCreatorTest extends TestCase
     {
         $creator = self::get(AuthorCreator::class);
         $author = $creator->createFromInputData(
-            new AuthorInputDto('test testov')
+            new AuthorPerson('test testov')
         );
 
         self::assertEquals('Test Testov', $author->person->name);

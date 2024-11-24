@@ -10,8 +10,8 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMapper;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
@@ -57,9 +57,7 @@ final readonly class AuthorIndex
     {
         $data = $this->authorValidator->prepare($data);
         $author = $this->creator->createFromInputData(
-            new AuthorInputDto(
-                name: $data['name'],
-            )
+            new AuthorPerson($data['name'])
         );
 
         if ($this->repository->exists($author)) {

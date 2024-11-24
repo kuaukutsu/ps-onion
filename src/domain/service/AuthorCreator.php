@@ -6,7 +6,6 @@ namespace kuaukutsu\ps\onion\domain\service;
 
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 
@@ -15,27 +14,34 @@ final readonly class AuthorCreator
     /**
      * @throws LogicException is input data not valid
      */
-    public function createFromInputData(AuthorInputDto $input): Author
+    public function createFromInputData(AuthorPerson $person): Author
     {
         return new Author(
             uuid: AuthorUuidGenerator::generate(),
-            person: new AuthorPerson(
-                name: $this->prepareName($input->name),
-            ),
+            person: $this->preparePerson($person),
             metadata: new AuthorMetadata(),
         );
     }
 
     /**
      * Domain logic
-     * @param non-empty-string $name
-     * @return non-empty-string
      */
-    private function prepareName(string $name): string
+    private function preparePerson(AuthorPerson $person): AuthorPerson
     {
         /**
-         * @var non-empty-string
+         * @var non-empty-string $name
          */
-        return mb_convert_case($name, MB_CASE_TITLE, "UTF-8");
+        $name = mb_convert_case($person->name, MB_CASE_TITLE, "UTF-8");
+
+        $secondName = null;
+        if (is_string($person->secondName)) {
+            /** @var non-empty-string $secondName */
+            $secondName = mb_convert_case($person->secondName, MB_CASE_TITLE, "UTF-8");
+        }
+
+        return new AuthorPerson(
+            name: $name,
+            secondName: $secondName,
+        );
     }
 }

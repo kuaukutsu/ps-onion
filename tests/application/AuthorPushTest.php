@@ -4,25 +4,16 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\application;
 
-use Override;
 use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\tests\Container;
 use kuaukutsu\ps\onion\application\AuthorIndex;
-use kuaukutsu\ps\onion\domain\entity\author\Author;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
-use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
-
-use function DI\factory;
 
 final class AuthorPushTest extends TestCase
 {
-    use Container;
+    use AuthorSetUp;
 
     /**
      * @throws DependencyException
@@ -83,44 +74,5 @@ final class AuthorPushTest extends TestCase
 
         $app = self::get(AuthorIndex::class);
         $app->push(['name' => 'exception']);
-    }
-
-    #[Override]
-    protected function setUp(): void
-    {
-        self::setDefinition(
-            AuthorRepository::class,
-            factory(
-                fn(): AuthorRepository => new class implements AuthorRepository {
-                    public function get(AuthorUuid $uuid): Author
-                    {
-                        return new Author(
-                            $uuid,
-                            new AuthorPerson(name: 'tester'),
-                            new AuthorMetadata()
-                        );
-                    }
-
-                    public function exists(Author $author): bool
-                    {
-                        return $author->person->name === 'Tester';
-                    }
-
-                    public function find(AuthorPerson $person): array
-                    {
-                        return [];
-                    }
-
-                    public function save(Author $author): Author
-                    {
-                        if ($author->person->name === 'Exception') {
-                            throw new InfrastructureException();
-                        }
-
-                        return $author;
-                    }
-                }
-            )
-        );
     }
 }
