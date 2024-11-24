@@ -10,9 +10,9 @@ use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\application\AuthorIndex;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
-use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
+use kuaukutsu\ps\onion\domain\exception\NotFoundException as NotFoundExceptionDomain;
 
-final class AuthorPushTest extends TestCase
+final class AuthorFindTest extends TestCase
 {
     use AuthorSetUp;
 
@@ -20,10 +20,10 @@ final class AuthorPushTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testAuthorPushSuccess(): void
+    public function testAuthorFindSuccess(): void
     {
         $app = self::get(AuthorIndex::class);
-        $domain = $app->push(
+        $domain = $app->find(
             new AuthorInput(name: 'test'),
         );
 
@@ -34,12 +34,12 @@ final class AuthorPushTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testAuthorPushValidateValueError(): void
+    public function testAuthorFindValidateValueError(): void
     {
         $this->expectException(LogicException::class);
 
         $app = self::get(AuthorIndex::class);
-        $app->push(
+        $app->find(
             new AuthorInput(name: ' '),
         );
     }
@@ -48,28 +48,14 @@ final class AuthorPushTest extends TestCase
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function testAuthorPushExistsError(): void
+    public function testAuthorFindNotFoundError(): void
     {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("Author 'Tester' already exists.");
+        $this->expectException(NotFoundExceptionDomain::class);
+        $this->expectExceptionMessage("Author 'exception' not found.");
 
         $app = self::get(AuthorIndex::class);
-        $app->push(
-            new AuthorInput(name: 'tester'),
-        );
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function testAuthorPushSaveError(): void
-    {
-        $this->expectException(InfrastructureException::class);
-
-        $app = self::get(AuthorIndex::class);
-        $app->push(
-            new AuthorInput(name: 'exception')
+        $app->find(
+            new AuthorInput(name: 'exception'),
         );
     }
 }
