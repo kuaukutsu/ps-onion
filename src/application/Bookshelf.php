@@ -64,17 +64,18 @@ final readonly class Bookshelf
      */
     public function find(BookInput $input): BookDto
     {
-        $find = $this->bookImportValidator->prepare($input);
-        $author = $this->findAuthor($find->author);
-        $book = $author instanceof Author
-            ? $this->bookRepository->find($find->title, $find->author)
-            : $this->bookRepository->find($find->title);
+        $bookTitle = $this->bookImportValidator->prepareTitle($input);
+        $bookAuthor = $this->bookImportValidator->prepareAuthor($input);
+
+        $book = $this->findAuthor($bookAuthor) instanceof Author
+            ? $this->bookRepository->find($bookTitle, $bookAuthor)
+            : $this->bookRepository->find($bookTitle);
 
         if ($book instanceof Book) {
             return BookMapper::toDto($book);
         }
 
-        throw new NotFoundException("Book '{$find->title->name}' not found.");
+        throw new NotFoundException("Book '$bookTitle->name' not found.");
     }
 
     /**
@@ -83,14 +84,15 @@ final readonly class Bookshelf
      */
     public function import(BookInput $input): BookDto
     {
-        $find = $this->bookImportValidator->prepare($input);
-        if ($find->author === null) {
+        $bookTitle = $this->bookImportValidator->prepareTitle($input);
+        $bookAuthor = $this->bookImportValidator->prepareAuthor($input);
+        if ($bookAuthor === null) {
             throw new LogicException("Author is required.");
         }
 
         $book = $this->bookCreator->createFromInputData(
-            $find->title,
-            $this->makeAuthor($find->author),
+            $bookTitle,
+            $this->makeAuthor($bookAuthor),
         );
 
         return BookMapper::toDto(
