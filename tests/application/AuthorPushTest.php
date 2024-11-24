@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\application;
 
-use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\application\AuthorIndex;
+use kuaukutsu\ps\onion\application\case\AuthorIndex;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
+use LogicException;
+use PHPUnit\Framework\TestCase;
 
 final class AuthorPushTest extends TestCase
 {

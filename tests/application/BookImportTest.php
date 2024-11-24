@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\application;
 
-use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\application\Bookshelf;
+use kuaukutsu\ps\onion\application\case\Bookshelf;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\input\BookInput;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
+use LogicException;
+use PHPUnit\Framework\TestCase;
 
 final class BookImportTest extends TestCase
 {
