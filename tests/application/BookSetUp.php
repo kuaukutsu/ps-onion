@@ -29,7 +29,7 @@ trait BookSetUp
     use Container;
 
     #[Override]
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         self::setDefinition(
             AuthorRepository::class,
@@ -44,6 +44,7 @@ trait BookSetUp
                         $this->creator = $container->make(AuthorCreator::class);
                     }
 
+                    #[Override]
                     public function get(AuthorUuid $uuid): Author
                     {
                         return new Author(
@@ -53,11 +54,13 @@ trait BookSetUp
                         );
                     }
 
+                    #[Override]
                     public function exists(Author $author): bool
                     {
                         return $author->person->name === 'Tester';
                     }
 
+                    #[Override]
                     public function find(AuthorPerson $person): array
                     {
                         if ($person->name === 'exception') {
@@ -70,6 +73,7 @@ trait BookSetUp
                         ];
                     }
 
+                    #[Override]
                     public function save(Author $author): Author
                     {
                         if ($author->person->name === 'Exception') {
@@ -86,6 +90,7 @@ trait BookSetUp
             BookRepository::class,
             factory(
                 fn(): BookRepository => new readonly class implements BookRepository {
+                    #[Override]
                     public function get(BookIsbn $isbn): Book
                     {
                         if ($isbn->getValue() === '0123456') {
@@ -99,6 +104,7 @@ trait BookSetUp
                         );
                     }
 
+                    #[Override]
                     public function find(BookTitle $title, ?BookAuthor $author = null): ?Book
                     {
                         if ($title->name === 'exception') {
@@ -116,6 +122,7 @@ trait BookSetUp
                         );
                     }
 
+                    #[Override]
                     public function import(Book $book): Book
                     {
                         if ($book->title->name === 'exception') {

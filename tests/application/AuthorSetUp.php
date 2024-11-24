@@ -23,7 +23,7 @@ trait AuthorSetUp
     use Container;
 
     #[Override]
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         self::setDefinition(
             AuthorRepository::class,
@@ -38,6 +38,7 @@ trait AuthorSetUp
                         $this->creator = $container->make(AuthorCreator::class);
                     }
 
+                    #[Override]
                     public function get(AuthorUuid $uuid): Author
                     {
                         if ($uuid->value === '30363638-6338-8863-b831-333265346631') {
@@ -51,11 +52,13 @@ trait AuthorSetUp
                         );
                     }
 
+                    #[Override]
                     public function exists(Author $author): bool
                     {
                         return $author->person->name === 'Tester';
                     }
 
+                    #[Override]
                     public function find(AuthorPerson $person): array
                     {
                         if ($person->name === 'exception') {
@@ -68,6 +71,7 @@ trait AuthorSetUp
                         ];
                     }
 
+                    #[Override]
                     public function save(Author $author): Author
                     {
                         if ($author->person->name === 'Exception') {
