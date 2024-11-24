@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use kuaukutsu\ps\onion\application\AuthorIndex;
+use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\presentation\cli\output\AuthorMessage;
 
 /**
@@ -66,18 +67,15 @@ final class AuthorCreateCommand extends Command
     }
 
     /**
-     * @return array{"name": string}
      * @throws InvalidArgumentException если UUID не корректный
      */
-    private function getArgumentData(InputInterface $input): array
+    private function getArgumentData(InputInterface $input): AuthorInput
     {
         $name = $input->getOption('name');
         if (is_string($name) === false) {
             throw new InvalidArgumentException('Name argument must be a string.');
         }
 
-        return [
-            'name' => $name,
-        ];
+        return new AuthorInput(name: $name);
     }
 }

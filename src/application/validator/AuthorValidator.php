@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\application\validator;
 
 use LogicException;
+use kuaukutsu\ps\onion\application\input\AuthorInput;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\application
@@ -16,22 +18,24 @@ final readonly class AuthorValidator
     }
 
     /**
-     * @return array{"name": non-empty-string}
      * @throws LogicException
      */
-    public function prepare(array $data): array
+    public function prepare(AuthorInput $data): AuthorPerson
     {
-        if (array_key_exists('name', $data) === false) {
-            throw new LogicException('Name is required.');
+        /** @var non-empty-string $name */
+        $name = trim($data->name);
+        $this->authorNameValidator->validate($name);
+
+        $secondName = null;
+        if ($data->secondName !== null) {
+            /** @var non-empty-string $secondName */
+            $secondName = trim($data->secondName);
+            $this->authorNameValidator->validate($secondName);
         }
 
-        $this->authorNameValidator->validate($data['name']);
-
-        /**
-         * @var array{"name": non-empty-string}
-         */
-        return [
-            'name' => $data['name'],
-        ];
+        return new AuthorPerson(
+            name: $name,
+            secondName: $secondName,
+        );
     }
 }

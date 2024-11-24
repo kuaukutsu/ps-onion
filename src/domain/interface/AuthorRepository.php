@@ -7,6 +7,7 @@ namespace kuaukutsu\ps\onion\domain\interface;
 use TypeError;
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
@@ -30,7 +31,7 @@ interface AuthorRepository
      * @return array<string, Author>
      * @throws InfrastructureException
      */
-    public function find(Author $author): array;
+    public function find(AuthorPerson $person): array;
 
     /**
      * @throws InfrastructureException

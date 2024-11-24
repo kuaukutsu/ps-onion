@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\validator\BookImportValidator;
 use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorInputDto;
+use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
@@ -21,6 +21,7 @@ use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\service\AuthorCreator;
+use kuaukutsu\ps\onion\domain\service\AuthorSearch;
 use kuaukutsu\ps\onion\domain\service\BookImporter;
 
 /**
@@ -30,6 +31,7 @@ final readonly class Bookshelf
 {
     public function __construct(
         private AuthorCreator $authorCreator,
+        private AuthorSearch $authorSearch,
         private AuthorRepository $authorRepository,
         private BookImporter $importer,
         private BookRepository $bookRepository,
@@ -63,14 +65,18 @@ final readonly class Bookshelf
     public function find(array $data): BookDto
     {
         $prepareData = $this->bookImportValidator->prepare($data);
-        $author = $this->makeAuthor(
-            new AuthorInputDto(name: $prepareData['author'])
+        $author = $this->findAuthor(
+            new AuthorPerson(name: $prepareData['author'])
         );
 
-        $book = $this->bookRepository->find(
-            new BookTitle(name: $prepareData['title']),
-            new BookAuthor(name: $author->person->name)
-        );
+        $book = $author instanceof Author
+            ? $this->bookRepository->find(
+                new BookTitle(name: $prepareData['title']),
+                new BookAuthor(name: $author->person->name),
+            )
+            : $this->bookRepository->find(
+                new BookTitle(name: $prepareData['title']),
+            );
 
         if ($book instanceof Book) {
             return BookMapper::toDto($book);
@@ -87,7 +93,7 @@ final readonly class Bookshelf
     {
         $prepareData = $this->bookImportValidator->prepare($data);
         $author = $this->makeAuthor(
-            new AuthorInputDto(name: $prepareData['author'])
+            new AuthorPerson(name: $prepareData['author'])
         );
 
         $book = $this->importer->createFromInputData(
@@ -105,15 +111,21 @@ final readonly class Bookshelf
      * @throws LogicException is input data not valid
      * @throws InfrastructureException
      */
-    private function makeAuthor(AuthorInputDto $inputDto): Author
+    private function makeAuthor(AuthorPerson $authorPerson): Author
     {
-        $author = $this->authorCreator->createFromInputData($inputDto);
-        $listAuthor = $this->authorRepository->find($author);
-        if ($listAuthor === []) {
-            return $this->authorRepository->save($author);
-        }
+        return $this->findAuthor($authorPerson)
+            ?? $this->authorRepository->save(
+                $this->authorCreator->createFromInputData($authorPerson)
+            );
+    }
 
-        // @note: Логика выбора нужного автора из списка если поиск вернул больше одного.
-        return current($listAuthor);
+    /**
+     * @throws InfrastructureException
+     */
+    private function findAuthor(AuthorPerson $authorPerson): ?Author
+    {
+        return $this->authorSearch->find(
+            $this->authorRepository->find($authorPerson),
+        );
     }
 }
