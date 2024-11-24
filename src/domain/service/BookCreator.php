@@ -9,7 +9,7 @@ use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 
-final readonly class BookImporter
+final readonly class BookCreator
 {
     /**
      * @throws LogicException

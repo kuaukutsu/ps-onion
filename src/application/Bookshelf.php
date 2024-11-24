@@ -22,7 +22,7 @@ use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\service\AuthorCreator;
 use kuaukutsu\ps\onion\domain\service\AuthorSearch;
-use kuaukutsu\ps\onion\domain\service\BookImporter;
+use kuaukutsu\ps\onion\domain\service\BookCreator;
 
 /**
  * @api
@@ -33,7 +33,7 @@ final readonly class Bookshelf
         private AuthorCreator $authorCreator,
         private AuthorSearch $authorSearch,
         private AuthorRepository $authorRepository,
-        private BookImporter $importer,
+        private BookCreator $bookCreator,
         private BookRepository $bookRepository,
         private BookImportValidator $bookImportValidator,
         private IsbnValidator $isbnValidator,
@@ -88,7 +88,7 @@ final readonly class Bookshelf
             throw new LogicException("Author is required.");
         }
 
-        $book = $this->importer->createFromInputData(
+        $book = $this->bookCreator->createFromInputData(
             $find->title,
             $this->makeAuthor($find->author),
         );
