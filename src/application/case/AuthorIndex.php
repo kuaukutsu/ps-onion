@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application\case;
 
+use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use TypeError;
 use LogicException;
 use InvalidArgumentException;
@@ -53,6 +54,7 @@ final readonly class AuthorIndex
 
     /**
      * @throws LogicException is input data not valid
+     * @throws ConflictException is record already exists
      * @throws InfrastructureException
      */
     public function push(AuthorInput $input): AuthorDto

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application\case\author;
 
+use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use LogicException;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
@@ -29,6 +30,7 @@ final readonly class Create
 
     /**
      * @throws LogicException is input data not valid
+     * @throws ConflictException is record already exists
      * @throws InfrastructureException is written record error
      */
     public function create(AuthorInput $input): AuthorDto
@@ -38,7 +40,7 @@ final readonly class Create
         );
 
         if ($this->repository->exists($author->person)) {
-            throw new LogicException("Author '{$author->person->name}' already exists.");
+            throw new ConflictException("Author '{$author->person->name}' already exists.");
         }
 
         return AuthorMapper::toDto(

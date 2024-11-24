@@ -6,11 +6,11 @@ namespace kuaukutsu\ps\onion\tests\application;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\application\case\Bookshelf;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\input\BookInput;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException as NotFoundExceptionDomain;
-use PHPUnit\Framework\TestCase;
 
 final class BookFindTest extends TestCase
 {

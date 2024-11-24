@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\application;
 
+use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\application\case\Bookshelf;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException as NotFoundExceptionDomain;
-use LogicException;
-use PHPUnit\Framework\TestCase;
 
 final class BookViewTest extends TestCase
 {
