@@ -55,22 +55,6 @@ trait Container
         self::$container->set($id, $definition);
     }
 
-    /**
-     * @template TClass
-     * @param class-string<TClass> $id
-     * @return TClass
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private static function make(string $id, array $parameters = [])
-    {
-        if (self::$container === null) {
-            self::$container = self::makeContainer();
-        }
-
-        return self::$container->make($id, $parameters);
-    }
-
     private static function makeContainer(): \DI\Container
     {
         return new \DI\Container(
