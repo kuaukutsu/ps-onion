@@ -28,7 +28,7 @@ final readonly class View
     public function __construct(
         private AuthorView $author,
         private BookImportValidator $validator,
-        private BookRepository $bookRepository,
+        private BookRepository $repository,
         private IsbnValidator $isbnValidator,
     ) {
     }
@@ -44,7 +44,7 @@ final readonly class View
     {
         $this->isbnValidator->exception($isbn);
         return BookMapper::toDto(
-            $this->bookRepository->get(
+            $this->repository->get(
                 new BookIsbn($isbn)
             )
         );
@@ -61,8 +61,8 @@ final readonly class View
         $bookAuthor = $this->validator->prepareAuthor($input);
 
         $book = $this->authorExists($bookAuthor)
-            ? $this->bookRepository->find($bookTitle, $bookAuthor)
-            : $this->bookRepository->find($bookTitle);
+            ? $this->repository->find($bookTitle, $bookAuthor)
+            : $this->repository->find($bookTitle);
 
         if ($book instanceof Book) {
             return BookMapper::toDto($book);

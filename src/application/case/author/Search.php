@@ -23,7 +23,7 @@ final readonly class Search
     public function __construct(
         private AuthorSearch $search,
         private AuthorRepository $repository,
-        private AuthorValidator $authorValidator,
+        private AuthorValidator $validator,
     ) {
     }
 
@@ -34,7 +34,7 @@ final readonly class Search
      */
     public function find(AuthorInput $input): AuthorDto
     {
-        $person = $this->authorValidator->prepare($input);
+        $person = $this->validator->prepare($input);
         $author = $this->search->find(
             $this->repository->find($person)
         );

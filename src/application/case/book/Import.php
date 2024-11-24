@@ -23,9 +23,9 @@ final readonly class Import
 {
     public function __construct(
         private Create $authorCreate,
-        private BookCreator $bookCreator,
-        private BookRepository $bookRepository,
-        private BookImportValidator $bookImportValidator,
+        private BookCreator $creator,
+        private BookRepository $repository,
+        private BookImportValidator $importValidator,
     ) {
     }
 
@@ -35,20 +35,20 @@ final readonly class Import
      */
     public function push(BookInput $input): BookDto
     {
-        $bookTitle = $this->bookImportValidator->prepareTitle($input);
-        $bookAuthor = $this->bookImportValidator->prepareAuthor($input);
+        $bookTitle = $this->importValidator->prepareTitle($input);
+        $bookAuthor = $this->importValidator->prepareAuthor($input);
         if ($bookAuthor === null) {
             throw new LogicException("Author is required.");
         }
 
-        $book = $this->bookCreator->createFromInputData(
+        $book = $this->creator->createFromInputData(
             $bookTitle,
             $this->makeAuthor($bookAuthor),
         );
 
         return BookMapper::toDto(
-            $this->bookRepository->find($book->title, $book->author)
-            ?? $this->bookRepository->import($book)
+            $this->repository->find($book->title, $book->author)
+            ?? $this->repository->import($book)
         );
     }
 
