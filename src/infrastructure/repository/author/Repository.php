@@ -75,7 +75,7 @@ SQL;
     }
 
     #[Override]
-    public function exists(Author $author): bool
+    public function exists(AuthorPerson $person): bool
     {
         $query = <<<SQL
 SELECT uuid FROM author WHERE lower(name)=lower(:name);
@@ -84,7 +84,7 @@ SQL;
         return $this->handleQueryExeception(
             fn(): bool => $this->query
                 ->make(Author::class)
-                ->prepare($query, ['name' => $author->person->name])
+                ->prepare($query, ['name' => $person->name])
                 ->exists()
         );
     }

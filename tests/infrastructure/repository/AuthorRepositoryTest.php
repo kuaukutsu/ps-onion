@@ -41,7 +41,7 @@ final class AuthorRepositoryTest extends TestCase
 
         self::assertEquals('Test', $author->person->name);
         self::assertTrue(
-            $repository->exists($author)
+            $repository->exists($author->person)
         );
 
         $author = $repository->get(
@@ -64,7 +64,7 @@ final class AuthorRepositoryTest extends TestCase
         );
 
         self::assertFalse(
-            $repository->exists($author)
+            $repository->exists($author->person)
         );
     }
 

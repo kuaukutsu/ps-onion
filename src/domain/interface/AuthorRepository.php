@@ -25,7 +25,7 @@ interface AuthorRepository
     /**
      * @throws InfrastructureException
      */
-    public function exists(Author $author): bool;
+    public function exists(AuthorPerson $person): bool;
 
     /**
      * @return array<string, Author>

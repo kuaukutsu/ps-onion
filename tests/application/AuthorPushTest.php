@@ -8,8 +8,9 @@ use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\application\AuthorIndex;
+use kuaukutsu\ps\onion\application\case\AuthorIndex;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
+use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 
 final class AuthorPushTest extends TestCase
@@ -50,7 +51,7 @@ final class AuthorPushTest extends TestCase
      */
     public function testAuthorPushExistsError(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(ConflictException::class);
         $this->expectExceptionMessage("Author 'Tester' already exists.");
 
         $app = self::get(AuthorIndex::class);

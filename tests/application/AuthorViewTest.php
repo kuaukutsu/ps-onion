@@ -8,7 +8,7 @@ use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\application\AuthorIndex;
+use kuaukutsu\ps\onion\application\case\AuthorIndex;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException as NotFoundExceptionDomain;
 use kuaukutsu\ps\onion\domain\service\AuthorUuidGenerator;
 

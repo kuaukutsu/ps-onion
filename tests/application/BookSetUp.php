@@ -55,9 +55,9 @@ trait BookSetUp
                     }
 
                     #[Override]
-                    public function exists(Author $author): bool
+                    public function exists(AuthorPerson $person): bool
                     {
-                        return $author->person->name === 'Tester';
+                        return $person->name === 'Tester';
                     }
 
                     #[Override]

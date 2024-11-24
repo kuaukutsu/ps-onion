@@ -8,7 +8,7 @@ use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
-use kuaukutsu\ps\onion\application\Bookshelf;
+use kuaukutsu\ps\onion\application\case\Bookshelf;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException as NotFoundExceptionDomain;
 
 final class BookViewTest extends TestCase
