@@ -106,7 +106,7 @@ trait BookSetUp
                         }
 
                         if ($author === null) {
-                            return null;
+                            $author = new BookAuthor('book.unknown.author');
                         }
 
                         return new Book(

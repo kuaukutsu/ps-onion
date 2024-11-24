@@ -15,6 +15,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use kuaukutsu\ps\onion\application\Bookshelf;
+use kuaukutsu\ps\onion\application\input\AuthorInput;
+use kuaukutsu\ps\onion\application\input\BookInput;
 use kuaukutsu\ps\onion\presentation\cli\output\BookMessage;
 
 /**
@@ -68,10 +70,9 @@ final class BookFindCommand extends Command
     }
 
     /**
-     * @return array{"title": string, "author": string}
      * @throws InvalidArgumentException если UUID не корректный
      */
-    private function getArgumentData(InputInterface $input): array
+    private function getArgumentData(InputInterface $input): BookInput
     {
         $title = $input->getOption('title');
         if (is_string($title) === false) {
@@ -83,9 +84,9 @@ final class BookFindCommand extends Command
             throw new InvalidArgumentException('Author argument must be string.');
         }
 
-        return [
-            'title' => $title,
-            'author' => $author,
-        ];
+        return new BookInput(
+            title: $title,
+            author: new AuthorInput(name: $author),
+        );
     }
 }

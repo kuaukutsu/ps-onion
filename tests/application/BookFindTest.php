@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\application;
 
-use LogicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PHPUnit\Framework\TestCase;
 use kuaukutsu\ps\onion\application\Bookshelf;
-use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
+use kuaukutsu\ps\onion\application\input\AuthorInput;
+use kuaukutsu\ps\onion\application\input\BookInput;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException as NotFoundExceptionDomain;
 
 final class BookFindTest extends TestCase
@@ -23,9 +23,32 @@ final class BookFindTest extends TestCase
     public function testBookFindSuccess(): void
     {
         $app = self::get(Bookshelf::class);
-        $domain = $app->find(['title' => 'book.test', 'author' => 'book.author']);
+        $domain = $app->find(
+            new BookInput(
+                title: 'book.test',
+                author: new AuthorInput(name: 'book.author'),
+            )
+        );
 
         self::assertEquals('book.test', $domain->title);
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testBookFindAuthorNotFoundSucces(): void
+    {
+        $app = self::get(Bookshelf::class);
+        $domain = $app->find(
+            new BookInput(
+                title: 'book.test',
+                author: new AuthorInput(name: 'exception'),
+            )
+        );
+
+        self::assertEquals('book.test', $domain->title);
+        self::assertEquals('book.unknown.author', $domain->author);
     }
 
     /**
@@ -37,42 +60,11 @@ final class BookFindTest extends TestCase
         $this->expectException(NotFoundExceptionDomain::class);
 
         $app = self::get(Bookshelf::class);
-        $app->find(['title' => 'exception', 'author' => 'book.author']);
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function testBookFindValidateValueError(): void
-    {
-        $this->expectException(LogicException::class);
-
-        $app = self::get(Bookshelf::class);
-        $app->find([]);
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function testBookFindValidateTypeError(): void
-    {
-        $this->expectException(LogicException::class);
-
-        $app = self::get(Bookshelf::class);
-        $app->find(['title' => 'book.test']);
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function testBookFindAuthorSaveError(): void
-    {
-        $this->expectException(InfrastructureException::class);
-
-        $app = self::get(Bookshelf::class);
-        $app->import(['title' => 'book.test', 'author' => 'exception']);
+        $app->find(
+            new BookInput(
+                title: 'exception',
+                author: new AuthorInput(name: 'book.author'),
+            )
+        );
     }
 }
