@@ -17,6 +17,7 @@ use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 
 /**
  * @api
+ * @note: Interactor
  */
 final readonly class AuthorIndex
 {
