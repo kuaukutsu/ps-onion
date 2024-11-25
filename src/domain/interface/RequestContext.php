@@ -13,4 +13,6 @@ interface RequestContext
      * @return non-empty-string UUID
      */
     public function getUuid(): string;
+
+    public function getTimeout(): float;
 }
