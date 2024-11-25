@@ -22,7 +22,6 @@ use kuaukutsu\ps\onion\domain\exception\UnexpectedRequestException;
 use kuaukutsu\ps\onion\domain\interface\ClientInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
-use kuaukutsu\ps\onion\domain\interface\RequestHttpContext;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\application
@@ -44,10 +43,9 @@ final readonly class GuzzleDecorator implements ClientInterface
     #[Override]
     public function send(RequestInterface $request, RequestContext $context): ResponseInterface
     {
-        $options = [];
-        if ($context instanceof RequestHttpContext) {
-            $options[RequestOptions::TIMEOUT] = $context->getTimeout();
-        }
+        $options = [
+            RequestOptions::TIMEOUT => $context->getTimeout(),
+        ];
 
         try {
             return $this->client->send($request, $options);

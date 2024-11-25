@@ -6,9 +6,9 @@ namespace kuaukutsu\ps\onion\infrastructure\http;
 
 use Override;
 use Ramsey\Uuid\Uuid;
-use kuaukutsu\ps\onion\domain\interface\RequestHttpContext;
+use kuaukutsu\ps\onion\domain\interface\RequestContext;
 
-final readonly class HttpContext implements RequestHttpContext
+final readonly class HttpContext implements RequestContext
 {
     /**
      * @var non-empty-string
