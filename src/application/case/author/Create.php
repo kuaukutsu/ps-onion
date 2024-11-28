@@ -24,7 +24,7 @@ final readonly class Create
         private AuthorSearch $search,
         private AuthorRepository $repository,
         private AuthorValidator $validator,
-        private AuthorMapper $mapper,
+        private OutputMapper $mapper,
     ) {
     }
 

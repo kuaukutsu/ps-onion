@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\application\case\book;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 
-final readonly class BookMapper
+final readonly class OutputMapper
 {
     public function toDto(Book $book): BookDto
     {

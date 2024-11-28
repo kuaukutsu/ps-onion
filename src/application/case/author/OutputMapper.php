@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\application\case\author;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 
-final readonly class AuthorMapper
+final readonly class OutputMapper
 {
     public function toDto(Author $author): AuthorDto
     {

@@ -25,7 +25,7 @@ final readonly class View
         private AuthorRepository $repository,
         private AuthorValidator $validator,
         private UuidValidator $uuidValidator,
-        private AuthorMapper $mapper,
+        private OutputMapper $mapper,
     ) {
     }
 

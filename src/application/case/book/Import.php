@@ -25,7 +25,7 @@ final readonly class Import
         private BookCreator $creator,
         private BookRepository $repository,
         private BookImportValidator $importValidator,
-        private BookMapper $mapper,
+        private OutputMapper $mapper,
     ) {
     }
 

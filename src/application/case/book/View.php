@@ -30,7 +30,7 @@ final readonly class View
         private BookImportValidator $validator,
         private BookRepository $repository,
         private IsbnValidator $isbnValidator,
-        private BookMapper $mapper,
+        private OutputMapper $mapper,
     ) {
     }
 
