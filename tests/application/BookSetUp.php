@@ -20,7 +20,7 @@ use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\service\AuthorCreator;
-use kuaukutsu\ps\onion\domain\service\BookUuidGenerator;
+use kuaukutsu\ps\onion\domain\service\BookCreator;
 
 use function DI\factory;
 
@@ -38,7 +38,6 @@ trait BookSetUp
                     $container,
                 ) implements AuthorRepository {
                     private AuthorCreator $creator;
-
                     public function __construct(ContainerInterface $container)
                     {
                         $this->creator = $container->make(AuthorCreator::class);
@@ -89,7 +88,15 @@ trait BookSetUp
         self::setDefinition(
             BookRepository::class,
             factory(
-                fn(): BookRepository => new readonly class implements BookRepository {
+                fn(ContainerInterface $container): BookRepository => new readonly class (
+                    $container
+                ) implements BookRepository {
+                    private BookCreator $creator;
+                    public function __construct(ContainerInterface $container)
+                    {
+                        $this->creator = $container->make(BookCreator::class);
+                    }
+
                     #[Override]
                     public function get(BookIsbn $isbn): Book
                     {
@@ -97,8 +104,7 @@ trait BookSetUp
                             throw new NotFoundException();
                         }
 
-                        return new Book(
-                            uuid: BookUuidGenerator::generateByIsbn($isbn->getValue()),
+                        return $this->creator->createFromInputData(
                             title: new BookTitle('book.title'),
                             author: new BookAuthor('book.author'),
                         );
@@ -115,11 +121,7 @@ trait BookSetUp
                             $author = new BookAuthor('book.unknown.author');
                         }
 
-                        return new Book(
-                            BookUuidGenerator::generate(),
-                            $title,
-                            $author,
-                        );
+                        return $this->creator->createFromInputData($title, $author);
                     }
 
                     #[Override]

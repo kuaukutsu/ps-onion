@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\interface;
 
+use TypeError;
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
@@ -18,6 +19,7 @@ interface BookRepository
      * @throws NotFoundException
      * @throws InfrastructureException
      * @throws LogicException
+     * @throws TypeError если получены не корректные данные
      */
     public function get(BookIsbn $isbn): Book;
 
@@ -25,6 +27,7 @@ interface BookRepository
      * @throws NotFoundException
      * @throws InfrastructureException
      * @throws LogicException
+     * @throws TypeError если получены не корректные данные
      */
     public function find(BookTitle $title, ?BookAuthor $author = null): ?Book;
 

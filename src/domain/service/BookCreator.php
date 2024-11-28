@@ -11,13 +11,17 @@ use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 
 final readonly class BookCreator
 {
+    public function __construct(private BookUuidGenerator $uuidGenerator)
+    {
+    }
+
     /**
      * @throws LogicException
      */
     public function createFromInputData(BookTitle $title, BookAuthor $author): Book
     {
         return new Book(
-            uuid: BookUuidGenerator::generate(),
+            uuid: $this->uuidGenerator->generate(),
             title: $title,
             author: $author,
         );

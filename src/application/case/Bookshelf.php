@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application\case;
 
+use TypeError;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\case\book\Import;
@@ -27,6 +28,7 @@ final readonly class Bookshelf
 
     /**
      * @param non-empty-string $isbn
+     * @throws TypeError is output data error
      * @throws LogicException is input data not valid
      * @throws NotFoundException
      * @throws InfrastructureException

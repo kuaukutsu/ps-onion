@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application\case\book;
 
+use TypeError;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\case\author\View as AuthorView;
-use kuaukutsu\ps\onion\application\validator\BookImportValidator;
-use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\input\BookInput;
+use kuaukutsu\ps\onion\application\validator\BookImportValidator;
+use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
-use kuaukutsu\ps\onion\domain\entity\book\BookMapper;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
@@ -30,11 +30,13 @@ final readonly class View
         private BookImportValidator $validator,
         private BookRepository $repository,
         private IsbnValidator $isbnValidator,
+        private BookMapper $mapper,
     ) {
     }
 
     /**
      * @param non-empty-string $isbn
+     * @throws TypeError is output data error
      * @throws LogicException is input data not valid
      * @throws NotFoundException
      * @throws InfrastructureException
@@ -43,7 +45,7 @@ final readonly class View
     public function getByISBN(string $isbn): BookDto
     {
         $this->isbnValidator->exception($isbn);
-        return BookMapper::toDto(
+        return $this->mapper->toDto(
             $this->repository->get(
                 new BookIsbn($isbn)
             )
@@ -65,7 +67,7 @@ final readonly class View
             : $this->repository->find($bookTitle);
 
         if ($book instanceof Book) {
-            return BookMapper::toDto($book);
+            return $this->mapper->toDto($book);
         }
 
         throw new NotFoundException("Book '$bookTitle->name' not found.");

@@ -6,7 +6,7 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\interface\EntityDto;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\infrastructure\logger\preset\LoggerExceptionPreset;
 
@@ -29,7 +29,7 @@ final readonly class Cache
         return 'book:' . implode('-', $keys);
     }
 
-    public function get(string $key): ?BookDto
+    public function get(string $key): ?EntityDto
     {
         try {
             $model = $this->cache->get($key);
@@ -42,14 +42,14 @@ final readonly class Cache
             return null;
         }
 
-        if ($model instanceof BookDto) {
+        if ($model instanceof EntityDto) {
             return $model;
         }
 
         return null;
     }
 
-    public function set(string $key, BookDto $book): void
+    public function set(string $key, EntityDto $book): void
     {
         try {
             $this->cache->set($key, $book);

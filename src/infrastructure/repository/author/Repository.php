@@ -10,7 +10,6 @@ use RuntimeException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorMapper;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
@@ -26,6 +25,7 @@ final readonly class Repository implements AuthorRepository
     public function __construct(
         private QueryFactory $query,
         private LoggerInterface $logger,
+        private Mapper $mapper,
     ) {
     }
 
@@ -44,7 +44,7 @@ SQL;
         );
 
         if ($dto instanceof AuthorDto) {
-            return AuthorMapper::toModel($dto);
+            return $this->mapper->fromDto($dto);
         }
 
         throw new NotFoundException(
@@ -68,7 +68,7 @@ SQL;
 
         $list = [];
         foreach ($iterable as $record) {
-            $list[$record->uuid] = AuthorMapper::toModel($record);
+            $list[$record->uuid] = $this->mapper->fromDto($record);
         }
 
         return $list;
@@ -99,7 +99,7 @@ SQL;
         $this->handleQueryExeception(
             fn(): bool => $this->query
                 ->make(Author::class)
-                ->execute($query, AuthorMapper::toDto($author)->toArray())
+                ->execute($query, $this->mapper->toDto($author)->toArray())
         );
 
         return $author;

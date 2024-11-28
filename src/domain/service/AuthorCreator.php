@@ -11,13 +11,17 @@ use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 
 final readonly class AuthorCreator
 {
+    public function __construct(private AuthorUuidGenerator $uuidGenerator)
+    {
+    }
+
     /**
      * @throws LogicException is input data not valid
      */
     public function createFromInputData(AuthorPerson $person): Author
     {
         return new Author(
-            uuid: AuthorUuidGenerator::generate(),
+            uuid: $this->uuidGenerator->generate(),
             person: $this->preparePerson($person),
             metadata: new AuthorMetadata(),
         );
