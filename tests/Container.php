@@ -15,6 +15,8 @@ use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
 use GuzzleHttp\Psr7\HttpFactory;
 use Ramsey\Uuid\Rfc4122\Validator;
+use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\UuidFactoryInterface;
 use Ramsey\Uuid\Validator\ValidatorInterface;
 use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
 use kuaukutsu\ps\onion\application\decorator\LoggerDecorator;
@@ -66,6 +68,7 @@ trait Container
                 ),
                 RequestFactoryInterface::class => create(HttpFactory::class),
                 StreamFactoryInterface::class => create(HttpFactory::class),
+                UuidFactoryInterface::class => create(UuidFactory::class),
                 ValidatorInterface::class => create(Validator::class),
                 CacheInterface::class => create(NullCache::class),
                 PsrLoggerInterface::class => create(NullLogger::class),

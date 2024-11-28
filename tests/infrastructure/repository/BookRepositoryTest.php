@@ -170,6 +170,7 @@ final class BookRepositoryTest extends TestCase
                                     'numFound' => 1,
                                     'docs' => [
                                         [
+                                            'key' => 'test33kdjebwkcb',
                                             'title' => 'test',
                                             'firstPublishYear' => 2022,
                                             'authorName' => [

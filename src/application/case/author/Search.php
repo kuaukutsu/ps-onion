@@ -9,7 +9,6 @@ use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorMapper;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
@@ -24,6 +23,7 @@ final readonly class Search
         private AuthorSearch $search,
         private AuthorRepository $repository,
         private AuthorValidator $validator,
+        private AuthorMapper $mapper,
     ) {
     }
 
@@ -40,7 +40,7 @@ final readonly class Search
         );
 
         if ($author instanceof Author) {
-            return AuthorMapper::toDto($author);
+            return $this->mapper->toDto($author);
         }
 
         throw new NotFoundException("Author '$person->name' not found.");

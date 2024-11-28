@@ -11,7 +11,6 @@ use kuaukutsu\ps\onion\application\input\BookInput;
 use kuaukutsu\ps\onion\application\validator\BookImportValidator;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
-use kuaukutsu\ps\onion\domain\entity\book\BookMapper;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\service\BookCreator;
@@ -26,6 +25,7 @@ final readonly class Import
         private BookCreator $creator,
         private BookRepository $repository,
         private BookImportValidator $importValidator,
+        private BookMapper $mapper,
     ) {
     }
 
@@ -46,7 +46,7 @@ final readonly class Import
             $this->makeAuthor($bookAuthor),
         );
 
-        return BookMapper::toDto(
+        return $this->mapper->toDto(
             $this->repository->find($book->title, $book->author)
             ?? $this->repository->import($book)
         );

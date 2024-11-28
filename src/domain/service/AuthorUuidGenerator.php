@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\service;
 
-use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactoryInterface;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 
 final readonly class AuthorUuidGenerator
 {
-    private function __construct()
+    public function __construct(private UuidFactoryInterface $uuidFactory)
     {
     }
 
-    public static function generate(): AuthorUuid
+    public function generate(): AuthorUuid
     {
         return new AuthorUuid(
-            Uuid::uuid4()->toString()
+            $this->uuidFactory->uuid4()->toString(),
         );
     }
 }

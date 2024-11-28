@@ -23,8 +23,9 @@ final class AuthorViewTest extends TestCase
     public function testAuthorViewSuccess(): void
     {
         $app = self::get(AuthorIndex::class);
+        $uuid = self::get(AuthorUuidGenerator::class);
         $domain = $app->get(
-            AuthorUuidGenerator::generate()->value
+            $uuid->generate()->value,
         );
 
         self::assertEquals('Tester', $domain->name);

@@ -6,14 +6,13 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use LogicException;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
 use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
- * @implements RequestEntity<BookDto>
+ * @implements RequestEntity<OpenlibraryBook>
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
  * @link https://openlibrary.org/dev/docs/api/search
  */
@@ -60,7 +59,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): ?BookDto
+    public function makeResponse(StreamDecode $stream): ?OpenlibraryBook
     {
         $openlibrarySchema = EntityMapper::denormalize(
             OpenlibrarySchema::class,
@@ -70,14 +69,9 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
             return null;
         }
 
-        $openlibraryBook = EntityMapper::denormalize(
+        return EntityMapper::denormalize(
             OpenlibraryBook::class,
             current($openlibrarySchema->docs),
-        );
-        return new BookDto(
-            uuid: $openlibraryBook->getUuid()->value,
-            title: $openlibraryBook->title,
-            author: $openlibraryBook->getAuthor(),
         );
     }
 
@@ -103,6 +97,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
         }
 
         $conditions['fields'] = [
+            'key',
             'title',
             'first_publish_year',
             'author_name',
