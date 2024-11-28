@@ -12,7 +12,7 @@ use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\service\BookUuidGenerator;
 
-final readonly class BookMapper
+final readonly class Mapper
 {
     public function __construct(private BookUuidGenerator $uuidGenerator)
     {

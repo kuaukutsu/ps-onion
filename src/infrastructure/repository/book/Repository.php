@@ -28,7 +28,7 @@ final readonly class Repository implements BookRepository
         private Cache $cache,
         private HttpClient $client,
         private LoggerInterface $logger,
-        private BookMapper $mapper,
+        private Mapper $mapper,
     ) {
     }
 

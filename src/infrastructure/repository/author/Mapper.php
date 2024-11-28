@@ -10,7 +10,7 @@ use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 
-final readonly class AuthorMapper
+final readonly class Mapper
 {
     public function fromDto(AuthorDto $dto): Author
     {

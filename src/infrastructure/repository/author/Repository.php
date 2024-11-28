@@ -25,7 +25,7 @@ final readonly class Repository implements AuthorRepository
     public function __construct(
         private QueryFactory $query,
         private LoggerInterface $logger,
-        private AuthorMapper $mapper,
+        private Mapper $mapper,
     ) {
     }
 
