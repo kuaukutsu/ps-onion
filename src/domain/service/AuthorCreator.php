@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\domain\service;
 
-use LogicException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorMetadata;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorPerson;
@@ -15,9 +14,6 @@ final readonly class AuthorCreator
     {
     }
 
-    /**
-     * @throws LogicException is input data not valid
-     */
     public function createFromInputData(AuthorPerson $person): Author
     {
         return new Author(

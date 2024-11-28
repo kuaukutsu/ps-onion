@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\application\case;
 
-use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use TypeError;
 use LogicException;
 use InvalidArgumentException;
@@ -13,6 +12,7 @@ use kuaukutsu\ps\onion\application\case\author\Search;
 use kuaukutsu\ps\onion\application\case\author\View;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
+use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 
