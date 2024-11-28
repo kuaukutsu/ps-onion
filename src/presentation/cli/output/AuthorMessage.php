@@ -7,7 +7,7 @@ namespace kuaukutsu\ps\onion\presentation\cli\output;
 use Override;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 
-final readonly class AuthorMessage implements OutputMessage
+final readonly class AuthorMessage implements ConsoleMessage
 {
     public function __construct(
         private string $uuid,
