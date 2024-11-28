@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\domain\entity\book;
 
 use Override;
+use kuaukutsu\ps\onion\domain\exception\UnsupportedException;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
 final readonly class BookDto implements EntityDto
@@ -32,5 +33,44 @@ final readonly class BookDto implements EntityDto
             'author' => $this->author,
             'description' => $this->description,
         ];
+    }
+
+    /**
+     * @throws UnsupportedException
+     */
+    #[Override]
+    public function serialize(): never
+    {
+        throw new UnsupportedException();
+    }
+
+    /**
+     * @throws UnsupportedException
+     */
+    #[Override]
+    public function unserialize(string $data): never
+    {
+        throw new UnsupportedException();
+    }
+
+    public function __serialize(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * @param array{
+     *     "uuid": non-empty-string,
+     *     "title": non-empty-string,
+     *     "author": non-empty-string,
+     *     "description": non-empty-string|null
+     * } $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->uuid = $data['uuid'];
+        $this->title = $data['title'];
+        $this->author = $data['author'];
+        $this->description = $data['description'];
     }
 }
