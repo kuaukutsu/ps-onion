@@ -52,7 +52,7 @@ final readonly class Cache
     public function set(string $key, EntityDto $book): void
     {
         try {
-            $this->cache->set($key, $book);
+            $this->cache->set($key, $book, 3600);
         } catch (InvalidArgumentException $exception) {
             $this->logger->preset(
                 new LoggerExceptionPreset($exception, ['key' => $key]),

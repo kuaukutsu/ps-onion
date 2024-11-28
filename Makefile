@@ -108,7 +108,17 @@ run-book-find:
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		php ./src/presentation/cli/main.php book:find --title="Domain-Driven Design Distilled" --author="Vaughn Vernon"
 
+run-book-find-2:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		php ./src/presentation/cli/main.php book:find --title="Domain-Driven Design" --author="Eric Evans"
+
 run-book-import:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		php ./src/presentation/cli/main.php book:import --title="Domain-Driven Design Distilled" --author="Vaughn Vernon"
+
+run-book-import-2:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		php ./src/presentation/cli/main.php book:import --title="Domain-Driven Design" --author="eric evans"
