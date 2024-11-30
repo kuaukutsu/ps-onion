@@ -8,6 +8,7 @@ use LogicException;
 use kuaukutsu\ps\onion\application\case\author\Create;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\input\BookInput;
+use kuaukutsu\ps\onion\application\output\BookMapper;
 use kuaukutsu\ps\onion\application\validator\BookImportValidator;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
@@ -25,7 +26,7 @@ final readonly class Import
         private BookCreator $creator,
         private BookRepository $repository,
         private BookImportValidator $importValidator,
-        private OutputMapper $mapper,
+        private BookMapper $mapper,
     ) {
     }
 

@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\case\author\View as AuthorView;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\input\BookInput;
+use kuaukutsu\ps\onion\application\output\BookMapper;
 use kuaukutsu\ps\onion\application\validator\BookImportValidator;
 use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
@@ -30,7 +31,7 @@ final readonly class View
         private BookImportValidator $validator,
         private BookRepository $repository,
         private IsbnValidator $isbnValidator,
-        private OutputMapper $mapper,
+        private BookMapper $mapper,
     ) {
     }
 

@@ -6,6 +6,7 @@ namespace kuaukutsu\ps\onion\application\case\author;
 
 use LogicException;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
+use kuaukutsu\ps\onion\application\output\AuthorMapper;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 use kuaukutsu\ps\onion\domain\exception\ConflictException;
@@ -24,7 +25,7 @@ final readonly class Create
         private AuthorSearch $search,
         private AuthorRepository $repository,
         private AuthorValidator $validator,
-        private OutputMapper $mapper,
+        private AuthorMapper $mapper,
     ) {
     }
 

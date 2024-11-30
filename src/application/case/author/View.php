@@ -8,6 +8,7 @@ use TypeError;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
+use kuaukutsu\ps\onion\application\output\AuthorMapper;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
@@ -25,7 +26,7 @@ final readonly class View
         private AuthorRepository $repository,
         private AuthorValidator $validator,
         private UuidValidator $uuidValidator,
-        private OutputMapper $mapper,
+        private AuthorMapper $mapper,
     ) {
     }
 

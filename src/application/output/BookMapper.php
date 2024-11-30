@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\application\case\book;
+namespace kuaukutsu\ps\onion\application\output;
 
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 
-final readonly class OutputMapper
+final readonly class BookMapper
 {
     public function toDto(Book $book): BookDto
     {
