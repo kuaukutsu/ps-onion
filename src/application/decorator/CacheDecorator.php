@@ -6,6 +6,7 @@ namespace kuaukutsu\ps\onion\application\decorator;
 
 use Override;
 use DateInterval;
+use RuntimeException;
 use Psr\SimpleCache\CacheInterface;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
@@ -17,6 +18,9 @@ final readonly class CacheDecorator implements CacheInterface
 {
     private CacheInterface $cache;
 
+    /**
+     * @throws RuntimeException if not create directory
+     */
     public function __construct()
     {
         $this->cache = new FileCache(

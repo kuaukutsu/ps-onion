@@ -6,6 +6,7 @@ namespace kuaukutsu\ps\onion\infrastructure\cache;
 
 use Override;
 use DateInterval;
+use RuntimeException;
 use Psr\SimpleCache\CacheInterface;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 
@@ -16,9 +17,15 @@ final readonly class FileCache implements CacheInterface
 {
     private string $tmpdir;
 
+    /**
+     * @throws RuntimeException if not create directory
+     */
     public function __construct(?string $tmpdir = null)
     {
         $this->tmpdir = $tmpdir ?? sys_get_temp_dir();
+        if (is_dir($this->tmpdir) === false && mkdir($this->tmpdir) === false) {
+            throw new RuntimeException('Could not create temporary directory');
+        }
     }
 
     #[Override]
