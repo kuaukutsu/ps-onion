@@ -4,7 +4,7 @@ USER = $$(id -u)
 composer:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		composer:latest \
-		composer install
+		composer install --optimize-autoloader
 
 composer-up:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
