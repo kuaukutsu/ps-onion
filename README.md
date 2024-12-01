@@ -54,6 +54,12 @@ Container:
 - `ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli` (**default**)
 - `jakzal/phpqa:php${PHP_VERSION}`
 
+### Setup
+
+```shell
+make setup
+```
+
 ### Run example
 
 ```shell

@@ -7,7 +7,6 @@ namespace kuaukutsu\ps\onion\application;
 use Override;
 use InvalidArgumentException;
 use DI\Container;
-use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -85,7 +84,7 @@ final readonly class Application implements ApplicationInterface
         return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'runtime';
     }
 
-    public function getContainer(): PsrContainerInterface
+    public function getContainer(): ContainerInterface
     {
         return $this->container;
     }
