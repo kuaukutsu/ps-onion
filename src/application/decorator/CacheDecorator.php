@@ -9,6 +9,7 @@ use DateInterval;
 use RuntimeException;
 use Psr\SimpleCache\CacheInterface;
 use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
+use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
 
 /**
@@ -21,10 +22,10 @@ final readonly class CacheDecorator implements CacheInterface
     /**
      * @throws RuntimeException if not create directory
      */
-    public function __construct()
+    public function __construct(ApplicationInterface $application)
     {
         $this->cache = new FileCache(
-            dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'cache'
+            $application->getRuntime() . DIRECTORY_SEPARATOR . 'cache'
         );
     }
 

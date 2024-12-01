@@ -57,7 +57,6 @@ final readonly class Application implements ApplicationInterface
                 StreamFactoryInterface::class => create(HttpFactory::class),
                 UuidFactoryInterface::class => create(UuidFactory::class),
                 ValidatorInterface::class => create(Validator::class),
-                CacheInterface::class => create(CacheDecorator::class),
             ]
         );
 
@@ -99,6 +98,13 @@ final readonly class Application implements ApplicationInterface
         $container->set(
             ContainerInterface::class,
             $this->container,
+        );
+
+        $container->set(
+            CacheInterface::class,
+            factory(
+                fn(): CacheInterface => new CacheDecorator($this)
+            ),
         );
 
         $container->set(
