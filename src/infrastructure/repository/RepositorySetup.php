@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\infrastructure\repository;
 
+use Override;
 use RuntimeException;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
+use kuaukutsu\ps\onion\domain\interface\ApplicationSetup;
 use kuaukutsu\ps\onion\infrastructure\db\QueryFactory;
 
-final readonly class RepositorySetup
+final readonly class RepositorySetup implements ApplicationSetup
 {
     public function __construct(
         private QueryFactory $queryFactory,
@@ -23,6 +25,7 @@ final readonly class RepositorySetup
      * @throws DbException connection failed.
      * @throws DbStatementException query failed.
      */
+    #[Override]
     public function run(ApplicationInterface $application): void
     {
         $this->createSqliteDatabase($application->getRuntime());

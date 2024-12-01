@@ -11,11 +11,12 @@ use kuaukutsu\ps\onion\application\Setup;
 require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
 
 try {
+    $application = new Application('onion.setup', '0.0.2');
     $setup = new Setup(
-        new Application('onion.setup', '0.0.1')
+        $application->getContainer(),
     );
 
-    $setup->run();
+    $setup->run($application);
 } catch (Throwable $e) {
     echo $e->getMessage() . PHP_EOL;
     exit(-1);
