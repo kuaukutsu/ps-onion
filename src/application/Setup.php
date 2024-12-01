@@ -9,8 +9,11 @@ use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\exception\DbException;
 use kuaukutsu\ps\onion\domain\exception\DbStatementException;
-use kuaukutsu\ps\onion\infrastructure\repository\setup\Repository;
+use kuaukutsu\ps\onion\infrastructure\repository\RepositorySetup;
 
+/**
+ * @api
+ */
 final readonly class Setup
 {
     public function __construct(private Application $application)
@@ -30,7 +33,7 @@ final readonly class Setup
 
         // Repository
         $container
-            ->make(Repository::class)
+            ->make(RepositorySetup::class)
             ->run($this->application);
 
         // Other infrastructure
