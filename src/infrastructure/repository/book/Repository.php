@@ -26,9 +26,9 @@ final readonly class Repository implements BookRepository
 {
     public function __construct(
         private Cache $cache,
+        private Mapper $mapper,
         private HttpClient $client,
         private LoggerInterface $logger,
-        private Mapper $mapper,
     ) {
     }
 
