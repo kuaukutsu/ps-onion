@@ -127,3 +127,8 @@ run-book-import-2:
 	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		php ./src/presentation/cli/main.php book:import --title="Domain-Driven Design" --author="eric evans"
+
+run-book-import-3:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
+		php ./src/presentation/cli/main.php book:import --title="Clean Architecture" --author="Robert Martin"
