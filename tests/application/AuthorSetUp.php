@@ -72,13 +72,11 @@ trait AuthorSetUp
                     }
 
                     #[Override]
-                    public function save(Author $author): Author
+                    public function save(Author $author): void
                     {
                         if ($author->person->name === 'Exception') {
                             throw new InfrastructureException();
                         }
-
-                        return $author;
                     }
                 }
             )

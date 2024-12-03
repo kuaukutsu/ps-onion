@@ -8,10 +8,9 @@ use TypeError;
 use LogicException;
 use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
-use kuaukutsu\ps\onion\application\output\AuthorMapper;
+use kuaukutsu\ps\onion\application\output\AuthorDto;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\application\validator\UuidValidator;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 use kuaukutsu\ps\onion\domain\entity\author\AuthorUuid;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
@@ -26,7 +25,6 @@ final readonly class View
         private AuthorRepository $repository,
         private AuthorValidator $validator,
         private UuidValidator $uuidValidator,
-        private AuthorMapper $mapper,
     ) {
     }
 
@@ -41,7 +39,7 @@ final readonly class View
     public function getByUuid(string $uuid): AuthorDto
     {
         $this->uuidValidator->exception($uuid);
-        return $this->mapper->toDto(
+        return AuthorDto::fromEntity(
             $this->repository->get(
                 new AuthorUuid($uuid)
             )

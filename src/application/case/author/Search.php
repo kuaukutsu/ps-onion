@@ -6,10 +6,9 @@ namespace kuaukutsu\ps\onion\application\case\author;
 
 use LogicException;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
-use kuaukutsu\ps\onion\application\output\AuthorMapper;
+use kuaukutsu\ps\onion\application\output\AuthorDto;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
@@ -24,7 +23,6 @@ final readonly class Search
         private AuthorSearch $search,
         private AuthorRepository $repository,
         private AuthorValidator $validator,
-        private AuthorMapper $mapper,
     ) {
     }
 
@@ -41,7 +39,7 @@ final readonly class Search
         );
 
         if ($author instanceof Author) {
-            return $this->mapper->toDto($author);
+            return AuthorDto::fromEntity($author);
         }
 
         throw new NotFoundException("Author '$person->name' not found.");

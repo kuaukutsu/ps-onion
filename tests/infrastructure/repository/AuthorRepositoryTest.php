@@ -33,22 +33,21 @@ final class AuthorRepositoryTest extends TestCase
     {
         $repository = self::get(AuthorRepository::class);
         $creator = self::get(AuthorCreator::class);
-        $author = $repository->save(
-            $creator->createFromInputData(
-                person: new AuthorPerson(name: 'test')
-            )
+        $author = $creator->createFromInputData(
+            person: new AuthorPerson(name: 'test')
         );
 
-        self::assertEquals('Test', $author->person->name);
+        $repository->save($author);
+
         self::assertTrue(
             $repository->exists($author->person)
         );
 
-        $author = $repository->get(
+        $authorLoadRepository = $repository->get(
             $author->uuid
         );
 
-        self::assertEquals('Test', $author->person->name);
+        self::assertEquals($author->person->name, $authorLoadRepository->person->name);
     }
 
     /**

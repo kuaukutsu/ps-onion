@@ -6,9 +6,8 @@ namespace kuaukutsu\ps\onion\application\case\author;
 
 use LogicException;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
-use kuaukutsu\ps\onion\application\output\AuthorMapper;
+use kuaukutsu\ps\onion\application\output\AuthorDto;
 use kuaukutsu\ps\onion\application\validator\AuthorValidator;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
 use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
@@ -25,7 +24,6 @@ final readonly class Create
         private AuthorSearch $search,
         private AuthorRepository $repository,
         private AuthorValidator $validator,
-        private AuthorMapper $mapper,
     ) {
     }
 
@@ -44,9 +42,8 @@ final readonly class Create
             throw new ConflictException("Author '{$author->person->name}' already exists.");
         }
 
-        return $this->mapper->toDto(
-            $this->repository->save($author)
-        );
+        $this->repository->save($author);
+        return AuthorDto::fromEntity($author);
     }
 
     /**
@@ -61,11 +58,10 @@ final readonly class Create
         );
 
         if ($author === null) {
-            $author = $this->repository->save(
-                $this->creator->createFromInputData($person)
-            );
+            $author = $this->creator->createFromInputData($person);
+            $this->repository->save($author);
         }
 
-        return $this->mapper->toDto($author);
+        return AuthorDto::fromEntity($author);
     }
 }

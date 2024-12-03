@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\presentation\cli\output;
 
 use Override;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\application\output\BookDto;
 
 final readonly class BookMessage implements ConsoleMessage
 {

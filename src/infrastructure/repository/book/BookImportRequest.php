@@ -6,14 +6,13 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use InvalidArgumentException;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
 use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityJson;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
 /**
- * @implements RequestEntity<BookDto>
+ * @implements RequestEntity<RecordData>
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository
  */
 final readonly class BookImportRequest implements RequestEntity
@@ -23,7 +22,7 @@ final readonly class BookImportRequest implements RequestEntity
     /**
      * @throws InvalidArgumentException
      */
-    public function __construct(BookDto $data)
+    public function __construct(RecordData $data)
     {
         $this->body = EntityJson::encode($data->toArray());
     }
@@ -47,9 +46,9 @@ final readonly class BookImportRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): BookDto
+    public function makeResponse(StreamDecode $stream): RecordData
     {
-        return EntityMapper::denormalize(BookDto::class, $stream->decode());
+        return EntityMapper::denormalize(RecordData::class, $stream->decode());
     }
 
     #[Override]

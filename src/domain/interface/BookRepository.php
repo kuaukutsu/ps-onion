@@ -24,7 +24,6 @@ interface BookRepository
     public function get(BookIsbn $isbn): Book;
 
     /**
-     * @throws NotFoundException
      * @throws InfrastructureException
      * @throws LogicException
      * @throws TypeError если получены не корректные данные
@@ -35,5 +34,5 @@ interface BookRepository
      * @throws InfrastructureException
      * @throws LogicException
      */
-    public function import(Book $book): Book;
+    public function import(Book $book): void;
 }
