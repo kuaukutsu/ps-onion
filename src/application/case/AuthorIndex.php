@@ -11,7 +11,7 @@ use kuaukutsu\ps\onion\application\case\author\Create;
 use kuaukutsu\ps\onion\application\case\author\Search;
 use kuaukutsu\ps\onion\application\case\author\View;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
-use kuaukutsu\ps\onion\domain\entity\author\AuthorDto;
+use kuaukutsu\ps\onion\application\output\AuthorDto;
 use kuaukutsu\ps\onion\domain\exception\ConflictException;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;

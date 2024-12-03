@@ -8,7 +8,7 @@ use Override;
 use TypeError;
 use LogicException;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\domain\entity\book\BookUuid;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
@@ -26,7 +26,7 @@ final readonly class Repository implements BookRepository
 {
     public function __construct(
         private Cache $cache,
-        private Mapper $mapper,
+        private OpenlibraryMapper $mapper,
         private HttpClient $client,
         private LoggerInterface $logger,
     ) {
@@ -53,13 +53,12 @@ final readonly class Repository implements BookRepository
         }
 
         if ($model instanceof OpenlibraryBook) {
-            $this->cache->set($cacheKey, $model);
-            return $this->mapper->fromOpenlibraryBook($model);
+            $model = $this->mapper->fromOpenlibraryBook($model);
         }
 
-        if ($model instanceof BookDto) {
+        if ($model instanceof RecordData) {
             $this->cache->set($cacheKey, $model);
-            return $this->mapper->fromDto($model);
+            return $this->castToEntity($model);
         }
 
         throw new NotFoundException("[{$isbn->getValue()}] Book ISBN not found.");
@@ -72,10 +71,10 @@ final readonly class Repository implements BookRepository
     }
 
     #[Override]
-    public function import(Book $book): Book
+    public function import(Book $book): void
     {
         $request = new BookImportRequest(
-            $this->mapper->toDto($book),
+            $this->castToData($book),
         );
 
         try {
@@ -88,8 +87,6 @@ final readonly class Repository implements BookRepository
 
             throw new InfrastructureException($exception->getMessage(), 0, $exception);
         }
-
-        return $book;
     }
 
     /**
@@ -140,15 +137,33 @@ final readonly class Repository implements BookRepository
         }
 
         if ($model instanceof OpenlibraryBook) {
-            $this->cache->set($cacheKey, $model);
-            return $this->mapper->fromOpenlibraryBook($model);
+            $model = $this->mapper->fromOpenlibraryBook($model);
         }
 
-        if ($model instanceof BookDto) {
+        if ($model instanceof RecordData) {
             $this->cache->set($cacheKey, $model);
-            return $this->mapper->fromDto($model);
+            return $this->castToEntity($model);
         }
 
         return null;
+    }
+
+    private function castToEntity(RecordData $data): Book
+    {
+        return new Book(
+            uuid: new BookUuid($data->uuid),
+            title: new BookTitle(name: $data->title),
+            author: new BookAuthor(name: $data->author),
+        );
+    }
+
+    private function castToData(Book $book): RecordData
+    {
+        return new RecordData(
+            uuid: $book->uuid->value,
+            title: $book->title->name,
+            author: $book->author->name,
+            description: $book->title->description,
+        );
     }
 }

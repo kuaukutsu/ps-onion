@@ -10,7 +10,7 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\case\book\Import;
 use kuaukutsu\ps\onion\application\case\book\View;
 use kuaukutsu\ps\onion\application\input\BookInput;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
+use kuaukutsu\ps\onion\application\output\BookDto;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
 
@@ -50,6 +50,7 @@ final readonly class Bookshelf
     }
 
     /**
+     * @throws TypeError is output data error
      * @throws LogicException is input data not valid
      * @throws InfrastructureException
      */

@@ -2,13 +2,17 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\domain\entity\author;
+namespace kuaukutsu\ps\onion\infrastructure\repository\author;
 
 use Override;
 use kuaukutsu\ps\onion\domain\exception\UnsupportedException;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
 
-final readonly class AuthorDto implements EntityDto
+/**
+ * Представление табличной записи.
+ * @psalm-internal kuaukutsu\ps\onion\infrastructure\repository\author
+ */
+final readonly class RecordData implements EntityDto
 {
     /**
      * @param non-empty-string $uuid

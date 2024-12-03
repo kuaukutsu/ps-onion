@@ -73,13 +73,11 @@ trait BookSetUp
                     }
 
                     #[Override]
-                    public function save(Author $author): Author
+                    public function save(Author $author): void
                     {
                         if ($author->person->name === 'Exception') {
                             throw new InfrastructureException();
                         }
-
-                        return $author;
                     }
                 }
             )
@@ -125,13 +123,11 @@ trait BookSetUp
                     }
 
                     #[Override]
-                    public function import(Book $book): Book
+                    public function import(Book $book): void
                     {
                         if ($book->title->name === 'exception') {
                             throw new InfrastructureException();
                         }
-
-                        return $book;
                     }
                 }
             )

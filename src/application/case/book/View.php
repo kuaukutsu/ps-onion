@@ -10,12 +10,11 @@ use InvalidArgumentException;
 use kuaukutsu\ps\onion\application\case\author\View as AuthorView;
 use kuaukutsu\ps\onion\application\input\AuthorInput;
 use kuaukutsu\ps\onion\application\input\BookInput;
-use kuaukutsu\ps\onion\application\output\BookMapper;
+use kuaukutsu\ps\onion\application\output\BookDto;
 use kuaukutsu\ps\onion\application\validator\BookImportValidator;
 use kuaukutsu\ps\onion\application\validator\IsbnValidator;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
-use kuaukutsu\ps\onion\domain\entity\book\BookDto;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\exception\NotFoundException;
@@ -31,7 +30,6 @@ final readonly class View
         private BookImportValidator $validator,
         private BookRepository $repository,
         private IsbnValidator $isbnValidator,
-        private BookMapper $mapper,
     ) {
     }
 
@@ -46,7 +44,7 @@ final readonly class View
     public function getByISBN(string $isbn): BookDto
     {
         $this->isbnValidator->exception($isbn);
-        return $this->mapper->toDto(
+        return BookDto::fromEntity(
             $this->repository->get(
                 new BookIsbn($isbn)
             )
@@ -68,7 +66,7 @@ final readonly class View
             : $this->repository->find($bookTitle);
 
         if ($book instanceof Book) {
-            return $this->mapper->toDto($book);
+            return BookDto::fromEntity($book);
         }
 
         throw new NotFoundException("Book '$bookTitle->name' not found.");

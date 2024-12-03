@@ -36,5 +36,5 @@ interface AuthorRepository
     /**
      * @throws InfrastructureException
      */
-    public function save(Author $author): Author;
+    public function save(Author $author): void;
 }

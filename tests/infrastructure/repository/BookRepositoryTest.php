@@ -14,7 +14,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use kuaukutsu\ps\onion\tests\Container;
 use kuaukutsu\ps\onion\application\decorator\ClientDecorator;
-use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;
@@ -43,14 +42,14 @@ final class BookRepositoryTest extends TestCase
     {
         $repository = self::get(BookRepository::class);
         $creator = self::get(BookCreator::class);
-        $book = $repository->import(
-            $creator->createFromInputData(
-                new BookTitle(name: 'test'),
-                new BookAuthor(name: 'tester'),
-            )
+        $book = $creator->createFromInputData(
+            new BookTitle(name: 'test'),
+            new BookAuthor(name: 'tester'),
         );
 
-        self::assertInstanceOf(Book::class, $book);
+        $repository->import($book);
+
+        self::assertEquals('tester', $book->author->name);
     }
 
     /**
@@ -63,12 +62,12 @@ final class BookRepositoryTest extends TestCase
 
         $repository = self::get(BookRepository::class);
         $creator = self::get(BookCreator::class);
-        $repository->import(
-            $creator->createFromInputData(
-                new BookTitle(name: 'test'),
-                new BookAuthor(name: 'exception'),
-            )
+        $book = $creator->createFromInputData(
+            new BookTitle(name: 'test'),
+            new BookAuthor(name: 'exception'),
         );
+
+        $repository->import($book);
     }
 
     /**
