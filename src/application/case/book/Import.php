@@ -13,6 +13,7 @@ use kuaukutsu\ps\onion\application\output\BookDto;
 use kuaukutsu\ps\onion\application\validator\BookImportValidator;
 use kuaukutsu\ps\onion\domain\entity\book\Book;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
+use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 use kuaukutsu\ps\onion\domain\exception\InfrastructureException;
 use kuaukutsu\ps\onion\domain\interface\BookRepository;
 use kuaukutsu\ps\onion\domain\service\BookCreator;
@@ -43,12 +44,7 @@ final readonly class Import
             throw new LogicException("Author is required.");
         }
 
-        $book = $this->creator->createFromInputData(
-            $bookTitle,
-            $bookAuthor,
-        );
-
-        $this->saveBook($book);
+        $book = $this->saveBook($bookTitle, $bookAuthor);
         $this->saveAuthor($book->author);
 
         return BookDto::fromEntity($book);
@@ -59,11 +55,19 @@ final readonly class Import
      * @throws TypeError is inner data not valid
      * @throws InfrastructureException
      */
-    private function saveBook(Book $book): void
+    private function saveBook(BookTitle $bookTitle, BookAuthor $bookAuthor): Book
     {
-        if ($this->repository->find($book->title, $book->author) === null) {
+        $book = $this->repository->find($bookTitle, $bookAuthor);
+        if ($book === null) {
+            $book = $this->creator->createFromInputData(
+                $bookTitle,
+                $bookAuthor,
+            );
+
             $this->repository->import($book);
         }
+
+        return $book;
     }
 
     /**
