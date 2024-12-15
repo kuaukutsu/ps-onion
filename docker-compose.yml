@@ -1,0 +1,26 @@
+x-services-volume:
+  &services-volume
+  - type: bind
+    source: .
+    target: /app
+
+x-default-logging:
+  &default-logging
+  driver: local
+  options:
+    max-size: "1m"
+    max-file: "3"
+
+name: ps_onion
+services:
+  cli:
+    container_name: onion_cli
+    profiles: [ "console" ]
+    build:
+      context: .docker/php/cli
+      target: app_devel
+      args:
+        UID: ${USER:-1}
+        WORKDIR: "/app"
+    volumes: *services-volume
+    logging: *default-logging
