@@ -29,9 +29,9 @@ composer-normalize:
 		composer normalize
 
 psalm:
-	docker run --init -it --rm -v "$$(pwd):/app" -e XDG_CACHE_HOME=/tmp -w /app \
-		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
-		./vendor/bin/psalm --php-version=${PHP_VERSION}
+	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -e XDG_CACHE_HOME=/tmp -w /app \
+		jakzal/phpqa:php${PHP_VERSION} \
+		php ./vendor/bin/psalm --php-version=${PHP_VERSION}
 
 phpstan:
 	docker run --init -it --rm -v "$$(pwd):/app" -w /app \

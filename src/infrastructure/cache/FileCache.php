@@ -58,12 +58,12 @@ final readonly class FileCache implements CacheInterface
     #[Override]
     public function clear(): bool
     {
-        /** @var non-empty-string[]|false $filesInDir */
         $filesInDir = glob($this->tmpdir . DIRECTORY_SEPARATOR . '*');
         if ($filesInDir === false) {
             return false;
         }
 
+        /** @var array<non-empty-string> $filesInDir */
         $filesProccessed = array_map(
             static fn(string $filePath) => (new FileDataStorage($filePath))->delete(),
             $filesInDir,

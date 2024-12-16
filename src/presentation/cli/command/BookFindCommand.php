@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace kuaukutsu\ps\onion\presentation\cli\command;
 
 use Override;
-use Error;
-use Exception;
+use Throwable;
 use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -58,7 +57,7 @@ final class BookFindCommand extends Command
         } catch (InvalidArgumentException $e) {
             $output->writeln($e->getMessage());
             return Command::INVALID;
-        } catch (Exception | Error $e) {
+        } catch (Throwable $e) {
             $output->writeln($e->getMessage());
             return Command::FAILURE;
         }

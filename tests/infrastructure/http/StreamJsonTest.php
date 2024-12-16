@@ -36,7 +36,6 @@ JSON;
 
         $responseData = $streamCoder->decode();
 
-        self::assertIsArray($responseData);
         self::assertArrayHasKey('name', $responseData);
         self::assertEquals('test stream json', $responseData['name']);
     }
@@ -54,7 +53,6 @@ JSON;
 
         $responseData = $streamCoder->decode();
 
-        self::assertIsArray($responseData);
         self::assertEmpty($responseData);
 
         $streamJson = <<<JSON
@@ -69,7 +67,6 @@ JSON;
 
         $responseData = $streamCoder->decode();
 
-        self::assertIsArray($responseData);
         self::assertEmpty($responseData);
     }
 
