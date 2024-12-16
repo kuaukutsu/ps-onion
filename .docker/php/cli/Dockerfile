@@ -40,11 +40,3 @@ USER $UID
 RUN composer global require cpx/cpx
 
 WORKDIR $WORKDIR
-
-FROM tools AS tools_psalm
-
-RUN ~/.composer/vendor/bin/cpx psalm
-
-FROM tools AS tools_phpstan
-
-RUN ~/.composer/vendor/bin/cpx phpstan

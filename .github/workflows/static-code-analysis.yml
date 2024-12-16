@@ -35,8 +35,5 @@ jobs:
       - name: Run phpcs
         run: vendor/bin/phpcs
 
-      - name: Psalm
-        run: vendor/bin/psalm --output-format=github
-
       - name: Phpstan
         run: vendor/bin/phpstan analyse -c phpstan.neon --error-format=github

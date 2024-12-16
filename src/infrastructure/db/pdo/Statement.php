@@ -39,6 +39,7 @@ final readonly class Statement implements DbStatement
     #[Override]
     public function fetchAssoc(): array
     {
+        /** @var array<string, scalar|null>|bool $data */
         $data = $this->statement->fetch(PDO::FETCH_ASSOC);
         if (is_array($data)) {
             return $data;
