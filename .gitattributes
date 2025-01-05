@@ -10,3 +10,4 @@
 /phpunit.xml.dist        export-ignore
 /psalm.xml.dist          export-ignore
 /rector.php              export-ignore
+/vendor-bin/**/composer.lock binary

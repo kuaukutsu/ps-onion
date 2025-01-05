@@ -31,7 +31,7 @@ composer-normalize:
 psalm:
 	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -e XDG_CACHE_HOME=/tmp -w /app \
 		jakzal/phpqa:php${PHP_VERSION} \
-		php ./vendor/bin/psalm --php-version=${PHP_VERSION}
+		php ./tools/psalm/vendor/bin/psalm --php-version=${PHP_VERSION}
 
 phpstan:
 	docker run --init -it --rm -v "$$(pwd):/app" -w /app \
