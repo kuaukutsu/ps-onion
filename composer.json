@@ -67,7 +67,7 @@
       "infection/extension-installer": true
     },
     "platform": {
-      "php": "8.3.14"
+      "php": "8.3.16"
     }
   },
   "extra": {
