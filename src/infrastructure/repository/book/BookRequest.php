@@ -35,13 +35,7 @@ final readonly class BookRequest implements RequestEntity
             . http_build_query(
                 [
                     ...$this->isbn->toConditions(),
-                    'fields' => [
-                        'key',
-                        'title',
-                        'first_publish_year',
-                        'author_name',
-                        'isbn',
-                    ],
+                    'fields' => 'key,title,first_publish_year,author_name,isbn',
                 ]
             );
     }
