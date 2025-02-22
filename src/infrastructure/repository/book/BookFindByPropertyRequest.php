@@ -96,13 +96,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
             throw new LogicException('Property must not be empty.');
         }
 
-        $conditions['fields'] = [
-            'key',
-            'title',
-            'first_publish_year',
-            'author_name',
-            'isbn',
-        ];
+        $conditions['fields'] = 'key,title,first_publish_year,author_name,isbn';
 
         return http_build_query($conditions);
     }
