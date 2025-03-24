@@ -14,9 +14,6 @@ use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
  */
 final readonly class StreamXml implements StreamDecode
 {
-    /**
-     * @phpstan-ignore constructor.unusedParameter
-     */
     public function __construct(StreamInterface $stream)
     {
     }
