@@ -11,7 +11,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 use kuaukutsu\ps\onion\domain\interface\RequestContext;
-use kuaukutsu\ps\onion\infrastructure\http\Request;
+use kuaukutsu\ps\onion\infrastructure\http\Container;
+use kuaukutsu\ps\onion\infrastructure\http\RequestMiddleware;
 
 /**
  * @psalm-internal kuaukutsu\ps\onion\infrastructure\http
@@ -19,9 +20,9 @@ use kuaukutsu\ps\onion\infrastructure\http\Request;
 final class Builder
 {
     /**
-     * @var HandlerContainer[]
+     * @var Container[]
      */
-    private array $handlers = [];
+    private array $containers = [];
 
     public function __construct(
         private readonly ContainerInterface $container,
@@ -30,24 +31,27 @@ final class Builder
     }
 
     /**
-     * @param HandlerContainer[] $handlers
+     * @param Container[] $containers
      */
-    public function process(Request $request, RequestContext $context, array $handlers): RequestInterface
+    public function withMiddleware(array $containers): self
     {
-        $this->handlers = $handlers;
+        $self = clone $this;
+        $self->containers = $containers;
 
+        return $self;
+    }
+
+    public function build(string $method, string $uri, RequestContext $context): RequestInterface
+    {
         return $this->handle(
-            $this->requestFactory->createRequest(
-                $request->getMethod(),
-                $request->getUri(),
-            ),
+            $this->requestFactory->createRequest($method, $uri),
             $context,
         );
     }
 
     private function handle(RequestInterface $request, RequestContext $context): RequestInterface
     {
-        $container = array_shift($this->handlers);
+        $container = array_shift($this->containers);
         if ($container !== null) {
             try {
                 return $this
@@ -68,10 +72,10 @@ final class Builder
      * @throws ContainerExceptionInterface
      * @throws InvalidArgumentException
      */
-    private function makeHandler(HandlerContainer $container): HandlerInterface
+    private function makeHandler(Container $container): RequestMiddleware
     {
         /**
-         * @var HandlerInterface
+         * @var RequestMiddleware
          */
         return $this->container->make($container->class, $container->parameters);
     }

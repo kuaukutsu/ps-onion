@@ -6,8 +6,10 @@ namespace kuaukutsu\ps\onion\infrastructure\repository\book;
 
 use Override;
 use LogicException;
-use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
+use kuaukutsu\ps\onion\infrastructure\http\request\middleware\JsonBase;
+use kuaukutsu\ps\onion\infrastructure\http\Container;
 use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
+use kuaukutsu\ps\onion\infrastructure\http\RequestMethod;
 use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
 
@@ -40,7 +42,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     #[Override]
     public function getMethod(): string
     {
-        return self::METHOD_GET;
+        return RequestMethod::GET->value;
     }
 
     #[Override]
@@ -49,13 +51,12 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
         return 'https://openlibrary.org/search.json?' . $this->query;
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     #[Override]
-    public function getBody(): never
+    public function makeRequest(): array
     {
-        throw new NotImplementedException();
+        return [
+            new Container(class: JsonBase::class),
+        ];
     }
 
     #[Override]

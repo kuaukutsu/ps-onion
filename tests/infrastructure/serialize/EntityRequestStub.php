@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace kuaukutsu\ps\onion\tests\infrastructure\serialize;
 
+use Override;
 use kuaukutsu\ps\onion\domain\interface\EntityDto;
+use kuaukutsu\ps\onion\infrastructure\http\request\middleware\JsonBase;
+use kuaukutsu\ps\onion\infrastructure\http\Container;
 use kuaukutsu\ps\onion\infrastructure\http\RequestEntity;
 use kuaukutsu\ps\onion\infrastructure\http\StreamDecode;
 use kuaukutsu\ps\onion\infrastructure\serialize\EntityMapper;
-use Override;
 
 /**
  * @implements RequestEntity<EntityDtoStub>
@@ -28,9 +30,11 @@ final readonly class EntityRequestStub implements RequestEntity
     }
 
     #[Override]
-    public function getBody(): string
+    public function makeRequest(): array
     {
-        return 'stub';
+        return [
+            new Container(class: JsonBase::class),
+        ];
     }
 
     #[Override]
@@ -45,7 +49,7 @@ final readonly class EntityRequestStub implements RequestEntity
         return [
             'uri' => $this->getUri(),
             'method' => $this->getMethod(),
-            'body' => $this->getBody(),
+            'body' => 'stub',
         ];
     }
 }
