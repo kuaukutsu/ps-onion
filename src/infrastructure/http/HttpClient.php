@@ -16,9 +16,6 @@ use kuaukutsu\ps\onion\infrastructure\http\decode\StreamHtml;
 use kuaukutsu\ps\onion\infrastructure\http\decode\StreamJson;
 use kuaukutsu\ps\onion\infrastructure\http\decode\StreamXml;
 use kuaukutsu\ps\onion\infrastructure\http\request\Builder;
-use kuaukutsu\ps\onion\infrastructure\http\request\HandlerContainer;
-use kuaukutsu\ps\onion\infrastructure\http\request\JsonBase;
-use kuaukutsu\ps\onion\infrastructure\http\request\JsonBody;
 
 final readonly class HttpClient
 {
@@ -37,22 +34,16 @@ final readonly class HttpClient
      */
     public function send(RequestEntity $requestEntity, RequestContext $context): ?EntityDto
     {
-        $requestHandlers = [
-            new HandlerContainer(class: JsonBase::class),
-        ];
-        if ($this->isRequestHasBody($requestEntity)) {
-            $requestHandlers[] = new HandlerContainer(
-                class: JsonBody::class,
-                parameters: [
-                    'body' => $requestEntity->getBody(),
-                ]
+        $request = $this->requestBuilder
+            ->withMiddleware($requestEntity->makeRequest())
+            ->build(
+                $requestEntity->getMethod(),
+                $requestEntity->getUri(),
+                $context,
             );
-        }
 
-        $request = $this->requestBuilder->process($requestEntity, $context, $requestHandlers);
         $response = $this->client->send($request, $context);
-
-        // response handler: middleware
+        // response handler: middleware, retry
 
         try {
             return $requestEntity->makeResponse(
@@ -61,16 +52,6 @@ final readonly class HttpClient
         } catch (Error | StreamDecodeException $e) {
             throw new UnexpectedRequestException($request, $e);
         }
-    }
-
-    private function isRequestHasBody(Request $request): bool
-    {
-        return match ($request->getMethod()) {
-            'GET',
-            'HEAD',
-            'OPTIONS' => false,
-            default => true,
-        };
     }
 
     /**

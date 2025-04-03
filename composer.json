@@ -19,7 +19,6 @@
     "ext-pdo": "*",
     "ext-sqlite3": "*",
     "beberlei/assert": "^3.3",
-    "fig/http-message-util": "^1.1",
     "guzzlehttp/guzzle": "^7.1",
     "monolog/monolog": "^3.7",
     "php-di/php-di": "^7.0.5",
@@ -73,8 +72,8 @@
   "extra": {
     "bamarni-bin": {
       "bin-links": false,
-      "target-directory": "tools",
-      "forward-command": true
+      "forward-command": true,
+      "target-directory": "tools"
     }
   }
 }
