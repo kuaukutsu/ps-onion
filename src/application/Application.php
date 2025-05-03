@@ -15,10 +15,10 @@ use Ramsey\Uuid\Rfc4122\Validator;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidFactoryInterface;
 use Ramsey\Uuid\Validator\ValidatorInterface;
-use kuaukutsu\ps\onion\application\decorator\CacheDecorator;
-use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
-use kuaukutsu\ps\onion\application\decorator\GuzzleDecorator;
-use kuaukutsu\ps\onion\application\decorator\LoggerDecorator;
+use kuaukutsu\ps\onion\application\proxy\CacheProxy;
+use kuaukutsu\ps\onion\application\proxy\ContainerProxy;
+use kuaukutsu\ps\onion\application\proxy\GuzzleDecorator;
+use kuaukutsu\ps\onion\application\proxy\LoggerProxy;
 use kuaukutsu\ps\onion\domain\entity\author\Author;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\domain\interface\AuthorRepository;
@@ -60,7 +60,7 @@ final readonly class Application implements ApplicationInterface
             ]
         );
 
-        $this->container = new ContainerDecorator($container);
+        $this->container = new ContainerProxy($container);
         $this->setDefinitions($container);
         $this->setRepository($container);
     }
@@ -103,14 +103,14 @@ final readonly class Application implements ApplicationInterface
         $container->set(
             CacheInterface::class,
             factory(
-                fn(): CacheInterface => new CacheDecorator($this)
+                fn(): CacheInterface => new CacheProxy($this)
             ),
         );
 
         $container->set(
             LoggerInterface::class,
             factory(
-                fn(): LoggerInterface => new LoggerDecorator($this)
+                fn(): LoggerInterface => new LoggerProxy($this)
             ),
         );
 

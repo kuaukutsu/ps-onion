@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\application\decorator;
+namespace kuaukutsu\ps\onion\application\proxy;
 
 use Override;
 use InvalidArgumentException;
@@ -10,7 +10,7 @@ use DI\Container;
 use Psr\Container\ContainerExceptionInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
 
-final readonly class ContainerDecorator implements ContainerInterface
+final readonly class ContainerProxy implements ContainerInterface
 {
     public function __construct(private Container $container)
     {

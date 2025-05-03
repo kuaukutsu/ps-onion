@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\application\decorator;
+namespace kuaukutsu\ps\onion\application\proxy;
 
 use Override;
 use Stringable;
@@ -17,7 +17,7 @@ use kuaukutsu\ps\onion\infrastructure\logger\Logger;
 /**
  * @psalm-internal kuaukutsu\ps\onion\application
  */
-final readonly class LoggerDecorator implements LoggerInterface
+final readonly class LoggerProxy implements LoggerInterface
 {
     private LoggerInterface $logger;
 
