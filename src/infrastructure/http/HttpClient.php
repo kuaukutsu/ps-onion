@@ -59,8 +59,7 @@ final readonly class HttpClient
      */
     private function makeStreamDecode(ResponseInterface $response): StreamDecode
     {
-        $headerContentType = current($response->getHeader('Content-Type'));
-
+        [$headerContentType] = explode(';', (string)current($response->getHeader('Content-Type')));
         return match ($headerContentType) {
             'application/xml' => new StreamXml($response->getBody()),
             'application/json' => new StreamJson($response->getBody()),

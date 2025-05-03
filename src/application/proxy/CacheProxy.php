@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\application\decorator;
+namespace kuaukutsu\ps\onion\application\proxy;
 
 use Override;
 use DateInterval;
@@ -15,7 +15,7 @@ use kuaukutsu\ps\onion\infrastructure\cache\FileCache;
 /**
  * @psalm-internal kuaukutsu\ps\onion\application
  */
-final readonly class CacheDecorator implements CacheInterface
+final readonly class CacheProxy implements CacheInterface
 {
     private CacheInterface $cache;
 

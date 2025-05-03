@@ -13,7 +13,7 @@ use Psr\Http\Client\ClientInterface as PsrClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use kuaukutsu\ps\onion\tests\Container;
-use kuaukutsu\ps\onion\application\decorator\ClientDecorator;
+use kuaukutsu\ps\onion\application\proxy\ClientDecorator;
 use kuaukutsu\ps\onion\domain\entity\book\BookAuthor;
 use kuaukutsu\ps\onion\domain\entity\book\BookTitle;
 use kuaukutsu\ps\onion\domain\entity\book\BookIsbn;

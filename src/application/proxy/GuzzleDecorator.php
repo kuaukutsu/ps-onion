@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\ps\onion\application\decorator;
+namespace kuaukutsu\ps\onion\application\proxy;
 
 use Override;
 use InvalidArgumentException;

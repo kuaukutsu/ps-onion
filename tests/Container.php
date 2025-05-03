@@ -18,8 +18,8 @@ use Ramsey\Uuid\Rfc4122\Validator;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidFactoryInterface;
 use Ramsey\Uuid\Validator\ValidatorInterface;
-use kuaukutsu\ps\onion\application\decorator\ContainerDecorator;
-use kuaukutsu\ps\onion\application\decorator\LoggerDecorator;
+use kuaukutsu\ps\onion\application\proxy\ContainerProxy;
+use kuaukutsu\ps\onion\application\proxy\LoggerProxy;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\ContainerInterface;
@@ -63,7 +63,7 @@ trait Container
             [
                 ContainerInterface::class => factory(
                     static function (\DI\Container $container): ContainerInterface {
-                        return new ContainerDecorator($container);
+                        return new ContainerProxy($container);
                     }
                 ),
                 RequestFactoryInterface::class => create(HttpFactory::class),
@@ -73,7 +73,7 @@ trait Container
                 CacheInterface::class => create(NullCache::class),
                 PsrLoggerInterface::class => create(NullLogger::class),
                 LoggerInterface::class => factory(
-                    fn(): LoggerInterface => new LoggerDecorator(
+                    fn(): LoggerInterface => new LoggerProxy(
                         new class implements ApplicationInterface {
                             #[Override]
                             public function getName(): string
