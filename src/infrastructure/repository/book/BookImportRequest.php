@@ -58,7 +58,7 @@ final readonly class BookImportRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): RecordData
+    public function makeResponse(int $statusCode, StreamDecode $stream): RecordData
     {
         return EntityMapper::denormalize(RecordData::class, $stream->decode());
     }
