@@ -38,7 +38,7 @@ final readonly class EntityRequestStub implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): EntityDto
+    public function makeResponse(int $statusCode, StreamDecode $stream): EntityDto
     {
         return EntityMapper::denormalize(EntityDtoStub::class, $stream->decode());
     }

@@ -35,5 +35,5 @@ interface RequestEntity extends DebugInfoInterface
      * @throws StreamDecodeException decode string to array
      * @noinspection PhpDocSignatureInspection
      */
-    public function makeResponse(StreamDecode $stream): ?TResponse;
+    public function makeResponse(int $statusCode, StreamDecode $stream): ?TResponse;
 }

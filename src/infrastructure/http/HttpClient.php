@@ -47,6 +47,7 @@ final readonly class HttpClient
 
         try {
             return $requestEntity->makeResponse(
+                $response->getStatusCode(),
                 $this->makeStreamDecode($response),
             );
         } catch (Error | StreamDecodeException $e) {
@@ -59,13 +60,20 @@ final readonly class HttpClient
      */
     private function makeStreamDecode(ResponseInterface $response): StreamDecode
     {
-        [$headerContentType] = explode(';', (string)current($response->getHeader('Content-Type')));
+        $headerContentType = current($response->getHeader('Content-Type'));
+        if ($headerContentType === false) {
+            throw new StreamDecodeException(
+                'Unsupported response content-type: unknown'
+            );
+        }
+
+        [$headerContentType] = explode(';', $headerContentType);
         return match ($headerContentType) {
             'application/xml' => new StreamXml($response->getBody()),
             'application/json' => new StreamJson($response->getBody()),
             'text/html' => new StreamHtml($response->getBody()),
             default => throw new StreamDecodeException(
-                "Unsupported response content-type: $headerContentType"
+                'Unsupported response content-type: ' . $headerContentType
             ),
         };
     }

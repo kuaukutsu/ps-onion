@@ -11,6 +11,7 @@ use kuaukutsu\ps\onion\domain\exception\NotImplementedException;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerInterface;
 use kuaukutsu\ps\onion\domain\interface\LoggerPreset;
+use kuaukutsu\ps\onion\infrastructure\logger\handler\FileHandler;
 use kuaukutsu\ps\onion\infrastructure\logger\MonologFactory;
 use kuaukutsu\ps\onion\infrastructure\logger\Logger;
 
@@ -26,7 +27,13 @@ final readonly class LoggerProxy implements LoggerInterface
      */
     public function __construct(ApplicationInterface $application)
     {
-        $factory = new MonologFactory($application);
+        $factory = new MonologFactory(
+            $application,
+            [
+                new FileHandler(),
+            ]
+        );
+
         $this->logger = new Logger(
             $factory->make()
         );

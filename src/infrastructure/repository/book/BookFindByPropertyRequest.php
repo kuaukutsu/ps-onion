@@ -60,7 +60,7 @@ final readonly class BookFindByPropertyRequest implements RequestEntity
     }
 
     #[Override]
-    public function makeResponse(StreamDecode $stream): ?OpenlibraryBook
+    public function makeResponse(int $statusCode, StreamDecode $stream): ?OpenlibraryBook
     {
         $openlibrarySchema = EntityMapper::denormalize(
             OpenlibrarySchema::class,

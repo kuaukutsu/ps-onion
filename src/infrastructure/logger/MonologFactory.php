@@ -6,20 +6,25 @@ namespace kuaukutsu\ps\onion\infrastructure\logger;
 
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\WebProcessor;
-use Monolog\Handler\StreamHandler;
-use Monolog\Level;
 use Monolog\Logger;
 use kuaukutsu\ps\onion\domain\interface\ApplicationInterface;
+use kuaukutsu\ps\onion\domain\interface\LoggerFactoryHandler;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\ApplicationProcessor;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\DebugInfoContextProcessor;
 use kuaukutsu\ps\onion\infrastructure\logger\processor\SystemEnvironmentProcessor;
 
 final readonly class MonologFactory
 {
-    public function __construct(private ApplicationInterface $application)
-    {
+    /**
+     * @param array<LoggerFactoryHandler> $factoryHandler
+     */
+    public function __construct(
+        private ApplicationInterface $application,
+        private array $factoryHandler = [],
+    ) {
     }
 
     /**
@@ -29,12 +34,7 @@ final readonly class MonologFactory
     {
         return new Logger(
             $this->application->getName(),
-            [
-                new StreamHandler(
-                    $this->getLogPath(),
-                    Level::Debug,
-                ),
-            ],
+            $this->makeHandlers(),
             [
                 new WebProcessor(),
                 new MemoryPeakUsageProcessor(),
@@ -45,10 +45,16 @@ final readonly class MonologFactory
         );
     }
 
-    private function getLogPath(): string
+    /**
+     * @return list<HandlerInterface>
+     */
+    private function makeHandlers(): array
     {
-        return $this->application->getRuntime() . DIRECTORY_SEPARATOR
-            . 'logs' . DIRECTORY_SEPARATOR
-            . $this->application->getName() . '.log';
+        $handlers = [];
+        foreach ($this->factoryHandler as $factoryHandler) {
+            $handlers[] = $factoryHandler->makeHandler($this->application);
+        }
+
+        return $handlers;
     }
 }
